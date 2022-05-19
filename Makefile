@@ -17,6 +17,7 @@ help:
 	@echo "  dockerrun   run docker image and serve api"
 	@echo "  coverage    run tests and generate coverage report"
 	@echo "  console     start python cli with env vars set"
+	@echo "  benchmark       start uvicorn production server for benchmark"
 	@echo "  server      start uvicorn development server fast-api for synchronizing with ldap"
 	@echo ""
 
@@ -91,4 +92,10 @@ server:
 	@. python_env/bin/activate; \
 	export `grep -v '^#' .env | xargs` && \
 	uvicorn app.server:app --reload --port 8080 --no-access-log --reload-dir app
+
+.PHONY: benchmark
+benchmark:
+	@. python_env/bin/activate; \
+	export `grep -v '^#' .env | xargs` && \
+	python main.py
 
