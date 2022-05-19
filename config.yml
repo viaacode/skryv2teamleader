@@ -1,0 +1,39 @@
+viaa:
+  logging:
+    level: DEBUG
+app:
+  environment: !ENV ${ENVIRONMENT}
+  teamleader:
+    auth_uri: !ENV ${TL_AUTH_URI}
+    api_uri: !ENV ${TL_API_URI}
+    client_id: !ENV ${TL_CLIENT_ID}
+    client_secret: !ENV ${TL_CLIENT_SECRET}
+    redirect_uri: !ENV ${TL_REDIRECT_URI}
+    secret_code_state: !ENV ${TL_SECRET_CODE_STATE}
+    code: !ENV ${TL_CODE}
+    auth_token: !ENV ${TL_AUTH_TOKEN}
+    refresh_token: !ENV ${TL_REFRESH_TOKEN}
+    token_file: !ENV ${TL_TOKEN_FILE}
+    redis_url: !ENV ${REDIS_URL}
+  slack:
+    channel: !ENV ${SLACK_CHANNEL}
+    token: !ENV ${SLACK_TOKEN}
+  skryv:
+    webhook_url: !ENV ${WEBHOOK_URL}
+    webhook_jwt: !ENV ${WEBHOOK_JWT} 
+  organizations:
+    or_id_url: !ENV ${OR_ID_URI}
+  custom_field_labels:
+    contact_rollen: '5 - Rollen'
+    contact_user_id: '6 - User-ID'
+    contact_technical_user: 'Technical User'
+    company_type_organisatie: '1.1 - Type organisatie'
+    relaties_andere_dan_cp: '1.2 - Relaties andere dan CP'
+    company_digitaliseringsbedrijf: 'LEV - digitaliseringsbedrijf'
+    company_fotograaf: 'LEV - fotograaf'
+    company_leverancier: 'leverancier'
+    company_dienstenafnemer: 'dienstenafnemer'
+    company_kring: '2.1 - Opstartfase'
+    company_or_id: '5.1 - OR-ID'
+    company_meemoo_or_id: 'OR-w66976m'
+
