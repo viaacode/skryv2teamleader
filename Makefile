@@ -1,4 +1,4 @@
-NAME := teamleader2ldap
+NAME := skryv2teamleader
 FOLDERS := ./app/ ./tests/
 
 .DEFAULT_GOAL := help
