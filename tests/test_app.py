@@ -8,13 +8,13 @@
 #
 
 import pytest
-import json
-from datetime import datetime, timedelta
+# import json
+# from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
 from app.clients.slack_client import SlackClient
 from app.clients.common_clients import CommonClients
 
-from tests.unit.mock_teamleader_client import MockTlClient, LINKED_CONTACT_UUID, DIENSTAFNEMER_UUID
+from tests.unit.mock_teamleader_client import MockTlClient
 from tests.unit.mock_slack_wrapper import MockSlackWrapper
 from tests.unit.testing_config import tst_app_config
 
@@ -23,7 +23,7 @@ class TestAppRequests:
     @pytest.fixture
     def app_client(self):
         from app.server import app
-        from app.server import main_app 
+        from app.server import main_app
         main_app.start_clients(False)
         main_app.clients = self.mock_clients()
         return TestClient(app)
@@ -114,4 +114,3 @@ class TestAppRequests:
     #     assert response.status_code == 200
     #     result = response.json()
     #     assert result['status'] == 'delete_contact_webhook received'
-

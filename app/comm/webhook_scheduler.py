@@ -14,9 +14,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
-from app.services.company_service import CompanyService
-from app.services.contact_service import ContactService
-
+# todo have other services here...
+# from app.services.company_service import CompanyService
+# from app.services.contact_service import ContactService
 
 # Initialize the logger and the configuration
 config = ConfigParser()
@@ -52,38 +52,18 @@ class WebhookScheduler:
         })
 
     async def execute_webhook(self, name, params):
-        if name == 'create_company_webhook':
-            logger.info(
-                f"Create company: company_uuid={params['id']} name={params['name']}"
-            )
-            cs = CompanyService(self.clients)
-            return cs.create_company_webhook(params)
-        elif name == 'update_company_webhook':
-            logger.info(
-                f"Update company: company_uuid={params['id']} name={params['name']}"
-            )
-            cs = CompanyService(self.clients)
-            return cs.update_company_webhook(params)
-        elif name == 'delete_company_webhook':
-            logger.info(f"Delete company: company_uuid={params}")
-            cs = CompanyService(self.clients)
-            return cs.delete_company_webhook(params)
-        elif name == 'update_contact_webhook':
-            logger.info(f"Update contact: contact_uuid = {params['id']}")
-            cs = ContactService(self.clients)
-            return cs.update_contact_webhook(params)
-        elif name == 'link_to_company':
-            logger.info(f"Link to company: contact_uuid = {params['id']}")
-            cs = ContactService(self.clients)
-            return cs.link_to_company(params)
-        elif name == 'unlink_from_company':
-            logger.info(f"Unlink from company: contact_uuid = {params['id']}")
-            cs = ContactService(self.clients)
-            return cs.unlink_from_company(params)
-        elif name == 'delete_contact_webhook':
-            logger.info(f"Delete contact: contact_uuid = {params}")
-            cs = ContactService(self.clients)
-            return cs.delete_contact_webhook(params)
+        if name == 'process_event':
+            logger.info(f"process event params={params}")
+            # TODO: some service call here...
+            return "process event result"
+        elif name == 'milestone_event':
+            logger.info(f"milestone event params={params}")
+            # TODO: some service call here...
+            return "milestione event result"
+        elif name == 'document_event':
+            logger.info(f"Document event params={params}")
+            # TODO: some service call here...
+            return "document event result"
         else:
             logger.warning(
                 f"invalid webhook: {name} received with params: {params}")

@@ -73,4 +73,3 @@ class SlackClient:
             {contact['web_url']}
             """
         )
-    

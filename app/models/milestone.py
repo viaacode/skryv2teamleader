@@ -8,30 +8,18 @@
 #   Milestone model using pydantic for field validation
 #
 
+import uuid
 from pydantic import BaseModel, Field
-from app.models.subject import Subject
-from app.models.account import Account
+from datetime import datetime
 
 
 class Milestone(BaseModel):
-    type: str = Field(
-        ...,
-        description="Type of milestone... "
+    id: uuid.UUID = Field(..., description="process uuid")
+    dossierId: uuid.UUID = Field(..., description="dossier uuid")
+    key: str = Field(...,
+                     description="IntermediateThrowEvent_DS_ITV_akkoordITVgeenopstart")
+    status: str = Field(..., description="milestone status")
+    timestamp: datetime = Field(
+        None,
+        description="Milestone timestamp"
     )
-    subject: Subject
-    account: Account
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "type": "milestone_type",
-                "subject": {
-                    "type": "milestone",
-                    "id": "8ac514fc-9247-0280-be7c-9ba5627c9b8d"
-                },
-                "account": {
-                    "type": "account",
-                    "id": "7159d591-1ecc-01c7-ad5f-341091d12f60"
-                }
-            }
-        }

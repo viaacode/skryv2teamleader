@@ -5,33 +5,31 @@
 #
 #   app/models/document.py
 #
-#   Document model using pydantic for field validation
+#   Used in document_body
 #
 
+import uuid
 from pydantic import BaseModel, Field
-from app.models.subject import Subject
-from app.models.account import Account
+from datetime import datetime
+from app.models.document_value import DocumentValue
+from app.models.links import Links
 
 
 class Document(BaseModel):
-    type: str = Field(
-        ...,
-        description="Type of document: contract, serviceagreement "
+    id: uuid.UUID = Field(..., description="document uuid")
+    version: int = Field(..., description="document version")
+    definition: uuid.UUID = Field(..., description="document definition uuid")
+    definitionLabel: str = Field(..., description="document definition label")
+    definitionKey: str = Field(..., description="document definition key")
+    readOnly: bool = Field(..., description="read only true/false")
+    document: DocumentValue
+    createdAt: datetime = Field(
+        None,
+        description="Syncronize since given iso date (optional parameter)"
     )
-    subject: Subject
-    account: Account
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "type": "contract",
-                "subject": {
-                    "type": "document",
-                    "id": "8ac514fc-9247-0280-be7c-9ba5627c9b8d"
-                },
-                "account": {
-                    "type": "account",
-                    "id": "7159d591-1ecc-01c7-ad5f-341091d12f60"
-                }
-            }
-        }
+    updatedAt: datetime = Field(
+        None,
+        description="Syncronize since given iso date (optional parameter)"
+    )
+    links: Links
+    subdocument: bool = Field(..., description="subdocument true/false")
