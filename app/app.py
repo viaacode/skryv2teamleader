@@ -55,7 +55,7 @@ class App:
     def milestone_webhook(self, milestone_body):
         logger.info(f"milestone event: {milestone_body}")
         self.whs.schedule('milestone_event', milestone_body)
-        return {'status': 'milestone event received and scheduled for handling'}
+        return {'status': milestone_body.milestone.status}
 
     def document_webhook(self, document_body):
         logger.info(f"document event: {document_body}")

@@ -8,7 +8,7 @@
 #
 
 import pytest
-# import json
+import json
 # from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
 from app.clients.slack_client import SlackClient
@@ -80,37 +80,14 @@ class TestAppRequests:
         assert response.status_code == 200
         # assert response.json() == 'code rejected'
 
-    # def test_companies_sync_datepassed(self, app_client):
-    #     ms = '2022-04-26T16:31:12'
-    #     response = app_client.post(
-    #         "/sync/companies",
-    #         json={
-    #             "full_sync": False,
-    #             "modified_since": f"{ms}"
-    #         }
-    #     )
-    #     assert response.status_code == 200
+    def test_milestone_event(self, app_client):
+        ms_ex = open("tests/fixtures/milestone_example.json", "r")
+        response = app_client.post(
+            "/skryv/milestone",
+            json = json.loads(ms_ex.read())
+        )
 
-    #     content = response.json()
-    #     assert content['full_sync'] is False
-    #     assert content['modified_since'] == ms
+        assert response.status_code == 200
+        content = response.json()
+        assert content['status'] == 'Akkoord, geen opstart'
 
-    # def test_delete_contact_webhook(self, app_client):
-    #     delete_params = {
-    #         "type": "contact.deleted",
-    #         "subject": {
-    #             "type": "contact",
-    #             "id": "a602ab6c-112c-088c-907a-45f0d2fc9341"
-    #         },
-    #         "account": {
-    #             "type": "account",
-    #             "id": "7159d591-1ecc-01c7-ad5f-341091d12f60"
-    #         }
-    #     }
-    #     response = app_client.post(
-    #         "/ldap/contact/delete",
-    #         data=json.dumps(delete_params)
-    #     )
-    #     assert response.status_code == 200
-    #     result = response.json()
-    #     assert result['status'] == 'delete_contact_webhook received'
