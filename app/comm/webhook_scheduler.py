@@ -14,9 +14,9 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
-# todo have other services here...
-# from app.services.company_service import CompanyService
-# from app.services.contact_service import ContactService
+from app.services.process_service import ProcessService 
+from app.services.document_service import DocumentService
+from app.services.milestone_service import MilestoneService
 
 # Initialize the logger and the configuration
 config = ConfigParser()
@@ -53,18 +53,20 @@ class WebhookScheduler:
 
     async def execute_webhook(self, name, params):
         if name == 'process_event':
-            logger.info(f"process event params={params}")
-            # TODO: some service call here...
-            return "process event result"
+            logger.info(f"handling process event")
+            ps = ProcessService(params)
+            ps.handle_event()
+            return "process event is handled"
         elif name == 'milestone_event':
-            logger.info(f"milestone event params={params}")
-            print("milestone status=", params.milestone.status)
-            # TODO: some service call here...
-            return "milestione event result"
+            logger.info(f"handling milestone event")
+            ms = MilestoneService(params)
+            ms.handle_event() 
+            return "milestione event is handled"
         elif name == 'document_event':
-            logger.info(f"Document event params={params}")
-            # TODO: some service call here...
-            return "document event result"
+            logger.info(f"handling document event")
+            ds = DocumentService(params)
+            ds.handle_event()
+            return "document event is handled"
         else:
             logger.warning(
                 f"invalid webhook: {name} received with params: {params}")
