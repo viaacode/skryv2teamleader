@@ -1,0 +1,132 @@
+{
+  "action": "updated",
+  "dossier": {
+    "id": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
+    "label": "Test Skryv",
+    "externalId": "OR-hx15s8s",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-05-19T09:17:15.000+0000",
+    "updatedAt": "2022-05-19T09:17:19.000+0000",
+    "creator": "f440f460-51e0-1034-9c23-ff9471efe8a8",
+    "active": true
+  },
+  "document": {
+    "id": "52eea053-f908-45fc-bf7c-16a0a9589175",
+    "version": 2,
+    "definition": "4c5d6f8a-3918-4f79-a9e7-68bcb91cd412",
+    "definitionLabel": "Controle Intentieverklaring",
+    "definitionKey": "controle_intentieverklaring",
+    "readOnly": false,
+    "document": {
+      "value": {
+        "raadpleeg_hier_de_samenwerkingsovereenkomst_met_viaa": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Samenwerkingsovereenkomst+contentpartner++-+meemoo.docx",
+        "wij_zijn_genteresseerd_in_een_samenwerking_met_viaa": {
+          "selectedOption": "neen",
+          "reden": {
+            "markup": "none",
+            "text": "nee wij willen geen partner worden"
+          }
+        },
+        "wij_hebben_kennis_genomen_van_de_samenwerkingsovereenkomst_met_viaa_en_zullen_deze_overeenkomst_binnen_een_termijn_van_maximum_8_weken_ter_goedkeuring_laten_ondertekenen_door_de_bevoegde_personeninstantie": {},
+        "wij_geven_viaa_de_toestemming_om_de_dienstverlening_reeds_voor_te_bereiden_en_op_te_starten_in_afwachting_van_de_goedkeuring_van_de_samenwerkingsovereenkomst": {},
+        "bedrijfsvorm": {
+          "selectedOption": "ag"
+        },
+        "adres_en_contactgegevens": {
+          "type_organisatie": {
+            "selectedOption": "archief"
+          },
+          "postadres": {
+            "straat": "qsdqsd",
+            "huisnummer": "qsdqsd",
+            "postcode": "qsdqsd",
+            "gemeente": "qsdqsd"
+          },
+          "algemeen_emailadres": "test@test.be",
+          "algemeen_telefoonnummer": "dfsdfsdf",
+          "laadadres_verschillend_van_postadres": {
+            "laadadres": {}
+          },
+          "is_de_facturatienaam_verschillend_van_de_organisatienaam": {},
+          "facturatieadres_verschillend_van_postadres": {
+            "facturatieadres": {}
+          },
+          "werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie": {},
+          "gegevens_directie": {
+            "naam_1": "tine",
+            "voornaam": "tine",
+            "email": "tine@test.be",
+            "functietitel": "esefsfsdfs"
+          },
+          "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie": {
+            "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten": {
+              "functiecategorie": {}
+            }
+          },
+          "centrale_contactpersoon_voor_het_opstarten_van_de_dienstverlening_door_viaa_verschillend_van_de_directie": {
+            "centrale_contactpersoon_voor_het_opstarten_van_de_dienstverlening_door_viaa": {},
+            "deze_contactpersoon_mag_gecontacteerd_worden_in_verband_met_deze_dienstverlening": {}
+          },
+          "contactpersoon_dienstverlening": {
+            "selectedOptions": {
+              "contactpersoon_directie": false,
+              "contactpersoon_administratieve_samenwerking": false,
+              "extra_contactpersoon_dienstverlening_1": false,
+              "extra_contactpersoon_dienstverlening_2": false
+            },
+            "dienstverlening_directie": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie": false,
+                "intake_van_de_digitale_collectie": false
+              }
+            },
+            "dienstverlening_administratie": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie_1": false,
+                "intake_van_de_digitale_collectie_1": false
+              }
+            },
+            "dienstverlening_extra_1": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie_3": false,
+                "intake_van_de_digitale_collectie_3": false
+              }
+            },
+            "dienstverlening_extra_2": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie": false,
+                "intake_van_de_digitale_collectie": false
+              }
+            }
+          }
+        },
+        "geschreven_naam": " ",
+        "datum": " ",
+        "officile_naam_organisatie": "test bedrijf",
+        "is_de_opgeladen_intentieverklaring_in_orde": {
+          "selectedOption": "ja_9"
+        }
+      }
+    },
+    "createdAt": "2022-05-23T12:54:30.000+0000",
+    "updatedAt": "2022-05-23T12:55:03.000+0000",
+    "links": [
+      {
+        "linkType": "SCOPE",
+        "resourceType": "TASK",
+        "resourceId": "7c1f84c8-da97-11ec-883a-0242ac130004"
+      },
+      {
+        "linkType": "LINK",
+        "resourceType": "PROCESS",
+        "resourceId": "5004eee8-da97-11ec-883a-0242ac130004"
+      },
+      {
+        "linkType": "LINK",
+        "resourceType": "DOSSIER",
+        "resourceId": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19"
+      }
+    ],
+    "subdocument": false
+  }
+}

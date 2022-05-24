@@ -90,24 +90,28 @@ class TestAppRequests:
             content = response.json()
             assert len(content['status']) > 0
 
-    def test_process(self, app_client):
-        proc = open("tests/fixtures/process/process_example.json", "r")
-        response = app_client.post(
-            "/skryv/process",
-            json=json.loads(proc.read())
-        )
+    def test_process_events(self, app_client):
+        for process_fixture in glob.glob("tests/fixtures/process/*.json"):
+            proc = open(process_fixture, "r")
+            response = app_client.post(
+                "/skryv/process",
+                json=json.loads(proc.read())
+            )
+            proc.close()
 
-        assert response.status_code == 200
-        content = response.json()
-        assert 'proces event received' in content['status']
+            assert response.status_code == 200
+            content = response.json()
+            assert 'proces event received' in content['status']
 
-    def test_document_created(self, app_client):
-        proc = open("tests/fixtures/document/created_example.json", "r")
-        response = app_client.post(
-            "/skryv/document",
-            json=json.loads(proc.read())
-        )
+    def test_document_events(self, app_client):
+        for document_fixture in glob.glob("tests/fixtures/document/*.json"):
+            doc = open(document_fixture, "r")
+            response = app_client.post(
+                "/skryv/document",
+                json=json.loads(doc.read())
+            )
+            doc.close()
 
-        assert response.status_code == 200
-        content = response.json()
-        assert 'document event received' in content['status']
+            assert response.status_code == 200
+            content = response.json()
+            assert 'document event received' in content['status']
