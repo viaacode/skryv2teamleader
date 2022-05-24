@@ -20,7 +20,9 @@ class ProcessService:
         self.dossier = self.body.dossier
         self.process = self.body.process
         self.action = self.body.action
-        print("handling process id={} organization_id={}".format(
+
+        print(
+            "handling process id={} organization_id={}".format(
                 self.process.id,
                 self.dossier.externalId
             )
