@@ -10,9 +10,10 @@
 
 import uuid
 from pydantic import BaseModel, Field
+from typing import Optional
 from datetime import datetime
+
 from app.models.document_value import DocumentValue
-from app.models.links import Links
 
 
 class Document(BaseModel):
@@ -31,5 +32,5 @@ class Document(BaseModel):
         None,
         description="Syncronize since given iso date (optional parameter)"
     )
-    links: Links
+    links: Optional[list] = []
     subdocument: bool = Field(..., description="subdocument true/false")

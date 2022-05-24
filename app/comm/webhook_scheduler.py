@@ -58,6 +58,7 @@ class WebhookScheduler:
             return "process event result"
         elif name == 'milestone_event':
             logger.info(f"milestone event params={params}")
+            print("milestone status=", params.milestone.status)
             # TODO: some service call here...
             return "milestione event result"
         elif name == 'document_event':
