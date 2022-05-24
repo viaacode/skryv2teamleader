@@ -1,0 +1,20 @@
+{
+  "action": "reached",
+  "dossier": {
+    "id": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
+    "label": "Test Skryv",
+    "externalId": "OR-hx15s8s",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-05-19T09:17:15.000+0000",
+    "updatedAt": "2022-05-19T09:17:19.000+0000",
+    "creator": "f440f460-51e0-1034-9c23-ff9471efe8a8",
+    "active": true
+  },
+  "milestone": {
+    "id": "0c11de71-2a78-4ad6-a02d-f5f721b34c93",
+    "dossierId": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
+    "key": "IntermediateThrowEvent_DS_ITV_misschienlatersamenwerkingVIAA",
+    "status": "Misschien later samenwerking",
+    "timestamp": "2022-05-23T13:16:19.245Z"
+  }
+}

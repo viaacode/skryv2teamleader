@@ -80,14 +80,58 @@ class TestAppRequests:
         assert response.status_code == 200
         # assert response.json() == 'code rejected'
 
-    def test_milestone_event(self, app_client):
-        ms_ex = open("tests/fixtures/milestone_example.json", "r")
+    def test_milestone_akkoord_event(self, app_client):
+        ms_ex = open("tests/fixtures/milestone/milestone_akkoord.json", "r")
         response = app_client.post(
             "/skryv/milestone",
-            json = json.loads(ms_ex.read())
+            json=json.loads(ms_ex.read())
         )
 
         assert response.status_code == 200
         content = response.json()
         assert content['status'] == 'Akkoord, geen opstart'
 
+    def test_milestone_geen_interesse(self, app_client):
+        ms_ex = open(
+            "tests/fixtures/milestone/milestone_geen_interesse.json", "r")
+        response = app_client.post(
+            "/skryv/milestone",
+            json=json.loads(ms_ex.read())
+        )
+
+        assert response.status_code == 200
+        content = response.json()
+        assert content['status'] == 'Geen interesse'
+
+    def test_milestone_later(self, app_client):
+        ms_ex = open("tests/fixtures/milestone/milestone_later.json", "r")
+        response = app_client.post(
+            "/skryv/milestone",
+            json=json.loads(ms_ex.read())
+        )
+
+        assert response.status_code == 200
+        content = response.json()
+        assert content['status'] == 'Misschien later samenwerking'
+
+    def test_process(self, app_client):
+        proc = open("tests/fixtures/process/process_example.json", "r")
+        response = app_client.post(
+            "/skryv/process",
+            json=json.loads(proc.read())
+        )
+
+        assert response.status_code == 200
+        content = response.json()
+        assert 'proces event received' in content['status']
+
+    def test_document_created(self, app_client):
+        proc = open("tests/fixtures/document/created_example.json", "r")
+        response = app_client.post(
+            "/skryv/document",
+            json=json.loads(proc.read())
+        )
+
+        assert response.status_code == 200
+        content = response.json()
+        assert 'document event received' in content['status']

@@ -18,7 +18,8 @@ class Dossier(BaseModel):
     label: str = Field(..., description="dossier label")
     externalId: Optional[str] = None
     dossierManager: Optional[uuid.UUID] = None
-    dossierDefinition: uuid.UUID = Field(..., description="dossier definition uuid")
+    dossierDefinition: uuid.UUID = Field(...,
+                                         description="dossier definition uuid")
     createdAt: datetime = Field(
         None,
         description="Syncronize since given iso date (optional parameter)"
