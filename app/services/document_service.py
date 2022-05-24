@@ -20,6 +20,5 @@ class DocumentService:
 
     def handle_event(self):
         print("in document handling label=", self.document.definitionLabel)
-        if self.body.action == 'updated': 
+        if self.body.action == 'updated':
             print("adres=", self.postadres())
-

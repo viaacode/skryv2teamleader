@@ -18,7 +18,7 @@ class ProcessService:
 
     def handle_event(self):
         print("handling process id={} organization_id={}".format(
-                self.process.id,
-                self.dossier.externalId
-            )
+            self.process.id,
+            self.dossier.externalId
+        )
         )

@@ -14,7 +14,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
-from app.services.process_service import ProcessService 
+from app.services.process_service import ProcessService
 from app.services.document_service import DocumentService
 from app.services.milestone_service import MilestoneService
 
@@ -53,17 +53,17 @@ class WebhookScheduler:
 
     async def execute_webhook(self, name, params):
         if name == 'process_event':
-            logger.info(f"handling process event")
+            logger.info("handling process event")
             ps = ProcessService(params)
             ps.handle_event()
             return "process event is handled"
         elif name == 'milestone_event':
-            logger.info(f"handling milestone event")
+            logger.info("handling milestone event")
             ms = MilestoneService(params)
-            ms.handle_event() 
+            ms.handle_event()
             return "milestione event is handled"
         elif name == 'document_event':
-            logger.info(f"handling document event")
+            logger.info("handling document event")
             ds = DocumentService(params)
             ds.handle_event()
             return "document event is handled"
