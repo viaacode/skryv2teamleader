@@ -10,15 +10,18 @@
 
 
 class ProcessService:
-    def __init__(self, process_body):
+    def __init__(self, common_clients):
+        self.tlc = common_clients.teamleader
+        self.org_ids = common_clients.org_ids
+        self.slack = common_clients.slack
+
+    def handle_event(self, process_body):
         self.body = process_body
         self.dossier = self.body.dossier
         self.process = self.body.process
         self.action = self.body.action
-
-    def handle_event(self):
         print("handling process id={} organization_id={}".format(
-            self.process.id,
-            self.dossier.externalId
-        )
+                self.process.id,
+                self.dossier.externalId
+            )
         )

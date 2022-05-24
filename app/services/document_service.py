@@ -10,15 +10,19 @@
 
 
 class DocumentService:
-    def __init__(self, document_body):
-        self.body = document_body
-        self.document = self.body.document
-        self.dossier = self.body.dossier
+    def __init__(self, common_clients):
+        self.tlc = common_clients.teamleader
+        self.org_ids = common_clients.org_ids
+        self.slack = common_clients.slack
 
     def postadres(self):
         return self.document.document.value['adres_en_contactgegevens']['postadres']
 
-    def handle_event(self):
-        print("in document handling label=", self.document.definitionLabel)
+    def handle_event(self, document_body):
+        self.body = document_body
+        self.document = self.body.document
+        self.dossier = self.body.dossier
+
+        print("handle_event document label=", self.document.definitionLabel)
         if self.body.action == 'updated':
             print("adres=", self.postadres())

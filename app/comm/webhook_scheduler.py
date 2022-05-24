@@ -54,18 +54,18 @@ class WebhookScheduler:
     async def execute_webhook(self, name, params):
         if name == 'process_event':
             logger.info("handling process event")
-            ps = ProcessService(params)
-            ps.handle_event()
+            ps = ProcessService(self.clients)
+            ps.handle_event(params)
             return "process event is handled"
         elif name == 'milestone_event':
             logger.info("handling milestone event")
-            ms = MilestoneService(params)
-            ms.handle_event()
+            ms = MilestoneService(self.clients)
+            ms.handle_event(params)
             return "milestione event is handled"
         elif name == 'document_event':
             logger.info("handling document event")
-            ds = DocumentService(params)
-            ds.handle_event()
+            ds = DocumentService(self.clients)
+            ds.handle_event(params)
             return "document event is handled"
         else:
             logger.warning(
