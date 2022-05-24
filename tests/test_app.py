@@ -77,7 +77,6 @@ class TestAppRequests:
         assert response.status_code == 200
         # assert response.json() == 'code rejected'
 
-
     def test_milestone_events(self, app_client):
         for milestone_fixture in glob.glob("tests/fixtures/milestone/*.json"):
             ms = open(milestone_fixture, "r")
