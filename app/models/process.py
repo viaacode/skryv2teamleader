@@ -13,7 +13,7 @@ from datetime import datetime
 
 
 class Process(BaseModel):
-    id: uuid.UUID = Field(..., description="process uuid")
+    id: str = Field(..., description="process uuid or id")
     businessKey: uuid.UUID = Field(..., description="businessKey uuid")
     processDefinitionId: str = Field(...,
                                      description="Intentieverklaring_v2:id")

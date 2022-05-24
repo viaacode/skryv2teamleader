@@ -30,3 +30,4 @@ class Dossier(BaseModel):
     )
     creator: str = Field(..., description="dossier creator")
     active: bool = Field(..., description="active true/false")
+    communications: Optional[list] = []

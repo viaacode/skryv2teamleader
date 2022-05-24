@@ -1,0 +1,24 @@
+{  
+   "action":"created",
+   "dossier":{  
+      "id":"b43283bf-8cf9-4ece-91dd-701b47b1837f",
+      "label":"TEST 2 17042018",
+      "externalId":"OR-j960b2x",
+      "description":"",
+      "dossierDefinition":"90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+      "createdAt":"2018-04-17T07:38:10.000+0000",
+      "updatedAt":"2018-04-17T07:38:10.000+0000",
+      "creator":"33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+      "active":true,
+      "communications":[  
+      ]
+   },
+   "process":{  
+      "id":"337028",
+      "businessKey":"b43283bf-8cf9-4ece-91dd-701b47b1837f",
+      "processDefinitionId":"Intentieverklaring_v2:5:331612",
+      "processDefinitionKey":"Intentieverklaring_v2",
+      "startTime":"2018-04-17T07:41:23.000+0000",
+      "startActivityId":"StartEvent_10e3ss5"
+   }
+}
