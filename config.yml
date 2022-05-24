@@ -24,16 +24,9 @@ app:
   organizations:
     or_id_url: !ENV ${OR_ID_URI}
   custom_field_labels:
-    contact_rollen: '5 - Rollen'
-    contact_user_id: '6 - User-ID'
-    contact_technical_user: 'Technical User'
-    company_type_organisatie: '1.1 - Type organisatie'
-    relaties_andere_dan_cp: '1.2 - Relaties andere dan CP'
-    company_digitaliseringsbedrijf: 'LEV - digitaliseringsbedrijf'
-    company_fotograaf: 'LEV - fotograaf'
-    company_leverancier: 'leverancier'
-    company_dienstenafnemer: 'dienstenafnemer'
-    company_kring: '2.1 - Opstartfase'
-    company_or_id: '5.1 - OR-ID'
-    company_meemoo_or_id: 'OR-w66976m'
+    company_kring: '2.2 - CP status'
+    company_kring: '2.3 - Intentieverklaring'
+    company_kring: '2.4 - Toestemming starten'
+    company_kring: '2.5 - SWO'
+    company_kring: '2.6 - SWO addenda'
 
