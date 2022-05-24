@@ -49,14 +49,9 @@ class TestAppRequests:
         assert response.status_code == 200
         content = response.json()
         assert content['registered_webhooks'] == [
-            {
-                'url': 'http://localhost:8080/ldap/company/create',
-                'types': ['company.added']
-            },
-            {
-                'url': 'http://localhost:8080/ldap/company/delete',
-                'types': ['company.deleted']
-            }
+            '/skryv/process',
+            '/skryv/document',
+            '/skryv/milestone',
         ]
 
     def test_webhook_create(self, app_client):
