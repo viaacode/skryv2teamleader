@@ -23,7 +23,7 @@ from mock_slack_wrapper import MockSlackWrapper
 from testing_config import tst_app_config
 
 
-class TestCompanyService:
+class TestScheduler:
     @pytest.fixture
     def mock_clients(self):
         slack_client = SlackClient(tst_app_config())

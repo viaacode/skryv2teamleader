@@ -36,21 +36,28 @@ INFO:     Started server process [51091]
 
 ```
 $ make test
-============================= test session starts =============================
-platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0 -- 
-/Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader/python_env/bin/python
+================================= test session starts ==================================
+platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0 -- /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader/python_env/bin/python
 cachedir: .pytest_cache
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 6 items                                                             
+collected 14 items                                                                     
 
-tests/test_app.py::TestAppRequests::test_webhook_delete PASSED          [ 16%]
-tests/test_app.py::TestAppRequests::test_webhook_list PASSED            [ 33%]
-tests/test_app.py::TestAppRequests::test_webhook_create PASSED          [ 50%]
-tests/test_app.py::TestAppRequests::test_health PASSED                  [ 66%]
-tests/test_app.py::TestAppRequests::test_oauth_rejection PASSED         [ 83%]
-tests/test_app.py::TestAppRequests::test_oauth_bad_code PASSED          [100%]
+tests/test_app.py::TestAppRequests::test_webhook_delete PASSED                   [  7%]
+tests/test_app.py::TestAppRequests::test_webhook_list PASSED                     [ 14%]
+tests/test_app.py::TestAppRequests::test_webhook_create PASSED                   [ 21%]
+tests/test_app.py::TestAppRequests::test_health PASSED                           [ 28%]
+tests/test_app.py::TestAppRequests::test_oauth_rejection PASSED                  [ 35%]
+tests/test_app.py::TestAppRequests::test_oauth_bad_code PASSED                   [ 42%]
+tests/test_app.py::TestAppRequests::test_milestone_events PASSED                 [ 50%]
+tests/test_app.py::TestAppRequests::test_process_events PASSED                   [ 57%]
+tests/test_app.py::TestAppRequests::test_document_events PASSED                  [ 64%]
+tests/unit/test_scheduler.py::TestScheduler::test_process_created_event PASSED   [ 71%]
+tests/unit/test_scheduler.py::TestScheduler::test_milestone_akkoord PASSED       [ 78%]
+tests/unit/test_scheduler.py::TestScheduler::test_document_update PASSED         [ 85%]
+tests/unit/test_scheduler.py::TestScheduler::test_invalid_webhook PASSED         [ 92%]
+tests/unit/test_scheduler.py::TestScheduler::test_scheduling PASSED              [100%]
 
-============================== 6 passed in 0.90s ==============================
+================================== 14 passed in 1.07s ==================================
 ```
