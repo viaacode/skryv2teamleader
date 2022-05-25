@@ -23,8 +23,9 @@ class ProcessService:
         self.action = self.body.action
 
         print(
-            "handling process id={} organization_id={}".format(
+            "handling process: id={} organization_id={} definition={}".format(
                 self.process.id,
-                self.dossier.externalId
+                self.dossier.externalId,
+                self.process.processDefinitionKey
             )
         )

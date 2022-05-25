@@ -1,0 +1,41 @@
+{
+  "action": "created",
+  "dossier": {
+    "id": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
+    "label": "Test Skryv",
+    "externalId": "OR-hx15s8s",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-05-19T09:17:15.000+0000",
+    "updatedAt": "2022-05-19T09:17:19.000+0000",
+    "creator": "f440f460-51e0-1034-9c23-ff9471efe8a8",
+    "active": true
+  },
+  "document": {
+    "id": "d40d2571-e65f-46bd-b46f-9f965ae31275",
+    "version": 1,
+    "definition": "8119b0ce-fbee-45b9-ae5b-afcb54a3a572",
+    "definitionLabel": "Intentieverklaring meemoo V2",
+    "definitionKey": "intentieverklaring_viaa_v2",
+    "readOnly": false,
+    "document": {
+      "value": {
+        "raadpleeg_hier_de_samenwerkingsovereenkomst_met_viaa": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Samenwerkingsovereenkomst+contentpartner++-+meemoo.docx"
+      }
+    },
+    "createdAt": "2022-05-23T12:53:33.000+0000",
+    "updatedAt": "2022-05-23T12:53:33.000+0000",
+    "links": [
+      {
+        "linkType": "SCOPE",
+        "resourceType": "PROCESS",
+        "resourceId": "5004eee8-da97-11ec-883a-0242ac130004"
+      },
+      {
+        "linkType": "LINK",
+        "resourceType": "DOSSIER",
+        "resourceId": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19"
+      }
+    ],
+    "subdocument": false
+  }
+}

@@ -5,7 +5,8 @@
 #
 #   app/models/process.py
 #
-#   Used in processbody
+#   Used in processbody., externalId is the organization_id but
+#   it is optional and not always supplied.
 #
 import uuid
 from pydantic import BaseModel, Field
@@ -18,8 +19,7 @@ class Dossier(BaseModel):
     label: str = Field(..., description="dossier label")
     externalId: Optional[str] = None
     dossierManager: Optional[uuid.UUID] = None
-    dossierDefinition: uuid.UUID = Field(...,
-                                         description="dossier definition uuid")
+    dossierDefinition: uuid.UUID = Field(..., description="dossier definition uuid")
     createdAt: datetime = Field(
         None,
         description="Syncronize since given iso date (optional parameter)"

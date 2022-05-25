@@ -24,8 +24,9 @@ class MilestoneService:
         self.milestone = self.body.milestone
 
         print(
-            "handling milestone id={} status={}".format(
+            "handling milestone: id={} organization_id={} status={}".format(
                 self.milestone.id,
+                self.dossier.externalId,
                 self.milestone.status
             )
         )
