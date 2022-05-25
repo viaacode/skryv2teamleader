@@ -22,11 +22,12 @@ class MilestoneService:
         self.action = self.body.action
         self.dossier = self.body.dossier
         self.milestone = self.body.milestone
+        self.or_id = self.dossier.externalId
 
         print(
             "handling milestone: id={} organization_id={} status={}".format(
                 self.milestone.id,
-                self.dossier.externalId,
+                self.or_id,
                 self.milestone.status
             )
         )
