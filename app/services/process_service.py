@@ -8,6 +8,7 @@
 #   ProcessService, handle process webhook events
 #
 
+from app.models.process_body import ProcessBody
 
 class ProcessService:
     def __init__(self, common_clients):
@@ -15,7 +16,7 @@ class ProcessService:
         self.org_ids = common_clients.org_ids
         self.slack = common_clients.slack
 
-    def handle_event(self, process_body):
+    def handle_event(self, process_body: ProcessBody):
         self.body = process_body
         self.dossier = self.body.dossier
         self.process = self.body.process

@@ -8,6 +8,8 @@
 #   DocumentService, handle document webhook events
 #
 
+from app.models.document_body import DocumentBody
+
 
 class DocumentService:
     def __init__(self, common_clients):
@@ -18,7 +20,7 @@ class DocumentService:
     def postadres(self):
         return self.document.document.value['adres_en_contactgegevens']['postadres']
 
-    def handle_event(self, document_body):
+    def handle_event(self, document_body: DocumentBody):
         self.body = document_body
         self.document = self.body.document
         self.dossier = self.body.dossier

@@ -8,6 +8,8 @@
 #   MilestoneService, handle milestone webhook events
 #
 
+from app.models.milestone_body import MilestoneBody 
+
 
 class MilestoneService:
     def __init__(self, common_clients):
@@ -15,7 +17,7 @@ class MilestoneService:
         self.org_ids = common_clients.org_ids
         self.slack = common_clients.slack
 
-    def handle_event(self, milestone_body):
+    def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body
         self.action = self.body.action
         self.dossier = self.body.dossier

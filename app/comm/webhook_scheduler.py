@@ -61,7 +61,7 @@ class WebhookScheduler:
             logger.info("handling milestone event")
             ms = MilestoneService(self.clients)
             ms.handle_event(params)
-            return "milestione event is handled"
+            return "milestone event is handled"
         elif name == 'document_event':
             logger.info("handling document event")
             ds = DocumentService(self.clients)
