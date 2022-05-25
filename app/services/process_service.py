@@ -36,5 +36,4 @@ class ProcessService:
         if(self.or_id):
             self.teamleader_update()
         else:
-            print(
-                "skipping process {self.process.id} because or_id is missing")
+            self.slack.external_id_empty(self.dossier)

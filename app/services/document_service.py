@@ -29,6 +29,10 @@ class DocumentService:
             )
         )
 
+        # TODO: make ldap call to map or_id to company_uuid and if
+        # missing then do slack message
+        # self.slack.no_ldap_entry_found(self.dossier)
+
         # TODO: make teamleader call here!
         if self.action == 'updated':
             print("adres=", self.postadres())
@@ -43,6 +47,4 @@ class DocumentService:
         if(self.or_id):
             self.teamleader_update()
         else:
-            print(
-                f"skipping document {self.document.id} because or_id is missing")
-            # TODO: send slack message here!
+            self.slack.external_id_empty(self.dossier)

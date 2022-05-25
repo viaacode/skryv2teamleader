@@ -10,6 +10,7 @@
 
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from app.models.dossier import Dossier
 
 
 class SlackWrapper:
@@ -66,10 +67,16 @@ class SlackClient:
             f'Skryv2Teamleader started. webhook_url = {webhook_url}'
         )
 
-    def missing_email(self, contact):
+    def external_id_empty(self, dossier: Dossier):
+        self.create_message(f"ExternalId is empty in document: {dossier}")
+
+    def no_ldap_entry_found(self, dossier: Dossier):
+        msg = 'No LDAP entry found with Attribute'
         self.create_message(
-            f"""Contact {contact['first_name']} {contact['last_name']}
-            heeft geen e-mailadres, gelieve dit in teamleader aan te passen:
-            {contact['web_url']}
-            """
+            "{} o={} for dossier {} with label {}".format(
+                msg,
+                dossier.externalId,
+                dossier.id,
+                dossier.label
+            )
         )

@@ -16,6 +16,10 @@ from app.clients.redis_cache import RedisCache
 from dataclasses import dataclass, field
 
 
+# TODO: bring ldap back here as we need to make a call in order
+# to map or-id into a company uuid!
+
+
 @dataclass
 class CommonClients:
     teamleader: TeamleaderClient
