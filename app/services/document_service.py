@@ -20,19 +20,29 @@ class DocumentService:
     def postadres(self):
         return self.document.document.value['adres_en_contactgegevens']['postadres']
 
-    def handle_event(self, document_body: DocumentBody):
-        self.body = document_body
-        self.document = self.body.document
-        self.dossier = self.body.dossier
-        self.organization_id = self.dossier.externalId
-
+    def teamleader_update(self):
         print(
-            "handling document: organization_id={}, document label={}, action={}".format(
-                self.organization_id,
+            "document teamleader update: organization_id={}, document label={}, action={}".format(
+                self.or_id,
                 self.document.definitionLabel,
-                self.body.action
+                self.action
             )
         )
 
-        if self.body.action == 'updated':
+        # TODO: make teamleader call here!
+        if self.action == 'updated':
             print("adres=", self.postadres())
+
+    def handle_event(self, document_body: DocumentBody):
+        self.body = document_body
+        self.action = self.body.action
+        self.document = self.body.document
+        self.dossier = self.body.dossier
+        self.or_id = self.dossier.externalId
+
+        if(self.or_id):
+            self.teamleader_update()
+        else:
+            print(
+                f"skipping document {self.document.id} because or_id is missing")
+            # TODO: send slack message here!

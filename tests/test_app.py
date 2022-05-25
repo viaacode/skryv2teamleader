@@ -51,9 +51,9 @@ class TestAppRequests:
         assert response.status_code == 200
         content = response.json()
         assert content['registered_webhooks'] == [
-            '/skryv/process',
-            '/skryv/document',
-            '/skryv/milestone',
+            'skryv_webhook_url/skryv/process',
+            'skryv_webhook_url/skryv/document',
+            'skryv_webhook_url/skryv/milestone',
         ]
 
     def test_webhook_create(self, app_client):
@@ -61,6 +61,12 @@ class TestAppRequests:
         assert response.status_code == 200
         content = response.json()
         assert content['status'] == 'create webhooks started.'
+
+    def test_webhook_update(self, app_client):
+        response = app_client.post("/webhooks/update")
+        assert response.status_code == 200
+        content = response.json()
+        assert content['status'] == 'update webhooks started.'
 
     def test_health(self, app_client):
         response = app_client.get("/health/live")

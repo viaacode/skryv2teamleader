@@ -5,7 +5,7 @@
 #
 #   tests/unit/mock_client.py
 #
-#     Used by teamleader_client and ldap_client mock classes to keep track
+#     Used by teamleader_client and other clients to keep track
 #     of methods called and arguments passed to mocked method calls
 #
 

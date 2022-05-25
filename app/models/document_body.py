@@ -27,6 +27,7 @@ class DocumentBody(BaseModel):
                 "dossier": {
                     "id": "14722c4e-3c36-48e2-86c6-e9fe09952a5d",
                     "label": "Te vervolledigen dossierlabel",
+                    "externalId": "OR-1234",
                     "dossierDefinition": "4f570882-9a73-4493-840b-067abfe1f1fb",
                     "createdAt": "2022-03-04T08:08:14.000+00:00",
                     "updatedAt": "2022-03-04T08:08:14.000+00:00",

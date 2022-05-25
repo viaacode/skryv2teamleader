@@ -6,14 +6,13 @@
 #   tests/unit/test_scheduler.py
 #
 
-import json
 import pytest
 
 from app.comm.webhook_scheduler import WebhookScheduler
 from app.clients.slack_client import SlackClient
 from app.clients.common_clients import CommonClients
 from app.models.process_body import ProcessBody
-from app.models.milestone_body import MilestoneBody 
+from app.models.milestone_body import MilestoneBody
 from app.models.document_body import DocumentBody
 
 from mock_teamleader_client import MockTlClient
@@ -46,7 +45,6 @@ class TestScheduler:
         res = await ws.execute_webhook('process_event', test_process)
         assert res == 'process event is handled'
 
-
     @pytest.mark.asyncio
     async def test_milestone_akkoord(self, mock_clients):
         ws = WebhookScheduler()
@@ -64,6 +62,17 @@ class TestScheduler:
         ws.start(mock_clients)
 
         doc = open("tests/fixtures/document/updated_example.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+    @pytest.mark.asyncio
+    async def test_document_create_without_or_id(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/created_example.json", "r")
         test_doc = DocumentBody.parse_raw(doc.read())
         doc.close()
         res = await ws.execute_webhook('document_event', test_doc)

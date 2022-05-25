@@ -8,7 +8,7 @@
 #   MilestoneService, handle milestone webhook events
 #
 
-from app.models.milestone_body import MilestoneBody 
+from app.models.milestone_body import MilestoneBody
 
 
 class MilestoneService:
