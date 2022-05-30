@@ -14,7 +14,7 @@ from app.models.process_body import ProcessBody
 class ProcessService:
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
-        self.org_ids = common_clients.org_ids
+        self.ldap = common_clients.ldap
         self.slack = common_clients.slack
 
     def teamleader_update(self):

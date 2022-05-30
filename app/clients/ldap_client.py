@@ -12,8 +12,8 @@ import ldap3
 from datetime import datetime, timezone
 
 DEFAULT_PAGE_SIZE = 200
-LDAP_PEOPLE_PREFIX = 'ou=users'
-LDAP_ORGS_PREFIX = 'ou=apps,ou=users'
+# LDAP_PEOPLE_PREFIX = 'ou=users'
+# LDAP_ORGS_PREFIX = 'ou=apps,ou=users'
 SEARCH_ATTRIBUTES = [
     ldap3.ALL_ATTRIBUTES, ldap3.ALL_OPERATIONAL_ATTRIBUTES
 ]
@@ -38,44 +38,6 @@ class LdapWrapper:
             auto_bind=True
         )
 
-    def search(
-            self,
-            connection,
-            search_base: str,
-            filter: str = '(objectClass=*)',
-            level=ldap3.SUBTREE,
-            pagesize=DEFAULT_PAGE_SIZE):
-
-        cookie = True
-        while cookie:
-            result = connection.search(
-                search_base,
-                filter,
-                search_scope=level,
-                attributes=self.search_attributes,
-                time_limit=5,
-                paged_size=pagesize,
-                paged_criticality=True,
-                paged_cookie=None if cookie is True else cookie,
-            )
-            if not isinstance(result, bool):
-                response, result = connection.get_response(result)
-            else:
-                result = connection.result
-
-            yield connection.entries
-
-            try:
-                cookie = result['controls']['1.2.840.113556.1.4.319']['value']['cookie']
-            except KeyError:
-                cookie = None
-
-    def add(self, connection, dn: str, object_class=None, attributes=None):
-        return connection.add(dn, object_class, attributes)
-
-    def delete(self, connection, dn: str):
-        return connection.delete(dn)
-
 
 class LdapClient:
     """Acts as a client to query relevant information from LDAP"""
@@ -84,37 +46,17 @@ class LdapClient:
         params = app_config['ldap']
         app_env = app_config.get('environment', 'qas').lower()
         self.LDAP_SUFFIX = f"dc={app_env},dc=viaa,dc=be"
-        print(f"LDAP_SUFFIX={self.LDAP_SUFFIX}")
         self.ldap_wrapper = LdapWrapper(params, SEARCH_ATTRIBUTES)
 
     def connection(self):
         return self.ldap_wrapper.connect()
-
-    def _search(self, conn, prefix: str, partial_filter: str,
-                modified_at: datetime = None, level=ldap3.SUBTREE, objectClass='*') -> list:
-        # Format modify timestamp to an LDAP filter string
-        modify_filter_string = (
-            ''
-            if modified_at is None
-            else '(!(modifyTimestamp<={}))'.format(
-                modified_at.astimezone(timezone.utc).strftime("%Y%m%d%H%M%SZ")
-            )
-        )
-        # Construct the LDAP filter string
-        filter = f'(&(objectClass={objectClass}){partial_filter}{modify_filter_string})'
-        return self.ldap_wrapper.search(
-            conn,
-            f'{prefix},{self.LDAP_SUFFIX}',
-            filter,
-            level
-        )
 
     def find_company_by_uuid(self, company_uuid):
         conn = self.connection()
         conn.search(
             search_base=f"ou=apps,ou=users,{self.LDAP_SUFFIX}",
             search_filter=f'(&(x-be-viaa-externalUUID={company_uuid})(structuralObjectClass=organization))',
-            attributes=[ldap3.ALL_ATTRIBUTES, ldap3.ALL_OPERATIONAL_ATTRIBUTES]
+            attributes=SEARCH_ATTRIBUTES
         )
 
         if len(conn.entries) == 1:
@@ -131,7 +73,7 @@ class LdapClient:
         conn.search(
             search_base=f"ou=apps,ou=users,{self.LDAP_SUFFIX}",
             search_filter=f'(&(o={or_id})(structuralObjectClass=organization))',
-            attributes=[ldap3.ALL_ATTRIBUTES, ldap3.ALL_OPERATIONAL_ATTRIBUTES]
+            attributes=SEARCH_ATTRIBUTES
         )
 
         if len(conn.entries) == 1:

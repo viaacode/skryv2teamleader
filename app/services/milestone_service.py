@@ -14,7 +14,7 @@ from app.models.milestone_body import MilestoneBody
 class MilestoneService:
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
-        self.org_ids = common_clients.org_ids
+        self.ldap = common_clients.ldap
         self.slack = common_clients.slack
 
     def teamleader_update(self):

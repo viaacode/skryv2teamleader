@@ -16,7 +16,7 @@ from app.models.milestone_body import MilestoneBody
 from app.models.document_body import DocumentBody
 
 from mock_teamleader_client import MockTlClient
-from mock_org_id_generator import MockOrgIdGenerator
+from mock_ldap_client import MockLdapClient
 from mock_slack_wrapper import MockSlackWrapper
 
 from testing_config import tst_app_config
@@ -30,8 +30,8 @@ class TestScheduler:
 
         return CommonClients(
             MockTlClient(),
-            slack_client,
-            MockOrgIdGenerator()
+            MockLdapClient(),
+            slack_client
         )
 
     @pytest.mark.asyncio

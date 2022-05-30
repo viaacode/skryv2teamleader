@@ -15,14 +15,16 @@ app:
     refresh_token: !ENV ${TL_REFRESH_TOKEN}
     token_file: !ENV ${TL_TOKEN_FILE}
     redis_url: !ENV ${REDIS_URL}
+  ldap:
+    bind: !ENV ${LDAP_BIND}
+    URI: !ENV ${LDAP_URI}
+    password: !ENV ${LDAP_PASSWORD}
   slack:
     channel: !ENV ${SLACK_CHANNEL}
     token: !ENV ${SLACK_TOKEN}
   skryv:
     webhook_url: !ENV ${WEBHOOK_URL}
     webhook_jwt: !ENV ${WEBHOOK_JWT} 
-  organizations:
-    or_id_url: !ENV ${OR_ID_URI}
   custom_field_labels:
     company_kring: '2.2 - CP status'
     company_kring: '2.3 - Intentieverklaring'

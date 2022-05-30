@@ -14,7 +14,7 @@ from app.models.document_body import DocumentBody
 class DocumentService:
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
-        self.org_ids = common_clients.org_ids
+        self.ldap = common_clients.ldap
         self.slack = common_clients.slack
 
     def postadres(self):
@@ -29,11 +29,15 @@ class DocumentService:
             )
         )
 
-        # TODO: make ldap call to map or_id to company_uuid and if
-        # missing then do slack message
-        # self.slack.no_ldap_entry_found(self.dossier)
+        ldap_org = self.ldap.find_company(self.or_id)
+        if not ldap_org:
+            self.slack.no_ldap_entry_found(self.dossier)
+            return
 
-        # TODO: make teamleader call here!
+        tl_org_uuid = ldap_org['x-be-viaa-externalUUID'].value
+
+        print("TODO: updated teamleader organization with uuid=", tl_org_uuid)
+
         if self.action == 'updated':
             print("adres=", self.postadres())
 

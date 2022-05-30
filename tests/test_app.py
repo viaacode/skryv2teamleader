@@ -17,6 +17,7 @@ from app.clients.slack_client import SlackClient
 from app.clients.common_clients import CommonClients
 
 from tests.unit.mock_teamleader_client import MockTlClient
+from tests.unit.mock_ldap_client import MockLdapClient
 from tests.unit.mock_slack_wrapper import MockSlackWrapper
 from tests.unit.testing_config import tst_app_config
 
@@ -36,8 +37,8 @@ class TestAppRequests:
 
         return CommonClients(
             MockTlClient(),
+            MockLdapClient(),
             slack_client,
-            # OrgIdGenerator mock here in future...
         )
 
     def test_webhook_delete(self, app_client):
