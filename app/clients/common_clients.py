@@ -13,7 +13,7 @@ from app.clients.teamleader_client import TeamleaderClient
 from app.clients.ldap_client import LdapClient
 from app.clients.slack_client import SlackClient
 from app.clients.redis_cache import RedisCache
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass

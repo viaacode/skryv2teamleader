@@ -210,5 +210,3 @@ class MockLdapClient(MockClient):
         company_uuid = f'some_uuid_belonging_to_{or_id}'
         self.company_mock = LdapEntryMock(company_uuid)
         return self.company_mock
-
-

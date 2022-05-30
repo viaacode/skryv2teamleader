@@ -9,9 +9,7 @@
 #
 
 import ldap3
-from datetime import datetime, timezone
 
-DEFAULT_PAGE_SIZE = 200
 # LDAP_PEOPLE_PREFIX = 'ou=users'
 # LDAP_ORGS_PREFIX = 'ou=apps,ou=users'
 SEARCH_ATTRIBUTES = [
