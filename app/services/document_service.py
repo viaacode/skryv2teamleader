@@ -21,22 +21,22 @@ class DocumentService:
         return self.document.document.value['adres_en_contactgegevens']['postadres']
 
     def teamleader_update(self):
-        print(
-            "document teamleader update: organization_id={}, document label={}, action={}".format(
-                self.or_id,
-                self.document.definitionLabel,
-                self.action
-            )
-        )
-
         ldap_org = self.ldap.find_company(self.or_id)
         if not ldap_org:
+            print(f"OR-id {self.or_id} not found for process {self.action}")
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
         tl_org_uuid = ldap_org['x-be-viaa-externalUUID'].value
 
-        print("TODO: updated teamleader organization with uuid=", tl_org_uuid)
+        print(
+            "document teamleader update: or-id={}, TL uuid={}, document label={}, action={}".format(
+                self.or_id,
+                tl_org_uuid,
+                self.document.definitionLabel,
+                self.action
+            )
+        )
 
         if self.action == 'updated':
             print("adres=", self.postadres())

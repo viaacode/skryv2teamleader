@@ -18,14 +18,23 @@ class MilestoneService:
         self.slack = common_clients.slack
 
     def teamleader_update(self):
-        # TODO make calls to ldap and update teamleader here
+        ldap_org = self.ldap.find_company(self.or_id)
+        if not ldap_org:
+            self.slack.no_ldap_entry_found(self.dossier)
+            return
+
+        tl_org_uuid = ldap_org['x-be-viaa-externalUUID'].value
+
         print(
-            "handling milestone: id={} organization_id={} status={}".format(
+            "milestone ({}) -> teamleader update: or-id={}, TL uuid={}, milestone status={} action={}".format(
                 self.milestone.id,
                 self.or_id,
-                self.milestone.status
+                tl_org_uuid,
+                self.milestone.status,
+                self.action
             )
         )
+        # TODO make calls to ldap and update teamleader here based on milestone status and action
 
     def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body
