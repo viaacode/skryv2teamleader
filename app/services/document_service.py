@@ -73,6 +73,18 @@ class DocumentService:
         pass
         # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L440
 
+    def status_update(self):
+        pass
+        # 2.2 CP status -> ja, nee, pending
+        # 2.3 intentieverklaring -> ingevuld, pending
+        # 2.4 Toestemming starten -> true,false
+        # SWO -> true,false
+        # SWO addenda -> GDPR protocol,
+        #                GDPR overeenkomst,
+        #                Aanduiding contentpartners,
+        #                Dienstverlening kunstwerken erfgooed,
+        #                addendum op maat
+
     # opmerking
     # Binnen dossier "Briefing" heb je 1 proces met 1 document denk ik
     # Binnen dossier "Contentpartner" heb je 3 processen met meerdere documenten
@@ -97,6 +109,7 @@ class DocumentService:
             )
         )
 
+        # enkel behandeling type dossier 'contentpartner'
         SKRYV_DOSSIER_CP_ID = 'some_uuid_here'
         if self.dossier.dossierDefinition != SKRYV_DOSSIER_CP_ID:
             print(

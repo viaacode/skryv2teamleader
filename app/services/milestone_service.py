@@ -40,6 +40,7 @@ class MilestoneService:
         )
         # TODO make calls to ldap and update teamleader here based on milestone status and action
 
+        # enkel behandeling type dossier 'contentpartner'
         SKRYV_DOSSIER_CP_ID = 'some_uuid_here'
         if self.dossier.dossierDefinition != SKRYV_DOSSIER_CP_ID:
             print(
