@@ -1,3 +1,14 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+#  @Author: Walter Schreppers
+#
+#   app/services/skryv_base.py
+#
+#   Used by DocumentService, ProcessService and MilestoneService to read in config
+#   variables and have a mapping of custom fields.
+#
+
 from viaa.configuration import ConfigParser
 import uuid
 
@@ -9,6 +20,7 @@ class SkryvBase:
         self.SKRYV_DOSSIER_CP_ID = uuid.UUID(
             self.skryv_config['dossier_content_partner_id']
         )
+
         self.custom_fields = self.custom_field_mapping(
             config.app_cfg['custom_field_ids']
         )

@@ -31,6 +31,14 @@ class DocumentService(SkryvBase):
             if 'addendum' in tod:
                 return tod['addendum']
 
+    def tl_update_addendums(self):
+        addendums = self.doc_addendums()
+        if not addendums:
+            return
+
+        for ad in addendums:
+            print("addendum=", ad)
+
     def company_document_update_samenwerkingsovereenkomst_eind():
         pass
         # TODO: convert this to python:
@@ -133,7 +141,7 @@ class DocumentService(SkryvBase):
 
         if self.action == 'updated':
             print("adres=", self.doc_postadres())
-            print("addendums=", self.doc_addendums())
+            self.tl_update_addendums()
 
     def handle_event(self, document_body: DocumentBody):
         self.body = document_body
