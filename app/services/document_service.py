@@ -9,13 +9,18 @@
 #
 
 from app.models.document_body import DocumentBody
-
+from viaa.configuration import ConfigParser
 
 class DocumentService:
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
+        config = ConfigParser()
+        self.skryv_config = config.app_cfg['skryv']
+        self.SKRYV_DOSSIER_CP_ID = self.skryv_config['dossier_content_partner_id']
+        self.custom_fields = config.app_cfg['custom_field_labels']
+        print("custom fields=", self.custom_fields)
 
     def postadres(self):
         return self.document.document.value['adres_en_contactgegevens']['postadres']
@@ -110,8 +115,7 @@ class DocumentService:
         )
 
         # enkel behandeling type dossier 'contentpartner'
-        SKRYV_DOSSIER_CP_ID = 'some_uuid_here'
-        if self.dossier.dossierDefinition != SKRYV_DOSSIER_CP_ID:
+        if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner document, skip event")
             return

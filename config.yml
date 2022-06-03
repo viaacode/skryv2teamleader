@@ -25,10 +25,11 @@ app:
   skryv:
     webhook_url: !ENV ${WEBHOOK_URL}
     webhook_jwt: !ENV ${WEBHOOK_JWT} 
+    dossier_content_partner_id: !ENV ${SKRYV_DOSSIER_CP_ID}
   custom_field_labels:
-    company_kring: '2.2 - CP status'
-    company_kring: '2.3 - Intentieverklaring'
-    company_kring: '2.4 - Toestemming starten'
-    company_kring: '2.5 - SWO'
-    company_kring: '2.6 - SWO addenda'
+    cp_status: '2.2 - CP status'
+    intentieverklaring: '2.3 - Intentieverklaring'
+    toestemming_starten: '2.4 - Toestemming starten'
+    swo: '2.5 - SWO'
+    swo_addenda: '2.6 - SWO addenda'
 

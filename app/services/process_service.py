@@ -9,6 +9,7 @@
 #
 
 from app.models.process_body import ProcessBody
+from viaa.configuration import ConfigParser
 
 
 class ProcessService:
@@ -16,6 +17,9 @@ class ProcessService:
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
+        config = ConfigParser()
+        self.skryv_config = config.app_cfg['skryv']
+        self.SKRYV_DOSSIER_CP_ID = self.skryv_config['dossier_content_partner_id']
 
     # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L285
     def company_process_set_api_fields():
@@ -41,8 +45,7 @@ class ProcessService:
         )
 
         # enkel behandeling type dossier 'contentpartner'
-        SKRYV_DOSSIER_CP_ID = 'some_uuid_here'
-        if self.dossier.dossierDefinition != SKRYV_DOSSIER_CP_ID:
+        if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner process, skipping process event")
             return
