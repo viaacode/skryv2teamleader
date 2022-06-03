@@ -103,7 +103,6 @@ class DocumentService(SkryvBase):
 
     # or id for testing: "OR-np1wh8z"
     def teamleader_update(self):
-
         ldap_org = self.ldap.find_company(self.or_id)
         if not ldap_org:
             print(f"OR-id {self.or_id} not found for process {self.action}")

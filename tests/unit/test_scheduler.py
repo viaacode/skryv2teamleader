@@ -7,6 +7,7 @@
 #
 
 import pytest
+import uuid
 
 from app.comm.webhook_scheduler import WebhookScheduler
 from app.clients.slack_client import SlackClient
@@ -46,6 +47,32 @@ class TestScheduler:
         assert res == 'process event is handled'
 
     @pytest.mark.asyncio
+    async def test_process_created_briefing(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        proc = open("tests/fixtures/process/process_created.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        test_process.dossier.dossierDefinition = uuid.UUID(
+            'ffb5c880-8301-4d15-bbe9-edaa6d59c4f6'
+        )
+        proc.close()
+        res = await ws.execute_webhook('process_event', test_process)
+        assert res == 'process event is handled'
+
+    @pytest.mark.asyncio
+    async def test_process_created_without_external_id(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        proc = open("tests/fixtures/process/process_created.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        test_process.dossier.externalId = None
+        proc.close()
+        res = await ws.execute_webhook('process_event', test_process)
+        assert res == 'process event is handled'
+
+    @pytest.mark.asyncio
     async def test_milestone_akkoord(self, mock_clients):
         ws = WebhookScheduler()
         ws.start(mock_clients)
@@ -57,12 +84,75 @@ class TestScheduler:
         assert res == 'milestone event is handled'
 
     @pytest.mark.asyncio
+    async def test_milestone_akkoord_missing_external_id(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_akkoord.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        test_milestone.dossier.externalId = None
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_briefing(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_akkoord.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        test_milestone.dossier.dossierDefinition = uuid.UUID(
+            'ffb5c880-8301-4d15-bbe9-edaa6d59c4f6'
+        )
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
     async def test_document_update(self, mock_clients):
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
         doc = open("tests/fixtures/document/updated_example.json", "r")
         test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+    @pytest.mark.asyncio
+    async def test_document_update_addendum(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+    @pytest.mark.asyncio
+    async def test_document_briefing(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        test_doc.dossier.dossierDefinition = uuid.UUID(
+            'ffb5c880-8301-4d15-bbe9-edaa6d59c4f6'
+        )
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+    @pytest.mark.asyncio
+    async def test_create_document_with_valid_or_id(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        test_doc.action = 'created'
         doc.close()
         res = await ws.execute_webhook('document_event', test_doc)
         assert res == 'document event is handled'

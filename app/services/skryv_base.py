@@ -7,10 +7,10 @@ class SkryvBase:
         config = ConfigParser()
         self.skryv_config = config.app_cfg['skryv']
         self.SKRYV_DOSSIER_CP_ID = uuid.UUID(
-          self.skryv_config['dossier_content_partner_id']
+            self.skryv_config['dossier_content_partner_id']
         )
         self.custom_fields = self.custom_field_mapping(
-          config.app_cfg['custom_field_ids']
+            config.app_cfg['custom_field_ids']
         )
 
     def custom_field_mapping(self, field_ids):
@@ -23,5 +23,3 @@ class SkryvBase:
                     print(f"custom_fields[{f_label}]={f}")
 
         return self.custom_fields
-
-
