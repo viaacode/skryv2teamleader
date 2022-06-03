@@ -6,6 +6,11 @@
 #   app/services/document_service.py
 #
 #   DocumentService, handle document webhook events
+#   This skips briefing type, only process the content partner dossiers
+#   We fetch addendums, postadres and other fields to update in teamleader.
+#   ldap_client is used to lookup or-id and map to correct teamleader id.
+#
+#   In case of errors, we use slack client to post messages on #skryvbot
 #
 
 from app.models.document_body import DocumentBody
