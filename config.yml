@@ -27,6 +27,7 @@ app:
     webhook_jwt: !ENV ${WEBHOOK_JWT} 
     dossier_content_partner_id: !ENV ${SKRYV_DOSSIER_CP_ID}
   custom_field_labels:
+    opstartfase: '2.1 - Opstartfase'
     cp_status: '2.2 - CP status'
     intentieverklaring: '2.3 - Intentieverklaring'
     toestemming_starten: '2.4 - Toestemming starten'
