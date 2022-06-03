@@ -9,17 +9,15 @@
 #
 
 from app.models.process_body import ProcessBody
-from viaa.configuration import ConfigParser
+from app.services.skryv_base import SkryvBase
 
 
-class ProcessService:
+class ProcessService(SkryvBase):
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
-        config = ConfigParser()
-        self.skryv_config = config.app_cfg['skryv']
-        self.SKRYV_DOSSIER_CP_ID = self.skryv_config['dossier_content_partner_id']
+        self.read_configuration()
 
     # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L285
     def company_process_set_api_fields():

@@ -9,17 +9,15 @@
 #
 
 from app.models.milestone_body import MilestoneBody
-from viaa.configuration import ConfigParser
+from app.services.skryv_base import SkryvBase
 
 
-class MilestoneService:
+class MilestoneService(SkryvBase):
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
-        config = ConfigParser()
-        self.skryv_config = config.app_cfg['skryv']
-        self.SKRYV_DOSSIER_CP_ID = self.skryv_config['dossier_content_partner_id']
+        self.read_configuration()
 
     # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L341
     def company_milestone_set_api_fields():
@@ -42,14 +40,13 @@ class MilestoneService:
                 self.action
             )
         )
-        # TODO make calls to ldap and update teamleader here based on milestone status and action
 
-        # QAS value, todo in env var
-        SKRYV_DOSSIER_CP_ID = '90d24d34-b5b3-4942-8504-b6d76dd86ccb'
-        if self.dossier.dossierDefinition != SKRYV_DOSSIER_CP_ID:
+        if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner milestone, skipping milestone event")
             return
+
+        print("TODO update status={self.milestone.status} in teamleader")
 
     def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body

@@ -9,33 +9,27 @@
 #
 
 from app.models.document_body import DocumentBody
-from viaa.configuration import ConfigParser
+from app.services.skryv_base import SkryvBase
 
 
-class DocumentService:
+class DocumentService(SkryvBase):
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
-        config = ConfigParser()
-        self.skryv_config = config.app_cfg['skryv']
-        self.SKRYV_DOSSIER_CP_ID = self.skryv_config['dossier_content_partner_id']
-        self.custom_fields = self.custom_field_mapping(config.app_cfg['custom_field_ids'])
+        self.read_configuration()
 
-    def custom_field_mapping(self, field_ids):
-        self.custom_fields = {}
-        for f in self.tlc.list_custom_fields():
-            for f_label, f_id in field_ids.items():
-                if f['id'] == f_id:
-                    self.custom_fields[f_label] = f
-                    # helpful print of mapping for debugging
-                    print(f"custom_fields[{f_label}]={f}")
+    def doc_postadres(self):
+        dvals = self.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            return dvals['adres_en_contactgegevens']['postadres']
 
-        return self.custom_fields
-
-
-    def postadres(self):
-        return self.document.document.value['adres_en_contactgegevens']['postadres']
+    def doc_addendums(self):
+        dvals = self.document.document.value
+        if 'te_ondertekenen_documenten' in dvals:
+            tod = dvals['te_ondertekenen_documenten']
+            if 'addendum' in tod:
+                return tod['addendum']
 
     def company_document_update_samenwerkingsovereenkomst_eind():
         pass
@@ -107,6 +101,7 @@ class DocumentService:
     # Binnen dossier "Contentpartner" heb je 3 processen met meerdere documenten
     # Briefing-dossier is veel eenvoudiger dan Contentpartner
 
+    # or id for testing: "OR-np1wh8z"
     def teamleader_update(self):
 
         ldap_org = self.ldap.find_company(self.or_id)
@@ -130,10 +125,16 @@ class DocumentService:
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner document, skip event")
+
+            return
+
+        if self.action == 'created':
+            print("skipping document create, waiting for update...")
             return
 
         if self.action == 'updated':
-            print("adres=", self.postadres())
+            print("adres=", self.doc_postadres())
+            print("addendums=", self.doc_addendums())
 
     def handle_event(self, document_body: DocumentBody):
         self.body = document_body

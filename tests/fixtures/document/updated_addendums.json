@@ -1,0 +1,95 @@
+{
+  "action": "updated",
+  "dossier": {
+    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "label": "S.M.A.K.",
+    "externalId": "OR-np1wh8z",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-06-03T09:16:37.000+0000",
+    "updatedAt": "2022-06-03T09:16:38.000+0000",
+    "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "active": true
+  },
+  "document": {
+    "id": "3aebef54-4bc0-484c-b258-b420ce075fa8",
+    "version": 2,
+    "definition": "ac0d46f8-8738-44b2-b8f1-577a37a2d27b",
+    "definitionLabel": "Getekende documenten samenwerking met meemoo",
+    "definitionKey": "getekende_samenwerkingsovereenkomst_documenten",
+    "readOnly": false,
+    "document": {
+      "value": {
+        "te_ondertekenen_documenten": {
+          "selectedOptions": {
+            "main": true,
+            "bijlage_1": false,
+            "bijlage_2": false,
+            "andere": true,
+            "topstukkenovereenkomst": false
+          },
+          "main": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Samenwerkingsovereenkomst+contentpartner++-+meemoo.docx",
+          "type": {
+            "selectedOption": "standaard"
+          },
+          "type_1": {},
+          "type_2": {},
+          "addendum": [
+            {
+              "naam": {
+                "Specifieke addenda": "Dienstverlening inzake de digitalisering en ontsluiting van kunstwerken, erfgoedobjecten of topstukken"
+              },
+              "addendum": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Dienstverlening+inzake+de+digitalisering+en+ontsluiting+van+kunstwerken%2C+erfgoedobjecten+of+topstukken.docx",
+              "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
+              "getekende_versie": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.0.getekende_versie",
+                "base": "934b0895-8d79-434e-b211-4fa5680defce",
+                "contentType": "image/png",
+                "size": 78227,
+                "name": "image-20220530-135839.png"
+              }
+            },
+            {
+              "naam": {
+                "Specifieke addenda": "Protocol voor de elektronische mededeling van persoonsgegevens (GDPR)"
+              },
+              "addendum": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Protocol+voor+de+elektronische+mededeling+van+persoonsgegevens+(GDPR).docx",
+              "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
+              "getekende_versie": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.1.getekende_versie",
+                "base": "32735b2d-bac5-4cdf-aab8-1b08f77965c6",
+                "contentType": "image/png",
+                "size": 78227,
+                "name": "image-20220530-135839.png"
+              }
+            }
+          ],
+          "versie": {
+            "Versies": 2022
+          },
+          "getekende_versie": {
+            "id": "attachment_te_ondertekenen_documenten.getekende_versie",
+            "base": "264f8655-8b74-4cff-812f-7ee155721212",
+            "contentType": "application/pdf",
+            "size": 300482,
+            "name": "Factuur 77.pdf"
+          }
+        }
+      }
+    },
+    "createdAt": "2022-06-03T09:24:29.000+0000",
+    "updatedAt": "2022-06-03T09:27:00.000+0000",
+    "links": [
+      {
+        "linkType": "SCOPE",
+        "resourceType": "PROCESS",
+        "resourceId": "554e1fef-e31e-11ec-883a-0242ac130004"
+      },
+      {
+        "linkType": "LINK",
+        "resourceType": "DOSSIER",
+        "resourceId": "471a7f96-ad00-42e8-817a-f1c616f17b1e"
+      }
+    ],
+    "subdocument": false
+  }
+}
