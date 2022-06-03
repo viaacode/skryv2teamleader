@@ -26,11 +26,10 @@ app:
     webhook_url: !ENV ${WEBHOOK_URL}
     webhook_jwt: !ENV ${WEBHOOK_JWT} 
     dossier_content_partner_id: !ENV ${SKRYV_DOSSIER_CP_ID}
-  custom_field_labels:
-    opstartfase: '2.1 - Opstartfase'
-    cp_status: '2.2 - CP status'
-    intentieverklaring: '2.3 - Intentieverklaring'
-    toestemming_starten: '2.4 - Toestemming starten'
-    swo: '2.5 - SWO'
-    swo_addenda: '2.6 - SWO addenda'
-
+  custom_field_ids:
+    opstartfase: !ENV ${TL_OPSTARTFASE}
+    cp_status: !ENV ${TL_CPSTATUS}
+    intentieverklaring: !ENV ${TL_INTENTIEVERKLARING}
+    toestemming_starten: !ENV ${TL_TOESTEMMING_STARTEN}
+    swo: !ENV ${TL_SWO}
+    swo_addenda: !ENV ${TL_SWO_ADDENDA}

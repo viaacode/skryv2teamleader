@@ -1,0 +1,534 @@
+[
+  {
+    "id": "17348dda-11c7-0e35-855b-38a4e1123dd6",
+    "context": "contact",
+    "type": "single_select",
+    "label": "1 - Functiecategorie",
+    "group": "1 Algemeen",
+    "required": false,
+    "configuration": {
+      "options": [
+        "administratie",
+        "archief en collectiebeheer",
+        "beleid",
+        "bestuur",
+        "consultancy",
+        "directie",
+        "effectief lid",
+        "IT en techniek",
+        "kennis en onderzoek",
+        "legal",
+        "management",
+        "marcom",
+        "mediaproductie",
+        "onderwijzend personeel",
+        "pedagogische begeleider",
+        "pers (geschreven)",
+        "pers (tv)",
+        "plaatsvervangend lid",
+        "publiekswerking en educatie",
+        "sales",
+        "uitgever/auteur"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "2245baba-81b2-0872-b159-9c553d323da7",
+    "context": "company",
+    "type": "single_select",
+    "label": "1.1 - Type organisatie",
+    "group": "1 ALGEMEEN",
+    "required": false,
+    "configuration": {
+      "options": [
+        "ALG - advocatenbureau",
+        "ALG - kathedrale kerkfabriek",
+        "ALG - kerkfabriek",
+        "ALG - sectororganisatie",
+        "CUL - archief",
+        "CUL - erfgoedbibliotheek",
+        "CUL - erfgoedcel",
+        "CUL - kunstenorganisatie",
+        "CUL - museum (erkend)",
+        "CUL - museum (niet-erkend)",
+        "CUL - openbare bibliotheek",
+        "LEV - dienstenbedrijf",
+        "LEV - digitaliseringsbedrijf",
+        "LEV - fotograaf",
+        "LEV - technologiebedrijf",
+        "MED - landelijke private omroep",
+        "MED - mediabedrijf",
+        "MED - publieke omroep",
+        "MED - regionale omroep",
+        "OND - deeltijds kunstonderwijs",
+        "OND - educatieve organisatie",
+        "OND - educatieve uitgeverij",
+        "OND - hoger onderwijs",
+        "OND - leerplichtonderwijs",
+        "OND - onderwijskoepel",
+        "OND - vakbond",
+        "OND - vakvereniging onderwijs",
+        "OND - volwassenenonderwijs",
+        "OVH - adviescommissie",
+        "OVH - commissie Vlaams Parlement",
+        "OVH - kabinet",
+        "OVH - overheidsdienst"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "5888fb72-503f-0165-a55b-113f48e23da8",
+    "context": "company",
+    "type": "multi_select",
+    "label": "1.2 - Relaties andere dan CP",
+    "group": "1 ALGEMEEN",
+    "required": false,
+    "configuration": {
+      "options": [
+        "AIF partner",
+        "dienstenafnemer",
+        "leverancier",
+        "projectpartner"
+      ],
+      "extra_option_allowed": false
+    }
+  },
+  {
+    "id": "61f6a334-a2a5-0cc1-8f5b-b793f386933d",
+    "context": "company",
+    "type": "single_line",
+    "label": "1.3 - Nickname",
+    "group": "1 ALGEMEEN",
+    "required": false
+  },
+  {
+    "id": "91844aa8-788b-0223-a151-d825d5a6933e",
+    "context": "company",
+    "type": "boolean",
+    "label": "1.4 - Overeenkomst AIF",
+    "group": "1 ALGEMEEN",
+    "required": false
+  },
+  {
+    "id": "fb842ba5-5372-0767-8752-e579d2e305b4",
+    "context": "company",
+    "type": "boolean",
+    "label": "1.5 - Bestelbon",
+    "group": "1.1 FACTURATIE",
+    "required": false
+  },
+  {
+    "id": "84bedd97-bde2-093f-855c-71874ec69340",
+    "context": "company",
+    "type": "single_line",
+    "label": "1.6 - Facturatie opmerking",
+    "group": "1.1 FACTURATIE",
+    "required": false
+  },
+  {
+    "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7",
+    "context": "contact",
+    "type": "multi_select",
+    "label": "2 - Relatie met meemoo",
+    "group": "1 Algemeen",
+    "required": false,
+    "configuration": {
+      "options": [
+        "AIF contact",
+        "AIF contactpersoon beeldbeheer",
+        "AvO ambassadeur",
+        "AvO communicatiecontact",
+        "AvO contactpersoon CP",
+        "AvO gebruiker",
+        "centraal contactpersoon",
+        "contactpersoon contract",
+        "contactpersoon digitale instroom",
+        "contactpersoon digitalisering film en AV",
+        "contactpersoon GIVE-glasplaten",
+        "contactpersoon GIVE-kranten",
+        "contactpersoon GIVE-manuscripten",
+        "contactpersoon GIVE-topstukken",
+        "contactpersoon team interactie",
+        "gedetacheerde leerkracht",
+        "meemoo alumnus"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "32053d1e-e1f6-0436-9f52-8a6ce7423db4",
+    "context": "company",
+    "type": "multi_select",
+    "label": "2.1 - Opstartfase",
+    "group": "2 CONTENTPARTNER",
+    "required": false,
+    "configuration": {
+      "options": [
+        "kring 1",
+        "kring 2",
+        "kring 3",
+        "kring 4",
+        "GIVE",
+        "NVDGO",
+        "andere"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "afe9268c-c6dd-0053-bc5d-d4da5e723daa",
+    "context": "company",
+    "type": "single_select",
+    "label": "2.2 - CP status",
+    "group": "2 CONTENTPARTNER",
+    "required": false,
+    "configuration": {
+      "options": [
+        "ja",
+        "nee",
+        "pending"
+      ],
+      "extra_option_allowed": false
+    }
+  },
+  {
+    "id": "bcf9ceba-a988-0fc6-805f-9e087ea23dac",
+    "context": "company",
+    "type": "single_select",
+    "label": "2.3 - Intentieverklaring",
+    "group": "2 CONTENTPARTNER",
+    "required": false,
+    "configuration": {
+      "options": [
+        "ingevuld",
+        "pending"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "1d0cc259-4b07-01b8-aa5b-100344423db0",
+    "context": "company",
+    "type": "boolean",
+    "label": "2.4 - Toestemming starten",
+    "group": "2 CONTENTPARTNER",
+    "required": false
+  },
+  {
+    "id": "05cf38ba-2d6f-01fe-a85f-dd84aad23dae",
+    "context": "company",
+    "type": "boolean",
+    "label": "2.5 -  SWO",
+    "group": "2 CONTENTPARTNER",
+    "required": false
+  },
+  {
+    "id": "30aa7f48-8915-0a13-8853-4c04fee6bb11",
+    "context": "company",
+    "type": "multi_select",
+    "label": "2.6 -  SWO addenda",
+    "group": "5 LDAP (niet Bewerken)",
+    "required": false,
+    "configuration": {
+      "options": [
+        "Aanduiding contentpartners (koepel)",
+        "Dienstverlening kunstwerken erfgoedobjecten topstukken",
+        "GDPR overeenkomst",
+        "GDPR protocol",
+        "Specifieke voorwaarden",
+        "Topstukkenaddendum"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "b995ec27-5800-096f-a25b-7aa76b669345",
+    "context": "contact",
+    "type": "multi_select",
+    "label": "3 - Onderwijsniveau",
+    "group": "2 INTERACTIE",
+    "required": false,
+    "configuration": {
+      "options": [
+        "BaO",
+        "BuBaO",
+        "SO",
+        "ASO",
+        "BSO",
+        "KSO",
+        "TSO",
+        "BuSO",
+        "CDO",
+        "HBO",
+        "HO",
+        "CBE",
+        "CVO",
+        "DKO"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "b732b771-bce9-04ae-b256-aa6fc9c23db5",
+    "context": "company",
+    "type": "multi_select",
+    "label": "3.1 - AV analoge dragers",
+    "group": "3 DIGITALISERING",
+    "required": false,
+    "configuration": {
+      "options": [
+        "1\" audiotape",
+        "1/2\" audiotape",
+        "1/4\" audiotape",
+        "2\" audiotape",
+        "8-track",
+        "audio CD-r",
+        "audiocassette",
+        "betacam oxide",
+        "betacam SP",
+        "betacam SX",
+        "betamax",
+        "CD",
+        "CD-video",
+        "D1",
+        "D2",
+        "D3",
+        "D9 (digital S)",
+        "DAT",
+        "digital8",
+        "digitale betacam",
+        "draadspoel",
+        "DVCAM",
+        "DVCPro",
+        "DVD",
+        "film",
+        "grundig EN3",
+        "hi8",
+        "krant",
+        "laserdisc",
+        "microcassette",
+        "MII",
+        "minicassette",
+        "minidisc",
+        "miniDV",
+        "open reel video",
+        "shellac- en lakplaat",
+        "stenocasette",
+        "u-Matic",
+        "VCR",
+        "VHS",
+        "video 2000",
+        "video-CD",
+        "video8",
+        "vinyl",
+        "wassen rol",
+        "XD-CAM",
+        "DV-formaten",
+        "stenocassette"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "903dab5d-cee3-06c5-8d56-16e578a23db6",
+    "context": "company",
+    "type": "multi_select",
+    "label": "3.2 - Golf",
+    "group": "3 DIGITALISERING",
+    "required": false,
+    "configuration": {
+      "options": [
+        "golf 1",
+        "golf 2",
+        "golf 3",
+        "golf 4",
+        "golf 5",
+        "golf 6",
+        "golf 7",
+        "golf 8",
+        "golf 9",
+        "golf 10",
+        "NvdGO",
+        "digital born",
+        "film"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "667de27f-e39a-07d8-b659-d7c995467397",
+    "context": "company",
+    "type": "single_select",
+    "label": "3.3 - Analoge collectiestukken",
+    "group": "3 DIGITALISERING",
+    "required": false,
+    "configuration": {
+      "options": [
+        "topstukken",
+        "reguliere collectie",
+        "reguliere collectie,topstukken"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "10d22b5f-72db-0ce7-ba58-d7013fb65b61",
+    "context": "company",
+    "type": "multi_select",
+    "label": "3.4 - GIVE-projecten",
+    "group": "3 DIGITALISERING",
+    "required": false,
+    "configuration": {
+      "options": [
+        "glasplaten",
+        "kranten",
+        "manuscripten",
+        "metadata",
+        "topstukken"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "9f0f8e69-1fe7-0d3c-8d5b-0bd324e66396",
+    "context": "company",
+    "type": "multi_select",
+    "label": "3.5 - Digitale instroom",
+    "group": "3 DIGITALISERING",
+    "required": false,
+    "configuration": {
+      "options": [
+        "pending",
+        "actief",
+        "non-actief",
+        "0",
+        "1"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "af5161f2-b96f-035b-9951-602137069347",
+    "context": "contact",
+    "type": "multi_select",
+    "label": "4 - Domeinen",
+    "group": "2 INTERACTIE",
+    "required": false,
+    "configuration": {
+      "options": [
+        "Muzische vorming (BaO)",
+        "Mens en Maatschappij (BaO)",
+        "Zingeving en filosofie (BaO)",
+        "Frans (BaO)",
+        "Economie en recht (SO)",
+        "Informatica (SO)",
+        "Kunst en Cultuur (SO)",
+        "Maatschappelijke vakken (SO)",
+        "Geschiedenis (SO)",
+        "Zingeving en filosofie (SO)",
+        "Vreemde talen (SO)",
+        "Klassieke talen (SO)",
+        "Technische vakken (SO)",
+        "Zorg -  Gezondheid - Welzijn (SO)",
+        "PAV (SO)",
+        "Wetenschap - Natuur - Milieu",
+        "Nederlands"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "efc39617-3241-0564-a350-71dfa9f66914",
+    "context": "company",
+    "type": "boolean",
+    "label": "4.1 - Bezoekertool",
+    "group": "4 INTERACTIE",
+    "required": false
+  },
+  {
+    "id": "9987d9fa-0230-0205-b75e-6cd219362f46",
+    "context": "company",
+    "type": "boolean",
+    "label": "4.2 - Watermerk",
+    "group": "4 INTERACTIE",
+    "required": false
+  },
+  {
+    "id": "e670f8a7-0ce6-0ba4-8455-cc92ec623de4",
+    "context": "contact",
+    "type": "multi_select",
+    "label": "5 - Rollen",
+    "group": "3 LDAP (niet Bewerken)",
+    "required": false,
+    "configuration": {
+      "options": [
+        "gebruiker inventaristool",
+        "gebruiker AMS",
+        "gebruiker MAM",
+        "gebruiker Catalogus Pro",
+        "gebruiker contract.meemoo.be",
+        "gebruiker ftp",
+        "hetarchief beheer"
+      ],
+      "extra_option_allowed": true
+    }
+  },
+  {
+    "id": "bb5def60-32e5-06fc-a455-e53016923d9e",
+    "context": "company",
+    "type": "single_line",
+    "label": "5.1 - OR-ID",
+    "group": "5 LDAP (niet Bewerken)",
+    "required": false
+  },
+  {
+    "id": "3f18708e-2599-06cd-b550-22965c523de5",
+    "context": "contact",
+    "type": "single_line",
+    "label": "6 - User-ID",
+    "group": "3 LDAP (niet Bewerken)",
+    "required": false
+  },
+  {
+    "id": "98b1b8b5-4970-0422-a55a-17855b262f4b",
+    "context": "company",
+    "type": "multi_line",
+    "label": "CP - Link aanvraagformulier",
+    "group": "4 INTERACTIE",
+    "required": false
+  },
+  {
+    "id": "9adf7d6f-b63f-0fcf-b350-b94201462f4a",
+    "context": "company",
+    "type": "multi_line",
+    "label": "CP - Omschrijving (200 tek.)",
+    "group": "4 INTERACTIE",
+    "required": false
+  },
+  {
+    "id": "15846b7e-104d-015f-8753-cb945d823db9",
+    "context": "company",
+    "type": "email",
+    "label": "E-mail Facturatie",
+    "group": "1.1 FACTURATIE",
+    "required": false
+  },
+  {
+    "id": "86043746-8f73-0852-9750-275458264e12",
+    "context": "company",
+    "type": "email",
+    "label": "E-mail Ontsluiting",
+    "group": "4 INTERACTIE",
+    "required": false
+  },
+  {
+    "id": "afc8bfab-53cc-0421-b052-1a7b0d865628",
+    "context": "company",
+    "type": "telephone",
+    "label": "Telefoon Ontsluiting",
+    "group": "4 INTERACTIE",
+    "required": false
+  }
+]
