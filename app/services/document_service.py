@@ -11,6 +11,7 @@
 from app.models.document_body import DocumentBody
 from viaa.configuration import ConfigParser
 
+
 class DocumentService:
     def __init__(self, common_clients):
         self.tlc = common_clients.teamleader
