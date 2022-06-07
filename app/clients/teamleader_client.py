@@ -259,7 +259,8 @@ class TeamleaderClient:
 
     def update_company(self, company):
         company = self.prepare_custom_fields(company)
-        return self.post_item('/companies.update', company)
+        result = self.post_item('/companies.update', company)
+        return result
 
     def list_contacts(self, page=1, page_size=20, updated_since: datetime = None):
         return self.request_page('/contacts.list', page, page_size, updated_since)

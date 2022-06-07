@@ -15,7 +15,6 @@
 
 from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
-import json
 
 
 class DocumentService(SkryvBase):
@@ -37,84 +36,69 @@ class DocumentService(SkryvBase):
             if 'addendum' in tod:
                 return tod['addendum']
 
-    def tl_update_addendums(self):
+    def addendums_update(self, company):
         addendums = self.doc_addendums()
         if not addendums:
-            return
+            return company
 
+        # TODO: update some field in company here!
         for ad in addendums:
             print("addendum=", ad)
 
-    def company_document_update_samenwerkingsovereenkomst_eind():
-        pass
-        # TODO: convert this to python:
-        # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L20
+        # In group 5 LDAP (niet in group 2 Content Partner)
+        # 2.6 SWO addenda : values:
+        #   'GDPR protocol'
+        #   'GDPR overeenkomst'
+        #   'Aanduiding contentpartners (koepel)'
+        #   'Dienstverlening kunstwerken erfgoedobjecten topstukken'
+        #   'Specifieke voorwaarden'
+        #   'Topstukkenaddendum'
 
-        # <sub-flow name="crm_company_document_update_samenwerkingsovereenkomst_eind">
-        #         <choice doc:name="Check if getekende documenten">
-        #             <when expression="#[flowVars.getekende_versie == null]">
-        #                 <set-variable variableName="skip_event" value="true" doc:name="skip_event"/>
-        #             </when>
-        #             <otherwise>
-        #                 <dw:transform-message doc:name="Ja - 7a - Update Samenwerkingsovereenkomst">
-        #                     <dw:set-payload><![CDATA[%dw 1.0
-        # %output application/java
-        # ---
-        # { api_group : p('teamleader.api_group'),
-        #   api_secret : p('teamleader.api_secret'),
-        #   track_changes : "1",
-        #   company_id : flowVars.company_id,
-        #   ("custom_field_" ++ p('teamleader.company.cp_status')) : p('teamleader.company.cp_status.ja'),
-        #   ("custom_field_" ++ p('teamleader.company.actief')) : p('teamleader.company.actief.nee'),
-        #   ("custom_field_" ++ p('teamleader.company.comment_intentieverklaring')) : "",
-        #   ("custom_field_" ++ p('teamleader.company.toestemming_starten')) : "1",
-        #   ("custom_field_" ++ p('teamleader.company.samenwerkingsovereenkomst')) : "1"
-        # }]]></dw:set-payload>
-        #                 </dw:transform-message>
-        #             </otherwise>
-        #         </choice>
-        #     </sub-flow>
+        # company = self.set_custom_field(
+        #     company, 'swo_addenda', []  # addendums here...
+        # )
+
+        return company
+
+    def status_update(self, company):
+        # TODO: use self.document to set correct values here!
+
+        # 2.2 CP status -> 'ja', 'nee', 'pending'
+        company = self.set_custom_field(
+            company, 'cp_status', 'ja'
+        )
+
+        # 2.3 intentieverklaring -> 'ingevuld', 'pending'
+        # company = self.set_custom_field(
+        #     company, 'intentieverklaring', 'ingevuld'
+        # )
+
+        # 2.4 Toestemming starten -> True, False
+        company = self.set_custom_field(
+            company, 'toestemming_starten', True
+        )
+
+        # 2.5 SWO -> True, False
+        company = self.set_custom_field(
+            company, 'swo', True
+        )
+
+        company = self.addendums_update(company)
+        return company
 
     def company_document_update_samenwerkingsovereenkomst():
         pass
         # TODO: port this to python
         # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L47
 
-    def company_document_get_dragers_golf():
-        pass
-        # TODO: port this to python
-        # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L104
-
-    def company_document_set_api_fields_drager_golf():
-        pass
-        # TODO
-        # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L185
-
     def company_document_set_api_fields_comment():
         pass
         # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L156
-
-    def company_document_set_api_fields():
-        pass
-        # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L440
-
-    def status_update(self):
-        pass
-        # 2.2 CP status -> ja, nee, pending
-        # 2.3 intentieverklaring -> ingevuld, pending
-        # 2.4 Toestemming starten -> true,false
-        # SWO -> true,false
-        # SWO addenda -> GDPR protocol,
-        #                GDPR overeenkomst,
-        #                Aanduiding contentpartners,
-        #                Dienstverlening kunstwerken erfgooed,
-        #                addendum op maat
 
     # opmerking
     # Binnen dossier "Briefing" heb je 1 proces met 1 document denk ik
     # Binnen dossier "Contentpartner" heb je 3 processen met meerdere documenten
     # Briefing-dossier is veel eenvoudiger dan Contentpartner
-
     # or id for testing: "OR-np1wh8z"
     def teamleader_update(self):
         ldap_org = self.ldap.find_company(self.or_id)
@@ -146,12 +130,13 @@ class DocumentService(SkryvBase):
             return
 
         tl_company = self.tlc.get_company(company_id)
-        print("teamleader company to update==",
-              json.dumps(tl_company))
+        # print("teamleader company to update==",
+        #       json.dumps(tl_company))
 
         if self.action == 'updated':
             print("adres=", self.doc_postadres())
-            self.tl_update_addendums()
+            tl_company = self.status_update(tl_company)
+            self.tlc.update_company(tl_company)
 
     def handle_event(self, document_body: DocumentBody):
         self.body = document_body

@@ -26,6 +26,7 @@ class SkryvBase:
         )
 
     def custom_field_mapping(self, field_ids):
+        print("field_ids=", field_ids)
         self.custom_fields = {}
         for f in self.tlc.list_custom_fields():
             for f_label, f_id in field_ids.items():
@@ -35,3 +36,15 @@ class SkryvBase:
                     print(f"custom_fields[{f_label}]={f}")
 
         return self.custom_fields
+
+    def get_custom_field(self, company, field_name):
+        for f in company['custom_fields']:
+            if f['definition']['id'] == self.custom_fields[field_name]['id']:
+                return f['value']
+
+    def set_custom_field(self, company, field_name, value):
+        for f in company['custom_fields']:
+            if f['definition']['id'] == self.custom_fields[field_name]['id']:
+                f['value'] = value
+
+        return company
