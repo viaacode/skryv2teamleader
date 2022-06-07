@@ -22,29 +22,26 @@ class ProcessService(SkryvBase):
     def status_update(self, company):
         print(f"TODO: check SWO akkoord in dossier {self.dossier.id}")
 
+        
+        # 2.2 CP status -> 'ja', 'nee', 'pending'
+        company = self.set_custom_field(
+            company, 'cp_status', 'ja'
+        )
+
+        # 2.4 Toestemming starten -> True, False
+        company = self.set_custom_field(
+            company, 'toestemming_starten', True
+        )
+
+        # 2.5 SWO -> True, False
+        company = self.set_custom_field(
+            company, 'swo', True
+        )
+
         # TODO: store dossier update in redis and retreive here!
-        # this to get the boolean swo_akkourd out of the full dossier
-        # which we don't get in this process ended event (only the uuid)
-        swo_akkoord = True
-
-        if swo_akkoord:
-            # 2.2 CP status -> 'ja', 'nee', 'pending'
-            company = self.set_custom_field(
-                company, 'cp_status', 'ja'
-            )
-
-            # 2.4 Toestemming starten -> True, False
-            company = self.set_custom_field(
-                company, 'toestemming_starten', True
-            )
-
-            # 2.5 SWO -> True, False
-            company = self.set_custom_field(
-                company, 'swo', True
-            )
-
-            # this also only works with fetching full dossier from redis
-            # company = self.addendums_update(company)
+        # since we now so_ondertekenproces and its process action==ended
+        # this also only works with fetching full dossier from redis
+        # company = self.addendums_update(company)
 
         return company
 
