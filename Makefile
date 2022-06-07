@@ -59,13 +59,13 @@ test:
 
 .PHONY: dockertest
 dockertest:
-	docker build . -t teamleader2ldap; \
-	docker container run --name teamleader2ldap --env-file .env.example --entrypoint python "teamleader2ldap" "-m" "pytest"
+	docker build . -t skryv2teamleader; \
+	docker container run --name skryv2teamleader --env-file .env.example --entrypoint python "skryv2teamleader" "-m" "pytest"
 
 .PHONY: dockerrun
 dockerrun:
-	docker build . -t teamleader2ldap; \
-	docker container run --name teamleader2ldap --env-file .env --entrypoint python "teamleader2ldap" "-m" "main"
+	docker build . -t skryv2teamleader; \
+	docker container run --name skryv2teamleader --env-file .env --entrypoint python "skryv2teamleader" "-m" "main"
 
 
 .PHONY: coverage

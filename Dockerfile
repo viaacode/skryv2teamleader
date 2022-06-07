@@ -18,7 +18,7 @@ RUN pip3 install -r requirements.txt \
     pip3 install -r requirements-test.txt \
     --extra-index-url http://do-prd-mvn-01.do.viaa.be:8081/repository/pypi-all/simple \
     --trusted-host do-prd-mvn-01.do.viaa.be && \
-    pip3 install flake8
+    pip3 install pycodestyle
 
 # Run the application
 ENTRYPOINT ["python3"]
