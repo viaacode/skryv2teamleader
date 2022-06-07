@@ -50,13 +50,6 @@ class ProcessService(SkryvBase):
 
         # TODO make calls to ldap and update teamleader here based on process action
 
-        # TODO: figure out why in the original skryv2crm they use skryv api call to fetch a document
-        # for this they get a token using skryv.username&pass to featch an oauth Bearer token, which
-        # is passed in header to a route:
-        #   /api/dossiers/{id}
-        # some fixed id is present with value f281edf1-b706-4f14-8c57-5d139d0e0d21
-        # https://github.com/viaacode/skryv2crm/blob/master/src/main/app/skryv.xml#L325
-
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body
         self.dossier = self.body.dossier
