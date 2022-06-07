@@ -1,5 +1,5 @@
 NAME := skryv2teamleader
-FOLDERS := ./app/ ./tests/
+FOLDERS := ./app ./tests
 
 .DEFAULT_GOAL := help
 
@@ -17,7 +17,7 @@ help:
 	@echo "  dockerrun   run docker image and serve api"
 	@echo "  coverage    run tests and generate coverage report"
 	@echo "  console     start python cli with env vars set"
-	@echo "  benchmark       start uvicorn production server for benchmark"
+	@echo "  benchmark   start uvicorn production server for benchmark"
 	@echo "  server      start uvicorn development server fast-api for synchronizing with ldap"
 	@echo ""
 
@@ -47,14 +47,14 @@ lint:
 .PHONY: format
 format:
 	@. python_env/bin/activate; \
-	autopep8 --in-place -r app; \
-	autopep8 --in-place -r tests;
+	autopep8 --in-place -r $(FOLDERS); 
+	@echo "autopep8 formatting in place for folders: $(FOLDERS)..."
 
 .PHONY: test
 test:
 	@. python_env/bin/activate; \
 	export `grep -v '^#' .env.example | xargs` && \
-	python -m pytest -vv
+	python -m pytest
 
 
 .PHONY: dockertest
