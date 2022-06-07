@@ -15,6 +15,7 @@
 
 from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
+import json
 
 
 class DocumentService(SkryvBase):
@@ -122,12 +123,12 @@ class DocumentService(SkryvBase):
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
-        tl_org_uuid = ldap_org['x-be-viaa-externalUUID'].value
+        company_id = ldap_org['x-be-viaa-externalUUID'].value
 
         print(
             "document teamleader update: or-id={}, TL uuid={}, document label={}, action={}".format(
                 self.or_id,
-                tl_org_uuid,
+                company_id,
                 self.document.definitionLabel,
                 self.action
             )
@@ -143,6 +144,10 @@ class DocumentService(SkryvBase):
         if self.action == 'created':
             print("skipping document create, waiting for update...")
             return
+
+        tl_company = self.tlc.get_company(company_id)
+        print("teamleader company to update==",
+              json.dumps(tl_company))
 
         if self.action == 'updated':
             print("adres=", self.doc_postadres())

@@ -47,19 +47,6 @@ class MockTlClient(MockClient):
         # on new company
         return []  # for now always return empty array
 
-    def get_migrate_uuid(self, resource_type, old_external_id):
-        if resource_type == 'contact':
-            contact_fixture = open(
-                'tests/fixtures/contact_linked_example.json').read()
-            contact = json.loads(contact_fixture)
-            return contact['id']
-
-        if resource_type == 'company':
-            company_fixture = open(
-                'tests/fixtures/company_dienstafnemer.json').read()
-            company = json.loads(company_fixture)
-            return company['id']
-
     def get_contact(self, contact_uuid):
         super().method_call(f"get_contact: {contact_uuid}")
 
@@ -67,7 +54,7 @@ class MockTlClient(MockClient):
             return None
 
         contact_fixture = open(
-            'tests/fixtures/contact_linked_example.json').read()
+            'tests/fixtures/teamleader/contact_linked_example.json').read()
         contact = json.loads(contact_fixture)
         return contact
 
@@ -77,7 +64,7 @@ class MockTlClient(MockClient):
             return []
         else:
             company_fixture = open(
-                'tests/fixtures/company_partner.json').read()
+                'tests/fixtures/teamleader/company_updated_addendums.json').read()
             company = json.loads(company_fixture)
             return company
 

@@ -23,12 +23,12 @@ class DocumentBody(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "action": "created",
+                "action": "updated",
                 "dossier": {
                     "id": "14722c4e-3c36-48e2-86c6-e9fe09952a5d",
-                    "label": "Te vervolledigen dossierlabel",
-                    "externalId": "OR-d795c82",
-                    "dossierDefinition": "4f570882-9a73-4493-840b-067abfe1f1fb",
+                    "label": "S.M.A.K.",
+                    "externalId": "OR-np1wh8z",
+                    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
                     "createdAt": "2022-03-04T08:08:14.000+00:00",
                     "updatedAt": "2022-03-04T08:08:14.000+00:00",
                     "creator": "Tine Philips",
