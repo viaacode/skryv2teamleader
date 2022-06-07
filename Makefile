@@ -41,7 +41,7 @@ clean:
 .PHONY: lint
 lint:
 	@. python_env/bin/activate; \
-	flake8 --max-line-length=120 --exclude=.git,python_env,__pycache__
+	pycodestyle --max-line-length=120 --exclude=.git,python_env,__pycache__  . && echo "pycodestyle OK."
 
 
 .PHONY: format
