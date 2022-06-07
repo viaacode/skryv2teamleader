@@ -23,24 +23,26 @@ class ProcessBody(BaseModel):
     class Config:
         schema_extra = {
             "example": {
-                "action": "created",
+                "action": "ended",
                 "dossier": {
-                    "id": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
-                    "label": "Test Skryv",
-                    "externalId": "OR-hx15s8s",
+                    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+                    "label": "S.M.A.K.",
+                    "externalId": "OR-np1wh8z",
                     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
-                    "createdAt": "2022-05-19T09:17:15.000+0000",
-                    "updatedAt": "2022-05-19T09:17:19.000+0000",
-                    "creator": "f440f460-51e0-1034-9c23-ff9471efe8a8",
+                    "createdAt": "2022-06-03T09:16:37.000+0000",
+                    "updatedAt": "2022-06-03T09:16:38.000+0000",
+                    "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
                     "active": True
                 },
                 "process": {
-                    "id": "5004eee8-da97-11ec-883a-0242ac130004",
-                    "businessKey": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
-                    "processDefinitionId": "Intentieverklaring_v2:16:b8d43a62-d695-11ec-a5e9-0242c0a8e002",
-                    "processDefinitionKey": "Intentieverklaring_v2",
-                    "startTime": "2022-05-23T12:53:16.000+0000",
-                    "startActivityId": "StartEvent_10e3ss5"
+                    "id": "554e1fef-e31e-11ec-883a-0242ac130004",
+                    "businessKey": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+                    "processDefinitionId": "so_ondertekenproces:16:b8ca9d6b-d695-11ec-a5e9-0242c0a8e002",
+                    "processDefinitionKey": "so_ondertekenproces",
+                    "startTime": "2022-06-03T09:19:56.000+0000",
+                    "endTime": "2022-06-03T09:27:01.000+0000",
+                    "durationInMillis": 424691,
+                    "startActivityId": "StartEvent_1"
                 }
             }
         }

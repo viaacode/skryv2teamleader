@@ -23,6 +23,11 @@ class MilestoneService(SkryvBase):
     def company_milestone_set_api_fields():
         pass
 
+    # geen actie bij deze milestone status:
+    # status: "SWO niet akkoord"
+
+    # by deze status is SWO wel ok
+
     def teamleader_update(self):
         ldap_org = self.ldap.find_company(self.or_id)
         if not ldap_org:

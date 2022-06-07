@@ -19,9 +19,34 @@ class ProcessService(SkryvBase):
         self.slack = common_clients.slack
         self.read_configuration()
 
-    # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L285
-    def company_process_set_api_fields():
-        pass
+    def status_update(self, company):
+        print(f"TODO: check SWO akkoord in dossier {self.dossier.id}")
+
+        # TODO: store dossier update in redis and retreive here!
+        # this to get the boolean swo_akkourd out of the full dossier
+        # which we don't get in this process ended event (only the uuid)
+        swo_akkoord = True
+
+        if swo_akkoord:
+            # 2.2 CP status -> 'ja', 'nee', 'pending'
+            company = self.set_custom_field(
+                company, 'cp_status', 'ja'
+            )
+
+            # 2.4 Toestemming starten -> True, False
+            company = self.set_custom_field(
+                company, 'toestemming_starten', True
+            )
+
+            # 2.5 SWO -> True, False
+            company = self.set_custom_field(
+                company, 'swo', True
+            )
+
+            # this also only works with fetching full dossier from redis
+            # company = self.addendums_update(company)
+
+        return company
 
     def teamleader_update(self):
         ldap_org = self.ldap.find_company(self.or_id)
@@ -31,13 +56,13 @@ class ProcessService(SkryvBase):
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
-        tl_org_uuid = ldap_org['x-be-viaa-externalUUID'].value
+        company_id = ldap_org['x-be-viaa-externalUUID'].value
 
         print(
             "process ({}) -> teamleader update: or-id={}, TL uuid={}, process action={}".format(
                 self.process.id,
                 self.or_id,
-                tl_org_uuid,
+                company_id,
                 self.action
             )
         )
@@ -48,7 +73,11 @@ class ProcessService(SkryvBase):
                 f"{self.dossier.dossierDefinition} is not a content partner process, skipping process event")
             return
 
-        # TODO make calls to ldap and update teamleader here based on process action
+        if self.action == "ended":
+            if self.process.processDefinitionKey == "so_ondertekenproces":
+                company = self.tlc.get_company(company_id)
+                company = self.status_update(company)
+                self.tlc.update_company(company)
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body

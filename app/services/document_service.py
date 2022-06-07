@@ -60,12 +60,19 @@ class DocumentService(SkryvBase):
 
         return company
 
+    # we use this temporarely for testing, however
+    # this needs to be done at a different moment, we
+    # store the dossier here, and then set these in
+    # either a process ended event for SWO.
+    # or a milestone for ITV
+    # see : https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2crm
+
     def status_update(self, company):
         # TODO: use self.document to set correct values here!
 
         # 2.2 CP status -> 'ja', 'nee', 'pending'
         company = self.set_custom_field(
-            company, 'cp_status', 'ja'
+            company, 'cp_status', 'nee'
         )
 
         # 2.3 intentieverklaring -> 'ingevuld', 'pending'
@@ -75,31 +82,23 @@ class DocumentService(SkryvBase):
 
         # 2.4 Toestemming starten -> True, False
         company = self.set_custom_field(
-            company, 'toestemming_starten', True
+            company, 'toestemming_starten', False
         )
 
         # 2.5 SWO -> True, False
         company = self.set_custom_field(
-            company, 'swo', True
+            company, 'swo', False
         )
 
         company = self.addendums_update(company)
         return company
-
-    def company_document_update_samenwerkingsovereenkomst():
-        pass
-        # TODO: port this to python
-        # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L47
-
-    def company_document_set_api_fields_comment():
-        pass
-        # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L156
 
     # opmerking
     # Binnen dossier "Briefing" heb je 1 proces met 1 document denk ik
     # Binnen dossier "Contentpartner" heb je 3 processen met meerdere documenten
     # Briefing-dossier is veel eenvoudiger dan Contentpartner
     # or id for testing: "OR-np1wh8z"
+
     def teamleader_update(self):
         ldap_org = self.ldap.find_company(self.or_id)
         if not ldap_org:
@@ -129,14 +128,12 @@ class DocumentService(SkryvBase):
             print("skipping document create, waiting for update...")
             return
 
-        tl_company = self.tlc.get_company(company_id)
-        # print("teamleader company to update==",
-        #       json.dumps(tl_company))
-
         if self.action == 'updated':
+            tl_company = self.tlc.get_company(company_id)
             print("adres=", self.doc_postadres())
             tl_company = self.status_update(tl_company)
             self.tlc.update_company(tl_company)
+            print(f"updated teamleader company {company_id}")
 
     def handle_event(self, document_body: DocumentBody):
         self.body = document_body

@@ -32,8 +32,7 @@ class SkryvBase:
             for f_label, f_id in field_ids.items():
                 if f['id'] == f_id:
                     self.custom_fields[f_label] = f
-                    # helpful print of mapping for debugging
-                    print(f"custom_fields[{f_label}]={f}")
+                    # print(f"custom_fields[{f_label}]={f}")  # debug
 
         return self.custom_fields
 
