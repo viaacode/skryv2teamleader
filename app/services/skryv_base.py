@@ -34,7 +34,7 @@ class SkryvBase:
             for f_label, f_id in field_ids.items():
                 if f['id'] == f_id:
                     self.custom_fields[f_label] = f
-                    print(f"custom_fields[{f_label}]={f}")  # debug
+                    # print(f"custom_fields[{f_label}]={f}")  # debug
 
         return self.custom_fields
 
@@ -62,7 +62,8 @@ class SkryvBase:
 
     def set_intentieverklaring(self, company, value):
         # 2.3 intentieverklaring -> 'ingevuld', 'pending'
-        allowed_values = ['ingevuld', 'pending']
+        # we also allow clearing it by passing None here
+        allowed_values = ['ingevuld', 'pending', None]
 
         if value not in allowed_values:
             print("skipping invalid intentieverklaring value=", value)

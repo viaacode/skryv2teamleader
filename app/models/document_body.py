@@ -25,7 +25,7 @@ class DocumentBody(BaseModel):
             "example": {
                 "action": "updated",
                 "dossier": {
-                    "id": "14722c4e-3c36-48e2-86c6-e9fe09952a5d",
+                    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
                     "label": "S.M.A.K.",
                     "externalId": "OR-np1wh8z",
                     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",

@@ -35,17 +35,17 @@ class DocumentService(SkryvBase):
     # or a milestone for ITV
     # see : https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2crm
 
-    def status_update(self, company):
-        # TODO: remove this, this is just to easier debug teamleader propagation,
+    def debug_status_update(self, company):
         # we clear all values here FOR DEBUGGING !!!!
 
         company = self.set_cp_status(company, 'nee')
-        company = self.set_intentieverklaring(company, 'pending')
+        company = self.set_intentieverklaring(company, None) # clear it
         company = self.set_toestemming_start(company, False)
         company = self.set_swo(company, False)
-        company = self.set_swo_addenda(company, [])
+        company = self.set_swo_addenda(company, []) # clear addenda
 
-        return company
+        self.tlc.update_company(company)
+        print(f"updated teamleader company {company['id']}")
 
     # opmerking
     # Binnen dossier "Briefing" heb je 1 proces met 1 document denk ik
@@ -83,12 +83,13 @@ class DocumentService(SkryvBase):
             return
 
         if self.action == 'updated':
+            # store document in redis for later use in milestone or process ended calls:
             self.redis.save_document(self.body)
-            tl_company = self.tlc.get_company(company_id)
             print("adres=", self.doc_postadres())
-            tl_company = self.status_update(tl_company)
-            self.tlc.update_company(tl_company)
-            print(f"updated teamleader company {company_id}")
+
+            # TODO: remove this, this is just to easier debug teamleader propagation,
+            company = self.tlc.get_company(company_id)
+            self.debug_status_update(company)
 
     def handle_event(self, document_body: DocumentBody):
         self.body = document_body
