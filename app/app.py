@@ -18,7 +18,7 @@ from viaa.observability import logging
 
 from app.services.webhook_service import WebhookService
 from app.clients.common_clients import construct_clients
-from app.clients.redis_cache import RedisCache
+from app.clients.redis_cache import redis_cache
 from app.comm.webhook_scheduler import WebhookScheduler
 
 
@@ -32,7 +32,7 @@ class App:
     def __init__(self):
         self.clients = None
         self.whs = WebhookScheduler()
-        self.redis_cache = RedisCache()
+        self.redis_cache = redis_cache
 
     def start_clients(self, start_scheduler=True):
         logger.info("Starting teamleader, zendesk, slack clients...")
@@ -45,7 +45,13 @@ class App:
         return self.clients.teamleader.authcode_callback(code, state)
 
     def process_webhook(self, process_body):
-        logger.info(f"proces event: {process_body}")
+        logger.info(
+            "process event: action={} dossier={} or_id={}".format(
+                process_body.action,
+                process_body.dossier.id,
+                process_body.dossier.externalId
+            )
+        )
         self.whs.schedule('process_event', process_body)
         return {'status': 'proces event received and scheduled for handling'}
 
@@ -55,7 +61,13 @@ class App:
         return {'status': milestone_body.milestone.status}
 
     def document_webhook(self, document_body):
-        logger.info(f"document event: {document_body}")
+        logger.info(
+            "document event: action={} dossier={} or_id={}".format(
+                document_body.action,
+                document_body.dossier.id,
+                document_body.dossier.externalId
+            )
+        )
         self.whs.schedule('document_event', document_body)
         return {'status': 'document event received and scheduled for handling'}
 

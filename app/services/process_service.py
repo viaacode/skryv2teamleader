@@ -28,6 +28,11 @@ class ProcessService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
+    def doc_postadres(self, document_body):
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            return dvals['adres_en_contactgegevens']['postadres']
+
     def get_addendums(self, document_body):
         dvals = document_body.document.document.value
         if 'te_ondertekenen_documenten' in dvals:
@@ -45,6 +50,8 @@ class ProcessService(SkryvBase):
             'Topstukkenaddendum': 'Topstukkenaddendum'
         }
 
+        print("TODO: save adres = ", self.doc_postadres(document))
+
         addendums = self.get_addendums(document)
         if not addendums:
             print("no addendums found in document")
@@ -57,7 +64,7 @@ class ProcessService(SkryvBase):
                 tl_swo_map.get(ad_naam)
             )
 
-        print("tl_addendums=", tl_addendums)
+        print("set_swo_addenda = ", tl_addendums)
         company = self.set_swo_addenda(company, tl_addendums)
 
         return company
@@ -70,12 +77,14 @@ class ProcessService(SkryvBase):
         company = self.set_swo(company, True)
 
         updated_document_json = self.redis.load_document(self.dossier.id)
-        print("last updated document =", updated_document_json)
-
-        company = self.addendums_update(
-            company,
-            DocumentBody.parse_raw(updated_document_json)
-        )
+        if updated_document_json:
+            company = self.addendums_update(
+                company,
+                DocumentBody.parse_raw(updated_document_json)
+            )
+        else:
+            print("ERROR: addendum update, could not find dossier id=",
+                  self.dossier.id)
 
         return company
 
@@ -99,6 +108,7 @@ class ProcessService(SkryvBase):
         )
 
         # enkel behandeling type dossier 'contentpartner'
+        # https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2crm
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner process, skipping process event")

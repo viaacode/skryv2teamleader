@@ -23,20 +23,9 @@ class DocumentService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
-    def doc_postadres(self):
-        dvals = self.document.document.value
-        if 'adres_en_contactgegevens' in dvals:
-            return dvals['adres_en_contactgegevens']['postadres']
-
-    # we use this temporarely for testing, however
-    # this needs to be done at a different moment, we
-    # store the dossier here, and then set these in
-    # either a process ended event for SWO.
-    # or a milestone for ITV
-    # see : https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2crm
-
-    def debug_status_update(self, company):
+    def reset_company_status(self, company_id):
         # we clear all values here FOR DEBUGGING !!!!
+        company = self.tlc.get_company(company_id)
 
         company = self.set_cp_status(company, 'nee')
         company = self.set_intentieverklaring(company, None)  # clear it
@@ -45,13 +34,7 @@ class DocumentService(SkryvBase):
         company = self.set_swo_addenda(company, [])  # clear addenda
 
         self.tlc.update_company(company)
-        print(f"updated teamleader company {company['id']}")
-
-    # opmerking
-    # Binnen dossier "Briefing" heb je 1 proces met 1 document denk ik
-    # Binnen dossier "Contentpartner" heb je 3 processen met meerdere documenten
-    # Briefing-dossier is veel eenvoudiger dan Contentpartner
-    # or id for testing: "OR-np1wh8z"
+        print(f"DEBUG reset_company_status called on company: {company['id']}")
 
     def teamleader_update(self):
         ldap_org = self.ldap.find_company(self.or_id)
@@ -71,7 +54,7 @@ class DocumentService(SkryvBase):
             )
         )
 
-        # enkel behandeling type dossier 'contentpartner'
+        # enkel behandeling type dossier 'contentpartner', skip briefing en anderen
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner document, skip event")
@@ -82,14 +65,13 @@ class DocumentService(SkryvBase):
             print("skipping document create, waiting for update...")
             return
 
+        # store any updated document in redis for later use in milestone or process webhooks:
         if self.action == 'updated':
-            # store document in redis for later use in milestone or process ended calls:
+            print(f"saving document {self.body.dossier.id} in redis")
             self.redis.save_document(self.body)
-            print("adres=", self.doc_postadres())
 
-            # TODO: remove this, this is just to easier debug teamleader propagation,
-            company = self.tlc.get_company(company_id)
-            self.debug_status_update(company)
+            # TODO: remove this, when releasing
+            self.reset_company_status(company_id)
 
     def handle_event(self, document_body: DocumentBody):
         self.body = document_body
