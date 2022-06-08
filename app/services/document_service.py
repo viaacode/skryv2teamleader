@@ -22,6 +22,7 @@ class DocumentService(SkryvBase):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
+        self.redis = common_clients.redis
         self.read_configuration()
 
     def doc_postadres(self):
@@ -129,6 +130,7 @@ class DocumentService(SkryvBase):
             return
 
         if self.action == 'updated':
+            self.redis.save_document(self.body)
             tl_company = self.tlc.get_company(company_id)
             print("adres=", self.doc_postadres())
             tl_company = self.status_update(tl_company)

@@ -17,6 +17,7 @@ class MilestoneService(SkryvBase):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
+        self.redis = common_clients.redis
         self.read_configuration()
 
     # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L341

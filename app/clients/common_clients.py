@@ -21,11 +21,13 @@ class CommonClients:
     teamleader: TeamleaderClient
     ldap: LdapClient
     slack: SlackClient
+    redis: RedisCache
 
 
 def construct_clients(app_cfg, redis_cache: RedisCache = None):
     return CommonClients(
         TeamleaderClient(app_cfg, redis_cache),
         LdapClient(app_cfg),
-        SlackClient(app_cfg)
+        SlackClient(app_cfg),
+        redis_cache
     )

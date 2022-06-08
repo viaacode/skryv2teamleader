@@ -35,6 +35,20 @@ class RedisCache:
     def save(self, key, dictvalue):
         self.set(key, json.dumps(dictvalue))
 
+    def save_document(self, document):
+        # we need to be able to lookup using dossier id
+        key = 'dossier_{}'.format(document.dossier.id)
+        print(f"saving in redis key={key}")
+        print("data=", json.dumps(document.json()))
+        self.set(key, json.dumps(document.json()))
+
+    def load_document(self, dossier_id):
+        # use a dossier id, to get last saved document
+        key = 'dossier_{}'.format(dossier_id)
+        dossier_data = self.get(key)
+        if dossier_data:
+            return json.loads(dossier_data)
+
     def load(self, key):
         return json.loads(self.get(key))
 

@@ -19,6 +19,7 @@ from app.models.document_body import DocumentBody
 from mock_teamleader_client import MockTlClient
 from mock_ldap_client import MockLdapClient
 from mock_slack_wrapper import MockSlackWrapper
+from mock_redis_cache import MockRedisCache
 
 from testing_config import tst_app_config
 
@@ -32,7 +33,8 @@ class TestScheduler:
         return CommonClients(
             MockTlClient(),
             MockLdapClient(),
-            slack_client
+            slack_client,
+            MockRedisCache()
         )
 
     @pytest.mark.asyncio

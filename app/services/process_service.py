@@ -17,12 +17,12 @@ class ProcessService(SkryvBase):
         self.tlc = common_clients.teamleader
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
+        self.redis = common_clients.redis
         self.read_configuration()
 
     def status_update(self, company):
         print(f"TODO: check SWO akkoord in dossier {self.dossier.id}")
 
-        
         # 2.2 CP status -> 'ja', 'nee', 'pending'
         company = self.set_custom_field(
             company, 'cp_status', 'ja'
@@ -72,6 +72,8 @@ class ProcessService(SkryvBase):
 
         if self.action == "ended":
             if self.process.processDefinitionKey == "so_ondertekenproces":
+                updated_document = self.redis.load_document(self.dossier.id)
+                print("last updated document =", updated_document)
                 company = self.tlc.get_company(company_id)
                 company = self.status_update(company)
                 self.tlc.update_company(company)
