@@ -1,24 +1,21 @@
 {
   "action": "ended",
   "dossier": {
-    "id": "a66d34fd-537c-4a64-9840-b7de4e6018cb",
-    "label": "Test Skryv 2",
-    "externalId": "OR-d795c82",
-    "dossierManager": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "label": "S.M.A.K.",
+    "externalId": "OR-np1wh8z",
     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
-    "createdAt": "2022-05-06T08:20:03.000+0000",
-    "updatedAt": "2022-05-09T14:30:55.000+0000",
+    "createdAt": "2022-06-03T09:16:37.000+0000",
+    "updatedAt": "2022-06-03T09:16:38.000+0000",
     "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
     "active": true
   },
   "process": {
-    "id": "95aca7af-db41-11ec-883a-0242ac130004",
-    "businessKey": "a66d34fd-537c-4a64-9840-b7de4e6018cb",
-    "processDefinitionId": "Intentieverklaring_v2:16:b8d43a62-d695-11ec-a5e9-0242c0a8e002",
-    "processDefinitionKey": "Intentieverklaring_v2",
-    "startTime": "2022-05-24T09:12:07.000+0000",
-    "endTime": "2022-05-24T09:13:20.000+0000",
-    "durationInMillis": 72883,
-    "startActivityId": "StartEvent_10e3ss5"
+    "id": "554e1fef-e31e-11ec-883a-0242ac130004",
+    "businessKey": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "processDefinitionId": "so_ondertekenproces:16:b8ca9d6b-d695-11ec-a5e9-0242c0a8e002",
+    "processDefinitionKey": "so_ondertekenproces",
+    "startTime": "2022-06-03T09:19:56.000+0000",
+    "startActivityId": "StartEvent_1"
   }
 }

@@ -22,6 +22,7 @@ from tests.unit.mock_slack_wrapper import MockSlackWrapper
 from tests.unit.testing_config import tst_app_config
 from tests.unit.mock_redis_cache import MockRedisCache
 
+
 class TestAppRequests:
     @pytest.fixture
     def app_client(self):
