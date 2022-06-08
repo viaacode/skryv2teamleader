@@ -39,10 +39,10 @@ class DocumentService(SkryvBase):
         # we clear all values here FOR DEBUGGING !!!!
 
         company = self.set_cp_status(company, 'nee')
-        company = self.set_intentieverklaring(company, None) # clear it
+        company = self.set_intentieverklaring(company, None)  # clear it
         company = self.set_toestemming_start(company, False)
         company = self.set_swo(company, False)
-        company = self.set_swo_addenda(company, []) # clear addenda
+        company = self.set_swo_addenda(company, [])  # clear addenda
 
         self.tlc.update_company(company)
         print(f"updated teamleader company {company['id']}")
