@@ -36,10 +36,10 @@ class App:
 
     def start_clients(self, start_scheduler=True):
         logger.info("Starting teamleader, zendesk, slack clients...")
-        if config.app_cfg['teamleader']['redis_url'] == 'DISABLED':
-            self.clients = construct_clients(config.app_cfg)
-        else:
-            self.clients = construct_clients(config.app_cfg, self.redis_cache)
+        #if config.app_cfg['teamleader']['redis_url'] == 'DISABLED':
+        #    self.clients = construct_clients(config.app_cfg)
+        #else:
+        self.clients = construct_clients(config.app_cfg, self.redis_cache)
 
         if start_scheduler:
             self.whs.start(self.clients)

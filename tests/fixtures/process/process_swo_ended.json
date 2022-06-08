@@ -1,0 +1,23 @@
+{
+  "action": "ended",
+  "dossier": {
+    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "label": "S.M.A.K.",
+    "externalId": "OR-np1wh8z",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-06-03T09:16:37.000+0000",
+    "updatedAt": "2022-06-03T09:16:38.000+0000",
+    "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "active": true
+  },
+  "process": {
+    "id": "554e1fef-e31e-11ec-883a-0242ac130004",
+    "businessKey": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "processDefinitionId": "so_ondertekenproces:16:b8ca9d6b-d695-11ec-a5e9-0242c0a8e002",
+    "processDefinitionKey": "so_ondertekenproces",
+    "startTime": "2022-06-03T09:19:56.000+0000",
+    "endTime": "2022-06-03T09:27:01.000+0000",
+    "durationInMillis": 424691,
+    "startActivityId": "StartEvent_1"
+  }
+}

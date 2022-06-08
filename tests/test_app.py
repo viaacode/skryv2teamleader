@@ -28,6 +28,7 @@ class TestAppRequests:
     def app_client(self):
         from app.server import app
         from app.server import main_app
+        main_app.redis_cache = MockRedisCache()
         main_app.start_clients(False)
         main_app.clients = self.mock_clients()
         return TestClient(app)
