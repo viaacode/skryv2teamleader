@@ -36,8 +36,12 @@ class TeamleaderAuth():
         return token_data['code'], token_data['token'], token_data['refresh_token']
 
     def reset(self):
-        self.redis.delete(self.token_key)
+        if self.redis:
+            self.redis.delete(self.token_key)
 
     def tokens_available(self):
+        if not self.redis:
+            return False
+
         res = self.redis.get(self.token_key)
         return res is not None

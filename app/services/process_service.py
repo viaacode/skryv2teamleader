@@ -5,10 +5,18 @@
 #
 #   app/services/process_service.py
 #
-#   ProcessService, handle process webhook events
+#   ProcessService, handle process webhook events, we check for a secific
+#   ended process. And if found. We fetch the last updated document associated
+#   with this process and then set
+#   cp_status = ja,
+#   toestemming_start=True
+#   swo = True
+#   swo_addenda = mapped list from addenda inside the document into specific
+#   array value. We use base class helper methods for this
 #
 
 from app.models.process_body import ProcessBody
+from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
 
 
@@ -20,28 +28,54 @@ class ProcessService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
+    def get_addendums(self, document_body):
+        dvals = document_body.document.document.value
+        if 'te_ondertekenen_documenten' in dvals:
+            tod = dvals['te_ondertekenen_documenten']
+            if 'addendum' in tod:
+                return tod['addendum']
+
+    def addendums_update(self, company, document):
+        tl_swo_map = {
+            'Aanduiding contentpartners (koepel)': 'Aanduiding contentpartners (koepel)',
+            'Protocol voor de elektronische mededeling van persoonsgegevens (GDPR)': 'GDPR protocol',
+            'Overeenkomst voor de bescherming van persoonsgegevens (GDPR)': 'GDPR overeenkomst',
+            'Dienstverlening inzake de digitalisering en ontsluiting van kunstwerken, erfgoedobjecten of topstukken': 'Dienstverlening kunstwerken erfgoedobjecten topstukken',  # noqa: E501
+            'Specifieke voorwaarden': 'Specifieke voorwaarden',
+            'Topstukkenaddendum': 'Topstukkenaddendum'
+        }
+
+        addendums = self.get_addendums(document)
+        if not addendums:
+            print("no addendums found in document")
+            return company
+
+        tl_addendums = []
+        for ad in addendums:
+            ad_naam = ad['naam']['Specifieke addenda']
+            tl_addendums.append(
+                tl_swo_map.get(ad_naam)
+            )
+
+        print("tl_addendums=", tl_addendums)
+        company = self.set_swo_addenda(company, tl_addendums)
+
+        return company
+
     def status_update(self, company):
-        print(f"TODO: check SWO akkoord in dossier {self.dossier.id}")
+        # if process is ended, and we get here, all checks passed
+        # also fetch related document, and set all flags to ja and true:
+        company = self.set_cp_status(company, 'ja')
+        company = self.set_toestemming_start(company, True)
+        company = self.set_swo(company, True)
 
-        # 2.2 CP status -> 'ja', 'nee', 'pending'
-        company = self.set_custom_field(
-            company, 'cp_status', 'ja'
+        updated_document_json = self.redis.load_document(self.dossier.id)
+        print("last updated document =", updated_document_json)
+
+        company = self.addendums_update(
+            company,
+            DocumentBody.parse_raw(updated_document_json)
         )
-
-        # 2.4 Toestemming starten -> True, False
-        company = self.set_custom_field(
-            company, 'toestemming_starten', True
-        )
-
-        # 2.5 SWO -> True, False
-        company = self.set_custom_field(
-            company, 'swo', True
-        )
-
-        # TODO: store dossier update in redis and retreive here!
-        # since we now so_ondertekenproces and its process action==ended
-        # this also only works with fetching full dossier from redis
-        # company = self.addendums_update(company)
 
         return company
 
@@ -72,8 +106,6 @@ class ProcessService(SkryvBase):
 
         if self.action == "ended":
             if self.process.processDefinitionKey == "so_ondertekenproces":
-                updated_document = self.redis.load_document(self.dossier.id)
-                print("last updated document =", updated_document)
                 company = self.tlc.get_company(company_id)
                 company = self.status_update(company)
                 self.tlc.update_company(company)

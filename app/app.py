@@ -18,7 +18,7 @@ from viaa.observability import logging
 
 from app.services.webhook_service import WebhookService
 from app.clients.common_clients import construct_clients
-from app.clients.redis_cache import redis_cache
+from app.clients.redis_cache import RedisCache
 from app.comm.webhook_scheduler import WebhookScheduler
 
 
@@ -32,13 +32,10 @@ class App:
     def __init__(self):
         self.clients = None
         self.whs = WebhookScheduler()
-        self.redis_cache = redis_cache
+        self.redis_cache = RedisCache()
 
     def start_clients(self, start_scheduler=True):
         logger.info("Starting teamleader, zendesk, slack clients...")
-        #if config.app_cfg['teamleader']['redis_url'] == 'DISABLED':
-        #    self.clients = construct_clients(config.app_cfg)
-        #else:
         self.clients = construct_clients(config.app_cfg, self.redis_cache)
 
         if start_scheduler:

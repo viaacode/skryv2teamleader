@@ -9,9 +9,11 @@
 from app.clients.teamleader_auth import TeamleaderAuth
 from mock_redis_cache import MockRedisCache
 
+
 class TestTeamleaderAuth:
     def test_token_saving(self):
-        ta = TeamleaderAuth({'token_file': 'test_tokens.pkl'}, MockRedisCache())
+        ta = TeamleaderAuth(
+            {'token_file': 'test_tokens.pkl'}, MockRedisCache())
         ta.reset()
         assert ta.tokens_available() is False
 

@@ -13,7 +13,6 @@ app:
     code: !ENV ${TL_CODE}
     auth_token: !ENV ${TL_AUTH_TOKEN}
     refresh_token: !ENV ${TL_REFRESH_TOKEN}
-    token_file: !ENV ${TL_TOKEN_FILE}
     redis_url: !ENV ${REDIS_URL}
   ldap:
     bind: !ENV ${LDAP_BIND}

@@ -5,11 +5,9 @@
 #
 #   app/services/document_service.py
 #
-#   DocumentService, handle document webhook events
+#   DocumentService, handle document webhook events and
+#   store updated_document in redis for later use in milestones and process events
 #   This skips briefing type, only process the content partner dossiers
-#   We fetch addendums, postadres and other fields to update in teamleader.
-#   ldap_client is used to lookup or-id and map to correct teamleader id.
-#
 #   In case of errors, we use slack client to post messages on #skryvbot
 #
 
@@ -30,37 +28,6 @@ class DocumentService(SkryvBase):
         if 'adres_en_contactgegevens' in dvals:
             return dvals['adres_en_contactgegevens']['postadres']
 
-    def doc_addendums(self):
-        dvals = self.document.document.value
-        if 'te_ondertekenen_documenten' in dvals:
-            tod = dvals['te_ondertekenen_documenten']
-            if 'addendum' in tod:
-                return tod['addendum']
-
-    def addendums_update(self, company):
-        addendums = self.doc_addendums()
-        if not addendums:
-            return company
-
-        # TODO: update some field in company here!
-        for ad in addendums:
-            print("addendum=", ad)
-
-        # In group 5 LDAP (niet in group 2 Content Partner)
-        # 2.6 SWO addenda : values:
-        #   'GDPR protocol'
-        #   'GDPR overeenkomst'
-        #   'Aanduiding contentpartners (koepel)'
-        #   'Dienstverlening kunstwerken erfgoedobjecten topstukken'
-        #   'Specifieke voorwaarden'
-        #   'Topstukkenaddendum'
-
-        # company = self.set_custom_field(
-        #     company, 'swo_addenda', []  # addendums here...
-        # )
-
-        return company
-
     # we use this temporarely for testing, however
     # this needs to be done at a different moment, we
     # store the dossier here, and then set these in
@@ -69,29 +36,15 @@ class DocumentService(SkryvBase):
     # see : https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2crm
 
     def status_update(self, company):
-        # TODO: use self.document to set correct values here!
+        # TODO: remove this, this is just to easier debug teamleader propagation,
+        # we clear all values here FOR DEBUGGING !!!!
 
-        # 2.2 CP status -> 'ja', 'nee', 'pending'
-        company = self.set_custom_field(
-            company, 'cp_status', 'nee'
-        )
+        company = self.set_cp_status(company, 'nee')
+        company = self.set_intentieverklaring(company, 'pending')
+        company = self.set_toestemming_start(company, False)
+        company = self.set_swo(company, False)
+        company = self.set_swo_addenda(company, [])
 
-        # 2.3 intentieverklaring -> 'ingevuld', 'pending'
-        # company = self.set_custom_field(
-        #     company, 'intentieverklaring', 'ingevuld'
-        # )
-
-        # 2.4 Toestemming starten -> True, False
-        company = self.set_custom_field(
-            company, 'toestemming_starten', False
-        )
-
-        # 2.5 SWO -> True, False
-        company = self.set_custom_field(
-            company, 'swo', False
-        )
-
-        company = self.addendums_update(company)
         return company
 
     # opmerking

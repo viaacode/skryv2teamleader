@@ -40,8 +40,8 @@ app.add_middleware(
 @app.on_event("startup")
 def startup_event():
     redis_url = config.app_cfg['teamleader']['redis_url']
-    if redis_url != 'DISABLED':
-        main_app.redis_cache.create_connection(redis_url)
+    # if redis_url != 'DISABLED':
+    main_app.redis_cache.create_connection(redis_url)
 
     main_app.start_clients()
     main_app.clients.slack.server_started_message()

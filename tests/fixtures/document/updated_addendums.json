@@ -2,16 +2,17 @@
   "action": "updated",
   "dossier": {
     "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
-    "label": "S.M.A.K.",
-    "externalId": "OR-np1wh8z",
+    "label": "Antigone",
+    "externalId": "OR-zs2kf7s",
+    "dossierManager": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
-    "createdAt": "2022-06-03T09:16:37.000+0000",
-    "updatedAt": "2022-06-03T09:16:38.000+0000",
+    "createdAt": "2022-06-02T08:51:50.000+0000",
+    "updatedAt": "2022-06-02T08:52:38.000+0000",
     "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
     "active": true
   },
   "document": {
-    "id": "3aebef54-4bc0-484c-b258-b420ce075fa8",
+    "id": "1b9b9c18-311b-45c6-83e8-3c8d7be3df9f",
     "version": 2,
     "definition": "ac0d46f8-8738-44b2-b8f1-577a37a2d27b",
     "definitionLabel": "Getekende documenten samenwerking met meemoo",
@@ -36,16 +37,50 @@
           "addendum": [
             {
               "naam": {
+                "Specifieke addenda": "Aanduiding contentpartners (koepel)"
+              },
+              "addendum": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.0.addendum",
+                "base": "b3b7e457-ba35-49d3-93f2-eca46c53230a",
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "size": 64274,
+                "name": "AGBMuseaIeper_addendumaanduidingCP.docx"
+              },
+              "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
+              "getekende_versie": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.0.getekende_versie",
+                "base": "3c811a1b-f507-496c-8f64-4d76be2c4b2a",
+                "contentType": "image/png",
+                "size": 132658,
+                "name": "Schermafbeelding 2022-06-08 om 10.11.35.png"
+              }
+            },
+            {
+              "naam": {
                 "Specifieke addenda": "Dienstverlening inzake de digitalisering en ontsluiting van kunstwerken, erfgoedobjecten of topstukken"
               },
               "addendum": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Dienstverlening+inzake+de+digitalisering+en+ontsluiting+van+kunstwerken%2C+erfgoedobjecten+of+topstukken.docx",
               "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
               "getekende_versie": {
-                "id": "attachment_te_ondertekenen_documenten.addendum.0.getekende_versie",
-                "base": "934b0895-8d79-434e-b211-4fa5680defce",
+                "id": "attachment_te_ondertekenen_documenten.addendum.1.getekende_versie",
+                "base": "d02f9592-7d47-4ce6-a906-4248fef260cc",
                 "contentType": "image/png",
-                "size": 78227,
-                "name": "image-20220530-135839.png"
+                "size": 132658,
+                "name": "Schermafbeelding 2022-06-08 om 10.11.35.png"
+              }
+            },
+            {
+              "naam": {
+                "Specifieke addenda": "Overeenkomst voor de bescherming van persoonsgegevens (GDPR)"
+              },
+              "addendum": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Overeenkomst+voor+de+bescherming+van+persoonsgegevens+(GDPR).docx",
+              "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
+              "getekende_versie": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.2.getekende_versie",
+                "base": "a413ceaa-b80d-462f-8d57-54f662c3435a",
+                "contentType": "image/png",
+                "size": 132658,
+                "name": "Schermafbeelding 2022-06-08 om 10.11.35.png"
               }
             },
             {
@@ -55,11 +90,51 @@
               "addendum": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Protocol+voor+de+elektronische+mededeling+van+persoonsgegevens+(GDPR).docx",
               "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
               "getekende_versie": {
-                "id": "attachment_te_ondertekenen_documenten.addendum.1.getekende_versie",
-                "base": "32735b2d-bac5-4cdf-aab8-1b08f77965c6",
+                "id": "attachment_te_ondertekenen_documenten.addendum.3.getekende_versie",
+                "base": "4fe1fbaf-c146-459d-9538-7c4c85668323",
                 "contentType": "image/png",
-                "size": 78227,
-                "name": "image-20220530-135839.png"
+                "size": 146478,
+                "name": "Schermafbeelding 2022-06-01 om 09.50.51.png"
+              }
+            },
+            {
+              "naam": {
+                "Specifieke addenda": "Topstukkenaddendum"
+              },
+              "addendum": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.4.addendum",
+                "base": "9bd02f87-f670-4d95-b6ee-5afae8bf719a",
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "size": 64274,
+                "name": "AGBMuseaIeper_addendumaanduidingCP.docx"
+              },
+              "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
+              "getekende_versie": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.4.getekende_versie",
+                "base": "956d36a4-1ec9-40bd-b3f8-a1eb4f79892b",
+                "contentType": "image/png",
+                "size": 81136,
+                "name": "Schermafbeelding 2022-06-08 om 09.22.03.png"
+              }
+            },
+            {
+              "naam": {
+                "Specifieke addenda": "Specifieke voorwaarden"
+              },
+              "addendum": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.5.addendum",
+                "base": "a9caf918-a273-4609-882c-e7e123567a06",
+                "contentType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                "size": 64274,
+                "name": "AGBMuseaIeper_addendumaanduidingCP.docx"
+              },
+              "addendum_alternatief": "http://public.skryv.com/viaa/dummy.pdf",
+              "getekende_versie": {
+                "id": "attachment_te_ondertekenen_documenten.addendum.5.getekende_versie",
+                "base": "1ebfdce7-2081-4dcb-ada0-4939ed61a93c",
+                "contentType": "image/png",
+                "size": 22018,
+                "name": "Schermafbeelding 2022-06-01 om 15.40.31.png"
               }
             }
           ],
@@ -68,26 +143,26 @@
           },
           "getekende_versie": {
             "id": "attachment_te_ondertekenen_documenten.getekende_versie",
-            "base": "264f8655-8b74-4cff-812f-7ee155721212",
-            "contentType": "application/pdf",
-            "size": 300482,
-            "name": "Factuur 77.pdf"
+            "base": "a0db7614-9406-464d-9bdb-f94f1d650a61",
+            "contentType": "image/png",
+            "size": 132658,
+            "name": "Schermafbeelding 2022-06-08 om 10.11.35.png"
           }
         }
       }
     },
-    "createdAt": "2022-06-03T09:24:29.000+0000",
-    "updatedAt": "2022-06-03T09:27:00.000+0000",
+    "createdAt": "2022-06-08T08:19:05.000+0000",
+    "updatedAt": "2022-06-08T08:21:06.000+0000",
     "links": [
-      {
-        "linkType": "SCOPE",
-        "resourceType": "PROCESS",
-        "resourceId": "554e1fef-e31e-11ec-883a-0242ac130004"
-      },
       {
         "linkType": "LINK",
         "resourceType": "DOSSIER",
-        "resourceId": "471a7f96-ad00-42e8-817a-f1c616f17b1e"
+        "resourceId": "e3aececb-5aed-440e-8c27-3f4a7367a7c7"
+      },
+      {
+        "linkType": "SCOPE",
+        "resourceType": "PROCESS",
+        "resourceId": "76fc0fb7-e31d-11ec-883a-0242ac130004"
       }
     ],
     "subdocument": false

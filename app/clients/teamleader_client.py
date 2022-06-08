@@ -8,11 +8,9 @@
 #   TeamleaderClient handles communication with the exposed
 #   json api from Teamleader.
 #
-#   The secret code, token and refresh_token is maintaned and updated in
-#   a pickle file (filename is defined in config.yml/token_file).
+#   The secret code, token and refresh_token are stored in redis
 #   Whenever a 401 response is returned we call the method
-#   auth_token_refresh to refresh the token and refresh_token usign a secret
-#   stored in our pickle file or in redis_cache if its passed in.
+#   auth_token_refresh to refresh the tokens using our redis cache
 #
 #   When a token update flow fails, a link is generated in the logs to request a new secret.
 #   This links needs to be pasted into a browser and will result in a
