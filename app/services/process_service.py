@@ -54,17 +54,21 @@ class ProcessService(SkryvBase):
 
         addendums = self.get_addendums(document)
         if not addendums:
-            print("no addendums found in document")
+            print("no new, addendums found in document")
             return company
 
-        tl_addendums = []
-        for ad in addendums:
-            ad_naam = ad['naam']['Specifieke addenda']
-            tl_addendums.append(
-                tl_swo_map.get(ad_naam)
-            )
+        # keep existing addenda from previous process
+        tl_addendums = self.get_existing_addenda(company)
+        print("existing company swo_addenda", tl_addendums)
 
-        print("set_swo_addenda = ", tl_addendums)
+        for ad in addendums:
+            ad_naam = tl_swo_map.get(ad['naam']['Specifieke addenda'])
+            if ad_naam and ad_naam not in tl_addendums:
+                tl_addendums.append(
+                    ad_naam
+                )
+
+        print("merged company swo_addenda = ", tl_addendums)
         company = self.set_swo_addenda(company, tl_addendums)
 
         return company

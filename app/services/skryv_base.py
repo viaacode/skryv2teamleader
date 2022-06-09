@@ -38,11 +38,10 @@ class SkryvBase:
 
         return self.custom_fields
 
-    # method not used yet, might be handy soon:
-    # def get_custom_field(self, company, field_name):
-    #     for f in company['custom_fields']:
-    #         if f['definition']['id'] == self.custom_fields[field_name]['id']:
-    #             return f['value']
+    def get_custom_field(self, company, field_name):
+        for f in company['custom_fields']:
+            if f['definition']['id'] == self.custom_fields[field_name]['id']:
+                return f['value']
 
     def set_custom_field(self, company, field_name, value):
         for f in company['custom_fields']:
@@ -108,3 +107,9 @@ class SkryvBase:
                 return company
 
         return self.set_custom_field(company, 'swo_addenda', addenda_list)
+
+    def get_existing_addenda(self, company):
+        addenda = self.get_custom_field(company, 'swo_addenda')
+        if not addenda:
+            return []
+        return addenda
