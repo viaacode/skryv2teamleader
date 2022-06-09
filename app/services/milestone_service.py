@@ -69,6 +69,14 @@ class MilestoneService(SkryvBase):
         company = perform_status_update(company)
         return (True, company)
 
+    def company_dossier_update(self, document_body, company):
+        print("TODO: Update company adres etc here!")
+        return company
+
+    def contacts_update(self, document_body, company):
+        print(f"TODO: Contacts update here on document={document_body}")
+        return company
+
     def teamleader_update(self):
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
@@ -91,22 +99,23 @@ class MilestoneService(SkryvBase):
         status_changed, company = self.status_update(
             company, self.milestone.status)
 
-        mdoc_json = self.redis.load_document(self.dossier.id)
-        if mdoc_json:
-            mdoc = DocumentBody.parse_raw(mdoc_json)
-            print(
-                "TODO: other updates with milestone_document {mdoc.dossier.id}")
-
         if status_changed:
             print(
-                "milestone ({}) -> teamleader update: or-id={}, company={}, milestone status={} action={}".format(
-                    self.milestone.id,
+                "milestone teamleader update: or-id={}, company={}, milestone status={} action={}".format(
                     self.or_id,
                     company['id'],
                     self.milestone.status,
                     self.action
                 )
             )
+            mdoc_json = self.redis.load_document(self.dossier.id)
+            if mdoc_json:
+                mdoc = DocumentBody.parse_raw(mdoc_json)
+                company = self.company_dossier_update(mdoc, company)
+                company = self.contacts_update(mdoc, company)
+            else:
+                print(f"milestone: no associated dossier found for id={self.dossier.id}")
+
             self.tlc.update_company(company)
 
     def handle_event(self, milestone_body: MilestoneBody):

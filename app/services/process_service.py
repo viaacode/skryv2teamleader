@@ -99,6 +99,8 @@ class ProcessService(SkryvBase):
 
         return company
 
+    # TODO: double check if this process 'start event' is needed
+    # ITV gestart -> sets cp_status == pending.
     def teamleader_update(self):
         if self.action != "ended":
             print(
