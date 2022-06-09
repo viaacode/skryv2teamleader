@@ -33,10 +33,30 @@ class DocumentService(SkryvBase):
         company = self.set_swo(company, False)
         company = self.set_swo_addenda(company, [])  # clear addenda
 
-        self.tlc.update_company(company)
-        print(f"DEBUG reset_company_status called on company: {company['id']}")
+        print(
+            "DEBUG RESET status with teamleader update: or-id={}, TL uuid={}, document label={}, action={}".format(
+                self.or_id,
+                company_id,
+                self.document.definitionLabel,
+                self.action
+            )
+        )
 
-    def teamleader_update(self):
+        self.tlc.update_company(company)
+
+    def save_cp_updated_document(self, document_body):
+        if self.action != 'updated':
+            print(
+                "skipping document {self.action}, waiting for document 'updated' action...")
+            return
+
+        # store updated document in redis for a following milestone or process webhook:
+        print(f"saving document {self.dossier.id} in redis")
+        self.redis.save_document(document_body)
+
+        # TODO: remove this reset status when releasing !!!
+        # also, we only need to save the doc in redis and no furher handling is
+        # needed (for now)
         ldap_org = self.ldap.find_company(self.or_id)
         if not ldap_org:
             print(f"OR-id {self.or_id} not found for process {self.action}")
@@ -44,15 +64,14 @@ class DocumentService(SkryvBase):
             return
 
         company_id = ldap_org['x-be-viaa-externalUUID'].value
+        self.reset_company_status(company_id)
 
-        print(
-            "document teamleader update: or-id={}, TL uuid={}, document label={}, action={}".format(
-                self.or_id,
-                company_id,
-                self.document.definitionLabel,
-                self.action
-            )
-        )
+    def handle_event(self, document_body: DocumentBody):
+        body = document_body
+        self.action = body.action
+        self.document = body.document
+        self.dossier = body.dossier
+        self.or_id = self.dossier.externalId
 
         # enkel behandeling type dossier 'contentpartner', skip briefing en anderen
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
@@ -61,26 +80,7 @@ class DocumentService(SkryvBase):
 
             return
 
-        if self.action == 'created':
-            print("skipping document create, waiting for update...")
-            return
-
-        # store any updated document in redis for later use in milestone or process webhooks:
-        if self.action == 'updated':
-            print(f"saving document {self.body.dossier.id} in redis")
-            self.redis.save_document(self.body)
-
-            # TODO: remove this, when releasing
-            self.reset_company_status(company_id)
-
-    def handle_event(self, document_body: DocumentBody):
-        self.body = document_body
-        self.action = self.body.action
-        self.document = self.body.document
-        self.dossier = self.body.dossier
-        self.or_id = self.dossier.externalId
-
         if(self.or_id):
-            self.teamleader_update()
+            self.save_cp_updated_document(document_body)
         else:
             self.slack.external_id_empty(self.dossier)

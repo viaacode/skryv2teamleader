@@ -28,7 +28,7 @@ class SkryvBase:
         )
 
     def custom_field_mapping(self, field_ids):
-        print("field_ids=", field_ids)
+        # print("field_ids=", field_ids)
         self.custom_fields = {}
         for f in self.tlc.list_custom_fields():
             for f_label, f_id in field_ids.items():

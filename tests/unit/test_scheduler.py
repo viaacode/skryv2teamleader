@@ -97,18 +97,73 @@ class TestScheduler:
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
-        ms = open("tests/fixtures/milestone/milestone_akkoord.json", "r")
+        ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
         test_milestone = MilestoneBody.parse_raw(ms.read())
         ms.close()
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
 
     @pytest.mark.asyncio
-    async def test_milestone_akkoord_missing_external_id(self, mock_clients):
+    async def test_milestone_geen_opstart(self, mock_clients):
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
-        ms = open("tests/fixtures/milestone/milestone_akkoord.json", "r")
+        ms = open("tests/fixtures/milestone/milestone_geen_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_later(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_later.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_geen_interesse(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_geen_interesse.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_interesse(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_interesse.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_swo(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_swo_akkoord.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_missing_external_id(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
         test_milestone = MilestoneBody.parse_raw(ms.read())
         test_milestone.dossier.externalId = None
         ms.close()
@@ -120,7 +175,7 @@ class TestScheduler:
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
-        ms = open("tests/fixtures/milestone/milestone_akkoord.json", "r")
+        ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
         test_milestone = MilestoneBody.parse_raw(ms.read())
         test_milestone.dossier.dossierDefinition = uuid.UUID(
             'ffb5c880-8301-4d15-bbe9-edaa6d59c4f6'

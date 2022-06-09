@@ -69,7 +69,14 @@ class ProcessService(SkryvBase):
 
         return company
 
-    def status_update(self, company):
+    def set_status_ondertekenproces(self, company):
+        print(
+            "process ({}) -> teamleader status ondertekenproces: or-id={}, company={}".format(
+                self.process.id,
+                self.or_id,
+                company['id']
+            )
+        )
         # if process is ended, and we get here, all checks passed
         # also fetch related document, and set all flags to ja and true:
         company = self.set_cp_status(company, 'ja')
@@ -83,42 +90,33 @@ class ProcessService(SkryvBase):
                 DocumentBody.parse_raw(updated_document_json)
             )
         else:
-            print("ERROR: addendum update, could not find dossier id=",
-                  self.dossier.id)
+            print(
+                f"ERROR: addendum update, could not find dossier id = {self.dossier.id}")
 
         return company
 
     def teamleader_update(self):
+        if self.action != "ended":
+            print(
+                "skipping process with action {self.action}, only handling ended")
+            return
+
         ldap_org = self.ldap.find_company(self.or_id)
         if not ldap_org:
-            print(
-                f"process: LDAP OR-ID not found {self.or_id} for action {self.action}")
+            print(f"ERROR in process: LDAP OR-ID not found {self.or_id}")
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
-        company_id = ldap_org['x-be-viaa-externalUUID'].value
-
-        print(
-            "process ({}) -> teamleader update: or-id={}, TL uuid={}, process action={}".format(
-                self.process.id,
-                self.or_id,
-                company_id,
-                self.action
-            )
-        )
-
-        # enkel behandeling type dossier 'contentpartner'
-        # https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2crm
-        if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
-            print(
-                f"{self.dossier.dossierDefinition} is not a content partner process, skipping process event")
-            return
-
-        if self.action == "ended":
-            if self.process.processDefinitionKey == "so_ondertekenproces":
-                company = self.tlc.get_company(company_id)
-                company = self.status_update(company)
+        # self.action == "ended"
+        if self.process.processDefinitionKey == "so_ondertekenproces":
+            company_id = ldap_org['x-be-viaa-externalUUID'].value
+            company = self.tlc.get_company(company_id)
+            if company:
+                company = self.set_status_ondertekenproces(company)
                 self.tlc.update_company(company)
+            else:
+                # TODO: slack message here?
+                print("ERROR: company {company_id} not found in teamleader!")
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body
@@ -126,6 +124,12 @@ class ProcessService(SkryvBase):
         self.process = self.body.process
         self.action = self.body.action
         self.or_id = self.dossier.externalId
+
+        # enkel behandeling type dossier 'contentpartner'
+        if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
+            print(
+                f"{self.dossier.dossierDefinition} is not a content partner process")
+            return
 
         if(self.or_id):
             self.teamleader_update()

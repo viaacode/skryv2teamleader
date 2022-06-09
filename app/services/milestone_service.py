@@ -9,6 +9,7 @@
 #
 
 from app.models.milestone_body import MilestoneBody
+from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
 
 
@@ -51,16 +52,6 @@ class MilestoneService(SkryvBase):
         return company
 
     def status_update(self, company, milestone_status):
-        print(
-            "milestone ({}) -> teamleader update: or-id={}, company={}, milestone status={} action={}".format(
-                self.milestone.id,
-                self.or_id,
-                company['id'],
-                milestone_status,
-                self.action
-            )
-        )
-
         status_actions = {
             'Geen interesse': self.status_geen_interesse,
             'Misschien later samenwerking': self.status_misschien_later,
@@ -70,17 +61,13 @@ class MilestoneService(SkryvBase):
         }
 
         if milestone_status not in status_actions:
-            # geen actie bij deze milestone status: "SWO niet akkoord"
-            # by deze status is SWO wel ok
-            print(
-                f"warning, skipped status update voor milestone status={milestone_status}")
-            # change to return company if teamleader_update does other changes...
-            return
+            # this happens for "SWO niet akkoord" and "SWO akkoord"
+            print(f"ignoring milestone status update for  {milestone_status}")
+            return (False, company)
 
         perform_status_update = status_actions.get(milestone_status)
         company = perform_status_update(company)
-        self.tlc.update_company(company)
-        # return company
+        return (True, company)
 
     def teamleader_update(self):
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
@@ -95,14 +82,32 @@ class MilestoneService(SkryvBase):
 
         company_id = ldap_org['x-be-viaa-externalUUID'].value
         company = self.tlc.get_company(company_id)
-
         if not company:
             # TODO: make slack message here
             print(
                 f"ERROR: company id={company_id} not found in teamleader for org {self.or_id}")
             return
 
-        self.status_update(company, self.milestone.status)
+        status_changed, company = self.status_update(
+            company, self.milestone.status)
+
+        mdoc_json = self.redis.load_document(self.dossier.id)
+        if mdoc_json:
+            mdoc = DocumentBody.parse_raw(mdoc_json)
+            print(
+                "TODO: other updates with milestone_document {mdoc.dossier.id}")
+
+        if status_changed:
+            print(
+                "milestone ({}) -> teamleader update: or-id={}, company={}, milestone status={} action={}".format(
+                    self.milestone.id,
+                    self.or_id,
+                    company['id'],
+                    self.milestone.status,
+                    self.action
+                )
+            )
+            self.tlc.update_company(company)
 
     def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body

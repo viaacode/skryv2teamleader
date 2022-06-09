@@ -25,9 +25,9 @@ class MilestoneBody(BaseModel):
             "example": {
                 "action": "reached",
                 "dossier": {
-                    "id": "a66d34fd-537c-4a64-9840-b7de4e6018cb",
-                    "label": "Test Skryv 2",
-                    "externalId": "OR-d795c82",
+                    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+                    "label": "S.M.A.K.",
+                    "externalId": "OR-np1wh8z",
                     "dossierManager": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
                     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
                     "createdAt": "2022-05-06T08:20:03.000+0000",

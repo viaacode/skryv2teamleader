@@ -1,21 +1,21 @@
 {
   "action": "reached",
   "dossier": {
-    "id": "a66d34fd-537c-4a64-9840-b7de4e6018cb",
-    "label": "Test Skryv 2",
-    "externalId": "OR-d795c82",
+    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "label": "S.M.A.K.",
+    "externalId": "OR-np1wh8z",
     "dossierManager": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
-    "createdAt": "2022-05-06T08:20:03.000+0000",
-    "updatedAt": "2022-05-09T14:30:55.000+0000",
+    "createdAt": "2022-06-02T08:51:50.000+0000",
+    "updatedAt": "2022-06-02T08:52:38.000+0000",
     "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
     "active": true
   },
   "milestone": {
-    "id": "ae0f5452-2574-4f9d-9a88-429d1d59c24a",
-    "dossierId": "a66d34fd-537c-4a64-9840-b7de4e6018cb",
+    "id": "98828aeb-be43-454d-8c7e-fe4fb064b23a",
+    "dossierId": "e3aececb-5aed-440e-8c27-3f4a7367a7c7",
     "key": "IntermediateThrowEvent_DS_ITV_akkoordITVenopstart",
     "status": "Akkoord en opstart",
-    "timestamp": "2022-05-24T09:11:20.069Z"
+    "timestamp": "2022-06-08T08:42:42.734Z"
   }
 }
