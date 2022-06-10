@@ -75,7 +75,8 @@ class MilestoneService(SkryvBase):
             return dvals['adres_en_contactgegevens']['postadres']
 
     def company_dossier_update(self, document_body, company):
-        print("TODO: save adres in tl company = ", self.get_postadres(document_body))
+        print("TODO: save adres in tl company = ",
+              self.get_postadres(document_body))
         return company
 
     def contacts_update(self, document_body, company):
@@ -119,7 +120,8 @@ class MilestoneService(SkryvBase):
                 company = self.company_dossier_update(mdoc, company)
                 company = self.contacts_update(mdoc, company)
             else:
-                print(f"milestone: no associated dossier found for id={self.dossier.id}")
+                print(
+                    f"milestone: no associated dossier found for id={self.dossier.id}")
 
             self.tlc.update_company(company)
 
