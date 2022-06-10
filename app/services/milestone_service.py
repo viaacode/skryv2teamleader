@@ -69,15 +69,23 @@ class MilestoneService(SkryvBase):
         company = perform_status_update(company)
         return (True, company)
 
-    def get_skryv_address(self, document_body, adress_type):
+    def get_skryv_postadres(self, document_body, adress_type):
         dvals = document_body.document.document.value
         if 'adres_en_contactgegevens' in dvals:
             if 'postadres' in dvals['adres_en_contactgegevens']:
                 return dvals['adres_en_contactgegevens']['postadres']
 
+    def get_skryv_laadadres(self, document_body):
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            ac = dvals['adres_en_contactgegevens']
+            if 'laadadres_verschillend_van_postadres' in ac:
+                ld = ac['laadadres_verschillend_van_postadres']
+                return ld['laadadres']
+
     def update_teamleader_address(self, company, address_type, skryv_address):
         # adress types : primary, delivery, invoicing
-        if not skryv_address:
+        if not skryv_address or skryv_address == {}:
             # skip if skryv adres was empty
             return company
 
@@ -115,11 +123,17 @@ class MilestoneService(SkryvBase):
     def company_dossier_update(self, document_body, company):
         company = self.update_teamleader_address(
             company,
-            'delivery',
-            self.get_skryv_address(document_body, 'postadres')
+            'primary',
+            self.get_skryv_postadres(document_body, 'postadres')
         )
 
-        # TODO primary en invoicing address...
+        company = self.update_teamleader_address(
+            company,
+            'delivery',
+            self.get_skryv_laadadres(document_body)
+        )
+
+        # TODO: what about invoicing address?
 
         return company
 
