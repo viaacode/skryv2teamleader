@@ -1,9 +1,9 @@
 {
   "action": "updated",
   "dossier": {
-    "id": "25cf6caf-d4eb-49e2-80f3-9fde8eaccd19",
-    "label": "Test Skryv",
-    "externalId": "OR-hx15s8s",
+    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "label": "S.M.A.K.",
+    "externalId": "OR-np1wh8z",
     "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
     "createdAt": "2022-05-19T09:17:15.000+0000",
     "updatedAt": "2022-05-19T09:17:19.000+0000",
@@ -37,13 +37,13 @@
             "selectedOption": "archief"
           },
           "postadres": {
-            "straat": "qsdqsd",
-            "huisnummer": "qsdqsd",
-            "postcode": "qsdqsd",
-            "gemeente": "qsdqsd"
+            "straat": "postadres straat",
+            "huisnummer": "postadres nr",
+            "postcode": "postadres postcode",
+            "gemeente": "postadres gemeente"
           },
           "algemeen_emailadres": "test@test.be",
-          "algemeen_telefoonnummer": "dfsdfsdf",
+          "algemeen_telefoonnummer": "telefoon nr",
           "laadadres_verschillend_van_postadres": {
             "laadadres": {}
           },
@@ -56,7 +56,7 @@
             "naam_1": "tine",
             "voornaam": "tine",
             "email": "tine@test.be",
-            "functietitel": "esefsfsdfs"
+            "functietitel": "functie titel test"
           },
           "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie": {
             "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten": {
@@ -100,7 +100,7 @@
             }
           }
         },
-        "geschreven_naam": " ",
+        "geschreven_naam": "Geschreven naam test ",
         "datum": " ",
         "officile_naam_organisatie": "test bedrijf",
         "is_de_opgeladen_intentieverklaring_in_orde": {

@@ -134,8 +134,9 @@ class TestMilestoneService:
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
-        # TODO: have doc with contact info here
-        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        doc = open("tests/fixtures/document/updated_example.json", "r")
         test_doc = DocumentBody.parse_raw(doc.read())
         doc.close()
         res = await ws.execute_webhook('document_event', test_doc)

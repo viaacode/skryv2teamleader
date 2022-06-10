@@ -69,14 +69,58 @@ class MilestoneService(SkryvBase):
         company = perform_status_update(company)
         return (True, company)
 
-    def get_postadres(self, document_body):
+    def get_skryv_address(self, document_body, adress_type):
         dvals = document_body.document.document.value
         if 'adres_en_contactgegevens' in dvals:
-            return dvals['adres_en_contactgegevens']['postadres']
+            if 'postadres' in dvals['adres_en_contactgegevens']:
+                return dvals['adres_en_contactgegevens']['postadres']
+
+    def update_teamleader_address(self, company, address_type, skryv_address):
+        # adress types : primary, delivery, invoicing
+        if not skryv_address:
+            # skip if skryv adres was empty
+            return company
+
+        updated_address = {
+            'type': address_type,
+            'address': {}
+        }
+        updated_address['address']['line_1'] = '{} {}'.format(
+            skryv_address['straat'],
+            skryv_address['huisnummer']
+        )
+        updated_address['address']['postal_code'] = skryv_address['postcode']
+        updated_address['address']['city'] = skryv_address['gemeente']
+        # skryv has no 'country' in address
+        updated_address['address']['country'] = 'BE'
+
+        # TODO: see if we can somehow fill in these teamleader fields:
+        # updated_address['address']['area_level_two'] = null
+        # updated_address['address']['addressee'] = "AGB - S.M.A.K."
+
+        if 'addresses' not in company.keys():
+            company['addresses'] = []
+
+        address_was_updated = False
+        for tad in company['addresses']:
+            if tad['type'] == updated_address['type']:
+                tad['address'] = updated_address['address']
+                address_was_updated = True
+
+        if not address_was_updated:
+            company['addresses'].append(updated_address)
+
+        return company
 
     def company_dossier_update(self, document_body, company):
-        print("TODO: save adres in tl company = ",
-              self.get_postadres(document_body))
+        company = self.update_teamleader_address(
+            company,
+            'delivery',
+            self.get_skryv_address(document_body, 'postadres')
+        )
+
+        # TODO primary en invoicing address...
+
         return company
 
     def contacts_update(self, document_body, company):
