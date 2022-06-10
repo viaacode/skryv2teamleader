@@ -41,13 +41,16 @@ platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 24 items                                                            
+collected 31 items                                                            
 
-tests/test_app.py ..........                                            [ 41%]
-tests/unit/test_auth_tokens.py .                                        [ 45%]
-tests/unit/test_scheduler.py .............                              [100%]
+tests/test_app.py ..........                                            [ 32%]
+tests/unit/test_auth_tokens.py .                                        [ 35%]
+tests/unit/test_document_service.py .....                               [ 51%]
+tests/unit/test_milestone_service.py .........                          [ 80%]
+tests/unit/test_process_service.py ....                                 [ 93%]
+tests/unit/test_scheduler.py ..                                         [100%]
 
-============================= 24 passed in 1.05s ==============================
+============================= 31 passed in 1.21s ==============================
 ```
 
 Also get testing code coverage:
@@ -58,11 +61,14 @@ platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 25 items                                                            
+collected 31 items                                                            
 
-tests/test_app.py ..........                                            [ 40%]
-tests/unit/test_auth_tokens.py .                                        [ 44%]
-tests/unit/test_scheduler.py ..............                             [100%]
+tests/test_app.py ..........                                            [ 32%]
+tests/unit/test_auth_tokens.py .                                        [ 35%]
+tests/unit/test_document_service.py .....                               [ 51%]
+tests/unit/test_milestone_service.py .........                          [ 80%]
+tests/unit/test_process_service.py ....                                 [ 93%]
+tests/unit/test_scheduler.py ..                                         [100%]
 
 ---------- coverage: platform darwin, python 3.9.11-final-0 ----------
 Name                                Stmts   Miss  Cover
@@ -78,7 +84,7 @@ app/app.py                             45      1    98%
 app/clients/__init__.py                 0      0   100%
 app/clients/common_clients.py          13      0   100%
 app/clients/ldap_client.py             37     18    51%
-app/clients/redis_cache.py             30      5    83%
+app/clients/redis_cache.py             32      7    78%
 app/clients/skryv_client.py             9      0   100%
 app/clients/slack_client.py            37     16    57%
 app/clients/teamleader_auth.py         22      1    95%
@@ -89,23 +95,22 @@ app/models/__init__.py                  0      0   100%
 app/models/document.py                 17      0   100%
 app/models/document_body.py             9      0   100%
 app/models/document_value.py            3      0   100%
-app/.py                  15      0   100%
+app/models/dossier.py                  15      0   100%
 app/models/milestone.py                 9      0   100%
 app/models/milestone_body.py            9      0   100%
 app/models/process.py                  10      0   100%
 app/models/process_body.py              9      0   100%
 app/server.py                          25      7    72%
 app/services/__init__.py                0      0   100%
-app/services/document_service.py       49      3    94%
-app/services/milestone_service.py      31      3    90%
-app/services/process_service.py        62      5    92%
-app/services/skryv_base.py             49      5    90%
+app/services/document_service.py       43      4    91%
+app/services/milestone_service.py      85      5    94%
+app/services/process_service.py        69      7    90%
+app/services/skryv_base.py             57      6    89%
 app/services/webhook_service.py        22      0   100%
-ldap_cli.py                            17     17     0%
 -------------------------------------------------------
-TOTAL                                 871    244    72%
-Coverage HTML written to dir htmlcov
+TOTAL                                 919    235    74%
+Covemen to dir htmlcov
 
-============================= 25 passed in 2.12s ==============================
+============================= 31 passed in 2.28s ==============================
 ```
 
