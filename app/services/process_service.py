@@ -28,11 +28,6 @@ class ProcessService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
-    def doc_postadres(self, document_body):
-        dvals = document_body.document.document.value
-        if 'adres_en_contactgegevens' in dvals:
-            return dvals['adres_en_contactgegevens']['postadres']
-
     def get_addendums(self, document_body):
         dvals = document_body.document.document.value
         if 'te_ondertekenen_documenten' in dvals:
@@ -49,8 +44,6 @@ class ProcessService(SkryvBase):
             'Specifieke voorwaarden': 'Specifieke voorwaarden',
             'Topstukkenaddendum': 'Topstukkenaddendum'
         }
-
-        print("TODO: save adres = ", self.doc_postadres(document))
 
         addendums = self.get_addendums(document)
         if not addendums:

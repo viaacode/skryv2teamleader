@@ -69,8 +69,13 @@ class MilestoneService(SkryvBase):
         company = perform_status_update(company)
         return (True, company)
 
+    def get_postadres(self, document_body):
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            return dvals['adres_en_contactgegevens']['postadres']
+
     def company_dossier_update(self, document_body, company):
-        print("TODO: Update company adres etc here!")
+        print("TODO: save adres in tl company = ", self.get_postadres(document_body))
         return company
 
     def contacts_update(self, document_body, company):
