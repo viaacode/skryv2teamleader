@@ -251,6 +251,54 @@ class MilestoneService(SkryvBase):
 
         return company
 
+    def algemeen_update(self, document_body, company):
+        # update email, telefoon, website, btwnummer
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            ac = dvals['adres_en_contactgegevens']
+
+            if 'algemeen_emailadres' in ac:
+                cp_mails = company['emails']
+                primaryFound = False
+                if 'emails' not in company:
+                    company['emails'] = []
+
+                for m in cp_mails:
+                    if m['type'] == 'primary':
+                        primaryFound = True
+                        m['email'] = ac['algemeen_emailadres']
+
+                if not primaryFound:
+                    company['emails'].append({
+                        'type': 'primary',
+                        'email': ac['algemeen_emailadres']
+                    })
+
+            if 'algemeen_telefoonnummer' in ac:
+                cp_phones = company['telephones']
+                phoneNumberFound = False
+                if 'telephones' not in company:
+                    company['telephones'] = []
+
+                for p in cp_phones:
+                    if p['type'] == 'phone':
+                        phoneNumberFound = True
+                        p['number'] = ac['algemeen_telefoonnummer']
+
+                if not phoneNumberFound:
+                    company['telephones'].append({
+                        'type': 'phone',
+                        'number': ac['algemeen_telefoonnummer']
+                    })
+
+            if 'website' in ac:
+                company['website'] = ac['website']
+
+            if 'btwnummer' in ac:
+                company['vat_number'] = ac['btwnummer']
+
+        return company
+
     def contacts_update(self, document_body, company):
         print(f"TODO: Contacts update here on document={document_body}")
         return company
@@ -264,6 +312,10 @@ class MilestoneService(SkryvBase):
                 company = self.bedrijfsvorm_update(mdoc, company)
                 company = self.orgtype_update(mdoc, company)
                 company = self.addresses_update(mdoc, company)
+                company = self.algemeen_update(mdoc, company)
+                # TODO: facturatienaam
+                # TODO: facturatie email adres
+                # TODO: bestelbonnen
                 company = self.contacts_update(mdoc, company)
             else:
                 print("document parse error in mdoc", mdoc)
