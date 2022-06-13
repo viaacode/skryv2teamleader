@@ -51,25 +51,7 @@ class MilestoneService(SkryvBase):
         company = self.set_toestemming_start(company, False)
         return company
 
-    def status_update(self, company, milestone_status):
-        status_actions = {
-            'Geen interesse': self.status_geen_interesse,
-            'Misschien later samenwerking': self.status_misschien_later,
-            'Akkoord en opstart': self.status_akkoord,
-            'Akkoord, geen opstart': self.status_akkoord_geen_start,
-            'Interesse, niet akkoord SWO': self.status_interesse
-        }
-
-        if milestone_status not in status_actions:
-            # this happens for "SWO niet akkoord" and "SWO akkoord"
-            print(f"ignoring milestone status update for  {milestone_status}")
-            return (False, company)
-
-        perform_status_update = status_actions.get(milestone_status)
-        company = perform_status_update(company)
-        return (True, company)
-
-    def get_skryv_postadres(self, document_body, adress_type):
+    def get_skryv_postadres(self, document_body):
         dvals = document_body.document.document.value
         if 'adres_en_contactgegevens' in dvals:
             if 'postadres' in dvals['adres_en_contactgegevens']:
@@ -81,7 +63,40 @@ class MilestoneService(SkryvBase):
             ac = dvals['adres_en_contactgegevens']
             if 'laadadres_verschillend_van_postadres' in ac:
                 ld = ac['laadadres_verschillend_van_postadres']
-                return ld['laadadres']
+                ladres = ld['laadadres']
+                # skryv has an anoying _2 here
+                skryv_address = {
+                    'straat': ladres['straat_2'],
+                    'huisnummer': ladres['huisnummer_2'],
+                    'postcode': ladres['postcode_2'],
+                    'gemeente': ladres['gemeente_2']
+                }
+
+                # if is_de_laadnaam_Verschillend...
+                # skryv_address['postbus_naam'] = ...
+                return skryv_address
+
+    def get_skryv_facturatieadres(self, document_body):
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            ac = dvals['adres_en_contactgegevens']
+            if 'facturatieadres_verschillend_van_postadres' in ac:
+                fd = ac['facturatieadres_verschillend_van_postadres']
+                fadres = fd['facturatieadres']
+                # skryv has an anoying _1 here
+                skryv_address = {
+                    'straat': fadres['straat_1'],
+                    'huisnummer': fadres['huisnummer_1'],
+                    'postcode': fadres['postcode_1'],
+                    'gemeente': fadres['gemeente_1']
+                }
+
+                if 'is_de_facturatienaam_verschillend_van_de_organisatienaam' in ac:
+                    fact_options = ac['is_de_facturatienaam_verschillend_van_de_organisatienaam']
+                    if 'ja' in fact_options['selectedOption']:
+                        skryv_address['postbus_naam'] = fact_options['facturatienaam']
+
+                return skryv_address
 
     def update_teamleader_address(self, company, address_type, skryv_address):
         # adress types : primary, delivery, invoicing
@@ -102,9 +117,11 @@ class MilestoneService(SkryvBase):
         # skryv has no 'country' in address
         updated_address['address']['country'] = 'BE'
 
+        if 'postbus_naam' in skryv_address:
+            updated_address['address']['addressee'] = skryv_address['postbus_naam']
+
         # TODO: see if we can somehow fill in these teamleader fields:
         # updated_address['address']['area_level_two'] = null
-        # updated_address['address']['addressee'] = "AGB - S.M.A.K."
 
         if 'addresses' not in company.keys():
             company['addresses'] = []
@@ -120,11 +137,29 @@ class MilestoneService(SkryvBase):
 
         return company
 
-    def company_dossier_update(self, document_body, company):
+    def status_update(self, company, milestone_status):
+        status_actions = {
+            'Geen interesse': self.status_geen_interesse,
+            'Misschien later samenwerking': self.status_misschien_later,
+            'Akkoord en opstart': self.status_akkoord,
+            'Akkoord, geen opstart': self.status_akkoord_geen_start,
+            'Interesse, niet akkoord SWO': self.status_interesse
+        }
+
+        if milestone_status not in status_actions:
+            # this happens for "SWO niet akkoord" and "SWO akkoord"
+            print(f"ignoring milestone status update for  {milestone_status}")
+            return (False, company)
+
+        perform_status_update = status_actions.get(milestone_status)
+        company = perform_status_update(company)
+        return (True, company)
+
+    def addresses_update(self, document_body, company):
         company = self.update_teamleader_address(
             company,
             'primary',
-            self.get_skryv_postadres(document_body, 'postadres')
+            self.get_skryv_postadres(document_body)
         )
 
         company = self.update_teamleader_address(
@@ -133,7 +168,11 @@ class MilestoneService(SkryvBase):
             self.get_skryv_laadadres(document_body)
         )
 
-        # TODO: what about invoicing address?
+        company = self.update_teamleader_address(
+            company,
+            'invoicing',
+            self.get_skryv_facturatieadres(document_body)
+        )
 
         return company
 
@@ -175,7 +214,7 @@ class MilestoneService(SkryvBase):
             mdoc_json = self.redis.load_document(self.dossier.id)
             if mdoc_json:
                 mdoc = DocumentBody.parse_raw(mdoc_json)
-                company = self.company_dossier_update(mdoc, company)
+                company = self.addresses_update(mdoc, company)
                 company = self.contacts_update(mdoc, company)
             else:
                 print(

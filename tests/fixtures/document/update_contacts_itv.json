@@ -1,0 +1,185 @@
+{
+  "action": "updated",
+  "dossier": {
+    "id": "471a7f96-ad00-42e8-817a-f1c616f17b1e",
+    "label": "Antigone",
+    "externalId": "OR-zs2kf7s",
+    "dossierManager": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-06-02T08:51:50.000+0000",
+    "updatedAt": "2022-06-02T08:52:38.000+0000",
+    "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "active": true
+  },
+  "document": {
+    "id": "f2c952a5-1851-4ffa-91ed-9de6fa19072b",
+    "version": 2,
+    "definition": "4c5d6f8a-3918-4f79-a9e7-68bcb91cd412",
+    "definitionLabel": "Controle Intentieverklaring",
+    "definitionKey": "controle_intentieverklaring",
+    "readOnly": false,
+    "document": {
+      "value": {
+        "raadpleeg_hier_de_samenwerkingsovereenkomst_met_viaa": "https://s3.eu-west-1.amazonaws.com/public.skryv.com/viaa/Samenwerkingsovereenkomst+contentpartner++-+meemoo.docx",
+        "wij_zijn_genteresseerd_in_een_samenwerking_met_viaa": {
+          "selectedOption": "ja"
+        },
+        "wij_hebben_kennis_genomen_van_de_samenwerkingsovereenkomst_met_viaa_en_zullen_deze_overeenkomst_binnen_een_termijn_van_maximum_8_weken_ter_goedkeuring_laten_ondertekenen_door_de_bevoegde_personeninstantie": {
+          "selectedOption": "ja_1"
+        },
+        "wij_geven_viaa_de_toestemming_om_de_dienstverlening_reeds_voor_te_bereiden_en_op_te_starten_in_afwachting_van_de_goedkeuring_van_de_samenwerkingsovereenkomst": {
+          "selectedOption": "ja_2"
+        },
+        "bedrijfsvorm": {
+          "selectedOption": "bvba"
+        },
+        "adres_en_contactgegevens": {
+          "type_organisatie": {
+            "selectedOption": "erfgoedbibliotheek"
+          },
+          "postadres": {
+            "straat": "straat",
+            "huisnummer": "1234",
+            "postcode": "9000",
+            "gemeente": "Gent"
+          },
+          "algemeen_emailadres": "test@voorwalter.be",
+          "algemeen_telefoonnummer": "03 123 45 67",
+          "website": "www.walter.be",
+          "laad_hier_het_logo_van_uw_organisatie_op": {
+            "id": "attachment_adres_en_contactgegevens.laad_hier_het_logo_van_uw_organisatie_op",
+            "base": "ff7093b4-7150-41f8-98a3-d5e798e480e2",
+            "contentType": "image/png",
+            "size": 78169,
+            "name": "Schermafbeelding 2022-06-13 om 11.41.41.png"
+          },
+          "laadadres_verschillend_van_postadres": {
+            "selectedOption": "ja_4",
+            "laadadres": {
+              "straat_2": "Leveringsstraat",
+              "huisnummer_2": "12",
+              "postcode_2": "9000",
+              "gemeente_2": "Gent"
+            }
+          },
+          "btwnummer": "0644.450.380",
+          "is_de_facturatienaam_verschillend_van_de_organisatienaam": {
+            "selectedOption": "ja",
+            "facturatienaam": "AGB Walter"
+          },
+          "facturatieadres_verschillend_van_postadres": {
+            "selectedOption": "ja_3",
+            "facturatieadres": {
+              "straat_1": "Facturatiestraat",
+              "huisnummer_1": "12",
+              "postcode_1": "9000",
+              "gemeente_1": "Gent"
+            }
+          },
+          "facturatie_emailadres": "facturatie@meemoo.be",
+          "werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie": {
+            "selectedOption": "ja"
+          },
+          "gegevens_directie": {
+            "naam_1": "Tine",
+            "voornaam": "directie",
+            "email": "directie@testorganisatievoorwalter.be",
+            "functietitel": "directie"
+          },
+          "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie": {
+            "selectedOption": "ja_5",
+            "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten": {
+              "naam_2": "Tine",
+              "voornaam_1": "Administratie",
+              "email_1": "administratie@testorganisatievoorwalter.be",
+              "telefoonnummer_1": "03 456 79 78",
+              "functie": "administratie",
+              "functiecategorie": {
+                "selectedOption": "marketing__communicatie"
+              }
+            }
+          },
+          "centrale_contactpersoon_voor_het_opstarten_van_de_dienstverlening_door_viaa_verschillend_van_de_directie": {
+            "centrale_contactpersoon_voor_het_opstarten_van_de_dienstverlening_door_viaa": {},
+            "deze_contactpersoon_mag_gecontacteerd_worden_in_verband_met_deze_dienstverlening": {}
+          },
+          "contactpersoon_dienstverlening": {
+            "selectedOptions": {
+              "contactpersoon_directie": false,
+              "contactpersoon_administratieve_samenwerking": false,
+              "extra_contactpersoon_dienstverlening_1": true,
+              "extra_contactpersoon_dienstverlening_2": true
+            },
+            "dienstverlening_directie": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie": false,
+                "intake_van_de_digitale_collectie": false
+              }
+            },
+            "dienstverlening_administratie": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie_1": false,
+                "intake_van_de_digitale_collectie_1": false
+              }
+            },
+            "dienstverlening_extra_1": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie_3": true,
+                "intake_van_de_digitale_collectie_3": true
+              }
+            },
+            "dienstverlening_extra_2": {
+              "selectedOptions": {
+                "digitalisering_van_de_analoge_collectie": true,
+                "intake_van_de_digitale_collectie": true
+              }
+            },
+            "naam_5": "Tine",
+            "voornaam_5": "Extra 1",
+            "emailadres_5": "extra1@testorganisatievoorwalter.be",
+            "telefoonnummer_5": "09 345 67 89",
+            "functietitel_5": "extra1",
+            "naam_6": "Tine",
+            "voornaam_6": "Extra 2",
+            "emailadres_6": "extra2@testorganisatievoorwalter.be",
+            "telefoonnummer_6": "04 567 34 45",
+            "functietitel_6": "extra2"
+          }
+        },
+        "geschreven_naam": " ",
+        "datum": " ",
+        "officile_naam_organisatie": "Testorganisatie voor Walter",
+        "getekende_intentieverklaring": {
+          "id": "attachment_getekende_intentieverklaring",
+          "base": "e2b00fa3-eb33-41e1-826a-e4c421059721",
+          "contentType": "image/png",
+          "size": 78169,
+          "name": "Schermafbeelding 2022-06-13 om 11.41.41.png"
+        },
+        "is_de_opgeladen_intentieverklaring_in_orde": {
+          "selectedOption": "ja_9"
+        }
+      }
+    },
+    "createdAt": "2022-06-13T10:00:31.000+0000",
+    "updatedAt": "2022-06-13T10:01:43.000+0000",
+    "links": [
+      {
+        "linkType": "LINK",
+        "resourceType": "DOSSIER",
+        "resourceId": "e3aececb-5aed-440e-8c27-3f4a7367a7c7"
+      },
+      {
+        "linkType": "SCOPE",
+        "resourceType": "TASK",
+        "resourceId": "a8fb3c2b-eaff-11ec-883a-0242ac130004"
+      },
+      {
+        "linkType": "LINK",
+        "resourceType": "PROCESS",
+        "resourceId": "faaed5d5-eafd-11ec-883a-0242ac130004"
+      }
+    ],
+    "subdocument": false
+  }
+}

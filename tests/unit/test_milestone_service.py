@@ -128,15 +128,36 @@ class TestMilestoneService:
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
 
+    # @pytest.mark.asyncio
+    # async def test_milestone_some_contacts_sync(self, mock_clients):
+
+    #     ws = WebhookScheduler()
+    #     ws.start(mock_clients)
+
+    #     # send a document event, so mocked redis stores it for
+    #     # actual milestone call
+    #     doc = open("tests/fixtures/document/updated_example.json", "r")
+    #     test_doc = DocumentBody.parse_raw(doc.read())
+    #     doc.close()
+    #     res = await ws.execute_webhook('document_event', test_doc)
+    #     assert res == 'document event is handled'
+
+    #     ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+    #     test_milestone = MilestoneBody.parse_raw(ms.read())
+    #     ms.close()
+
+    #     res = await ws.execute_webhook('milestone_event', test_milestone)
+    #     assert res == 'milestone event is handled'
+
     @pytest.mark.asyncio
-    async def test_milestone_contact_sync(self, mock_clients):
+    async def test_milestone_contacts_and_adresses_sync(self, mock_clients):
 
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
         # send a document event, so mocked redis stores it for
         # actual milestone call
-        doc = open("tests/fixtures/document/updated_example.json", "r")
+        doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
         test_doc = DocumentBody.parse_raw(doc.read())
         doc.close()
         res = await ws.execute_webhook('document_event', test_doc)
