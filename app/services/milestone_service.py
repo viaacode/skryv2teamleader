@@ -51,6 +51,24 @@ class MilestoneService(SkryvBase):
         company = self.set_toestemming_start(company, False)
         return company
 
+    def status_update(self, company, milestone_status):
+        status_actions = {
+            'Geen interesse': self.status_geen_interesse,
+            'Misschien later samenwerking': self.status_misschien_later,
+            'Akkoord en opstart': self.status_akkoord,
+            'Akkoord, geen opstart': self.status_akkoord_geen_start,
+            'Interesse, niet akkoord SWO': self.status_interesse
+        }
+
+        if milestone_status not in status_actions:
+            # this happens for "SWO niet akkoord" and "SWO akkoord"
+            print(f"ignoring milestone status update for  {milestone_status}")
+            return (False, company)
+
+        perform_status_update = status_actions.get(milestone_status)
+        company = perform_status_update(company)
+        return (True, company)
+
     def get_skryv_postadres(self, document_body):
         dvals = document_body.document.document.value
         if 'adres_en_contactgegevens' in dvals:
@@ -64,6 +82,9 @@ class MilestoneService(SkryvBase):
             if 'laadadres_verschillend_van_postadres' in ac:
                 ld = ac['laadadres_verschillend_van_postadres']
                 ladres = ld['laadadres']
+                if ladres == {}:
+                    return None
+
                 # skryv has an anoying _2 here
                 skryv_address = {
                     'straat': ladres['straat_2'],
@@ -83,6 +104,9 @@ class MilestoneService(SkryvBase):
             if 'facturatieadres_verschillend_van_postadres' in ac:
                 fd = ac['facturatieadres_verschillend_van_postadres']
                 fadres = fd['facturatieadres']
+                if fadres == {}:
+                    return None
+
                 # skryv has an anoying _1 here
                 skryv_address = {
                     'straat': fadres['straat_1'],
@@ -114,13 +138,13 @@ class MilestoneService(SkryvBase):
         )
         updated_address['address']['postal_code'] = skryv_address['postcode']
         updated_address['address']['city'] = skryv_address['gemeente']
-        # skryv has no 'country' in address
+        # skryv has no 'country' in address, assume belgium
         updated_address['address']['country'] = 'BE'
 
         if 'postbus_naam' in skryv_address:
             updated_address['address']['addressee'] = skryv_address['postbus_naam']
 
-        # TODO: see if we can somehow fill in these teamleader fields:
+        # TODO: see if we can somehow fill in this extra teamleader field:
         # updated_address['address']['area_level_two'] = null
 
         if 'addresses' not in company.keys():
@@ -136,24 +160,6 @@ class MilestoneService(SkryvBase):
             company['addresses'].append(updated_address)
 
         return company
-
-    def status_update(self, company, milestone_status):
-        status_actions = {
-            'Geen interesse': self.status_geen_interesse,
-            'Misschien later samenwerking': self.status_misschien_later,
-            'Akkoord en opstart': self.status_akkoord,
-            'Akkoord, geen opstart': self.status_akkoord_geen_start,
-            'Interesse, niet akkoord SWO': self.status_interesse
-        }
-
-        if milestone_status not in status_actions:
-            # this happens for "SWO niet akkoord" and "SWO akkoord"
-            print(f"ignoring milestone status update for  {milestone_status}")
-            return (False, company)
-
-        perform_status_update = status_actions.get(milestone_status)
-        company = perform_status_update(company)
-        return (True, company)
 
     def addresses_update(self, document_body, company):
         company = self.update_teamleader_address(
@@ -176,8 +182,95 @@ class MilestoneService(SkryvBase):
 
         return company
 
+    def bedrijfsnaam_update(self, document_body, company):
+        dvals = document_body.document.document.value
+        if 'officile_naam_organisatie' in dvals:
+            bedrijfsnaam = dvals['officile_naam_organisatie']
+            company['name'] = bedrijfsnaam
+
+        return company
+
+    def bedrijfsvorm_update(self, document_body, company):
+        btype_mapping = {
+            'ag': 'AG',
+            'bvba': 'BVBA',
+            'cvba': 'CVBA',
+            'cvoa': 'CVOA',
+            'comm.v': 'Comm.V',
+            'comm.va': 'Comm.VA',
+            'esv': 'ESV',
+            'ebvba': 'EBVBA',
+            'eenmanszaak': 'Eenmanszaak',
+            'lv': 'LV',
+            'nv': 'NV',
+            'sbvba': 'SBVBA',
+            'se': 'SE',
+            'vof': 'VOF',
+            'vzw': 'VZW',
+            'vereniging': 'Vereniging',
+            'overige': None
+        }
+
+        dvals = document_body.document.document.value
+        if 'bedrijfsvorm' in dvals:
+            bedrijfsvorm = dvals['bedrijfsvorm']['selectedOption']
+            company['business_type'] = btype_mapping.get('bedrijfsvorm')
+            print(
+                "DEBUG: bedrijfsvorm found=", bedrijfsvorm,
+                " -> business_type=", company['business_type']
+            )
+
+        return company
+
+    def orgtype_update(self, document_body, company):
+        otype_mapping = {
+            'archief': 'CUL - archief',
+            'erfgoedbibliotheek': 'CUL - erfgoedbibliotheek',
+            'erfgoedcel': 'CUL - erfgoedcel',
+            'kunstenorganisatie': 'CUL - kunstenorganisatie',
+            'mediabedrijf': 'MED - mediabedrijf',
+            'museum': 'CUL - museum (erkend)',  # niet erkend is er ook!
+            'regionale_omroep': 'MED - regionale omroep',
+            'sectorinstituut': 'ALG - sectororganisatie',
+            'overheidsinstelling': 'OVH - overheidsdienst'
+        }
+
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' in dvals:
+            ac = dvals['adres_en_contactgegevens']
+            if 'type_organisatie' in ac:
+                type_organisatie = ac['type_organisatie']['selectedOption']
+                tl_orgtype = otype_mapping[type_organisatie]
+
+                company = self.set_type_organisatie(company, tl_orgtype)
+                print(
+                    "DEBUG: type organisatie found =", type_organisatie,
+                    "mapped value=",
+                    self.get_custom_field(company, 'type_organisatie')
+                )
+
+        return company
+
     def contacts_update(self, document_body, company):
         print(f"TODO: Contacts update here on document={document_body}")
+        return company
+
+    def update_company_using_dossier(self, company, dossier_id):
+        mdoc_json = self.redis.load_document(dossier_id)
+        if mdoc_json:
+            mdoc = DocumentBody.parse_raw(mdoc_json)
+            if mdoc:
+                company = self.bedrijfsnaam_update(mdoc, company)
+                company = self.bedrijfsvorm_update(mdoc, company)
+                company = self.orgtype_update(mdoc, company)
+                company = self.addresses_update(mdoc, company)
+                company = self.contacts_update(mdoc, company)
+            else:
+                print("document parse error in mdoc", mdoc)
+        else:
+            print(
+                f"milestone: no associated dossier found for id={dossier_id}")
+
         return company
 
     def teamleader_update(self):
@@ -200,7 +293,9 @@ class MilestoneService(SkryvBase):
             return
 
         status_changed, company = self.status_update(
-            company, self.milestone.status)
+            company,
+            self.milestone.status
+        )
 
         if status_changed:
             print(
@@ -211,15 +306,9 @@ class MilestoneService(SkryvBase):
                     self.action
                 )
             )
-            mdoc_json = self.redis.load_document(self.dossier.id)
-            if mdoc_json:
-                mdoc = DocumentBody.parse_raw(mdoc_json)
-                company = self.addresses_update(mdoc, company)
-                company = self.contacts_update(mdoc, company)
-            else:
-                print(
-                    f"milestone: no associated dossier found for id={self.dossier.id}")
 
+            company = self.update_company_using_dossier(
+                company, self.dossier.id)
             self.tlc.update_company(company)
 
     def handle_event(self, milestone_body: MilestoneBody):

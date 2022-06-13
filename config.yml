@@ -32,3 +32,4 @@ app:
     toestemming_starten: !ENV ${TL_TOESTEMMING_STARTEN}
     swo: !ENV ${TL_SWO}
     swo_addenda: !ENV ${TL_SWO_ADDENDA}
+    type_organisatie: !ENV ${TL_TYPE_ORGANISATIE}

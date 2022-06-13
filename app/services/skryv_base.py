@@ -50,6 +50,9 @@ class SkryvBase:
 
         return company
 
+    def set_type_organisatie(self, company, value):
+        return self.set_custom_field(company, 'type_organisatie', value)
+
     def set_cp_status(self, company, value):
         # 2.2 CP status -> 'ja', 'nee', 'pending'
         allowed_values = ['ja', 'nee', 'pending']

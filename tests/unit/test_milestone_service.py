@@ -128,26 +128,29 @@ class TestMilestoneService:
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
 
-    # @pytest.mark.asyncio
-    # async def test_milestone_some_contacts_sync(self, mock_clients):
+    @pytest.mark.asyncio
+    async def test_milestone_some_contacts_sync(self, mock_clients):
 
-    #     ws = WebhookScheduler()
-    #     ws.start(mock_clients)
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
 
-    #     # send a document event, so mocked redis stores it for
-    #     # actual milestone call
-    #     doc = open("tests/fixtures/document/updated_example.json", "r")
-    #     test_doc = DocumentBody.parse_raw(doc.read())
-    #     doc.close()
-    #     res = await ws.execute_webhook('document_event', test_doc)
-    #     assert res == 'document event is handled'
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        doc = open("tests/fixtures/document/updated_example.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
 
-    #     ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
-    #     test_milestone = MilestoneBody.parse_raw(ms.read())
-    #     ms.close()
+        ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        ms.close()
 
-    #     res = await ws.execute_webhook('milestone_event', test_milestone)
-    #     assert res == 'milestone event is handled'
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+        tlc = mock_clients.teamleader
+        assert tlc.method_called('update_company')
 
     @pytest.mark.asyncio
     async def test_milestone_contacts_and_adresses_sync(self, mock_clients):
@@ -169,3 +172,13 @@ class TestMilestoneService:
 
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
+
+        tlc = mock_clients.teamleader
+        last_tl_call = tlc.calls[-1]
+        assert 'update_company' in last_tl_call
+        assert 'Testorganisatie voor Walter' in last_tl_call
+        assert 'CUL - erfgoedbibliotheek' in last_tl_call
+
+        assert 'straat 1234' in last_tl_call
+        assert 'Facturatiestraat 12' in last_tl_call
+        assert 'Leveringsstraat 12' in last_tl_call
