@@ -89,7 +89,8 @@ class ProcessService(SkryvBase):
             )
 
         except ValidationError as e:
-            print(f"Missing or malformed dossier for ondertekenproces: {self.dossier.id} error: {e}")
+            print(
+                f"Missing or malformed dossier for ondertekenproces: {self.dossier.id} error: {e}")
 
         return company
 
@@ -126,7 +127,8 @@ class ProcessService(SkryvBase):
 
         # enkel behandeling type dossier 'contentpartner'
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
-            print(f"Skipping {self.dossier.dossierDefinition}, it's not a CP process")
+            print(
+                f"Skipping {self.dossier.dossierDefinition}, it's not a CP process")
             return
 
         if(self.or_id):

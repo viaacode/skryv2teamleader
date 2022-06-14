@@ -266,7 +266,7 @@ class MilestoneService(SkryvBase):
         if not typeFound:
             company['emails'].append({
                 'type': mail_type,
-                'email': mail_value 
+                'email': mail_value
             })
 
         return company
@@ -361,7 +361,8 @@ class MilestoneService(SkryvBase):
             company = self.contacts_update(mdoc, company)
 
         except ValidationError as e:
-            print(f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}")
+            print(
+                f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}")
 
         return company
 
