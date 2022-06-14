@@ -89,7 +89,7 @@ class ProcessService(SkryvBase):
             )
 
         except ValidationError as e:
-            print(f"Missing or malformed dossier: {self.dossier.id} error: {e}")
+            print(f"Missing or malformed dossier for ondertekenproces: {self.dossier.id} error: {e}")
 
         return company
 

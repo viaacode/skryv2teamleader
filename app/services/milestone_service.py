@@ -11,6 +11,7 @@
 from app.models.milestone_body import MilestoneBody
 from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
+from pydantic import ValidationError
 
 
 class MilestoneService(SkryvBase):
@@ -304,24 +305,22 @@ class MilestoneService(SkryvBase):
         return company
 
     def update_company_using_dossier(self, company, dossier_id):
-        mdoc_json = self.redis.load_document(dossier_id)
-        if mdoc_json:
+        try:
+            mdoc_json = self.redis.load_document(dossier_id)
             mdoc = DocumentBody.parse_raw(mdoc_json)
-            if mdoc:
-                company = self.bedrijfsnaam_update(mdoc, company)
-                company = self.bedrijfsvorm_update(mdoc, company)
-                company = self.orgtype_update(mdoc, company)
-                company = self.addresses_update(mdoc, company)
-                company = self.algemeen_update(mdoc, company)
-                # TODO: facturatienaam
-                # TODO: facturatie email adres
-                # TODO: bestelbonnen
-                company = self.contacts_update(mdoc, company)
-            else:
-                print("document parse error in mdoc", mdoc)
-        else:
-            print(
-                f"milestone: no associated dossier found for id={dossier_id}")
+
+            company = self.bedrijfsnaam_update(mdoc, company)
+            company = self.bedrijfsvorm_update(mdoc, company)
+            company = self.orgtype_update(mdoc, company)
+            company = self.addresses_update(mdoc, company)
+            company = self.algemeen_update(mdoc, company)
+            # TODO: facturatienaam
+            # TODO: facturatie email adres
+            # TODO: bestelbonnen
+            company = self.contacts_update(mdoc, company)
+
+        except ValidationError as e:
+            print(f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}")
 
         return company
 
