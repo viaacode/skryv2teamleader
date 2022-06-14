@@ -344,7 +344,36 @@ class MilestoneService(SkryvBase):
     def contacts_update(self, document_body, company):
         dvals = document_body.document.document.value
         ac = dvals['adres_en_contactgegevens']
-        print(f"TODO: Contacts update here on document contactgegevens={ac}")
+
+        cdirect = ac['gegevens_directie']
+        # strange here: naam_1 but voornaam does not have underscore ???
+        contactpersoon_directie = {
+            'naam': cdirect.get('naam_1'),
+            'voornaam': cdirect.get('voornaam'),
+            'email': cdirect.get('email'),
+            'functie_categorie': cdirect.get('functietitel'),
+            'relatie_meemoo': 'contactpersoon contact'
+        }
+        print("TODO: save contact directie = ", contactpersoon_directie)
+
+        cdienst = ac['contactpersoon_dienstverlening']
+        # how do these _5 or _6 work??? and is this always used ???
+        contactpersoon_administratie = {
+            'naam': cdienst.get('naam_5'),
+            'voornaam': cdienst.get('voornaam_5'),
+            'email': cdienst.get('emailadres_5'),
+            'telephone': cdienst.get('telefoonnummer_5'),
+            'telephone2': cdienst.get('telefoonnummer_6'),
+            'functie_categorie': cdienst.get('functietitel_5'),
+            # wat hiermee ???
+            'functie_categorie_tweede': cdienst.get('functietitel_6'),
+            'relatie_meemoo': 'contactpersoon contact'
+        }
+        print("TODO: save contact administratie = ",
+              contactpersoon_administratie)
+
+        # if cdienst.get('naam_5'):
+        #     __import__('pdb').set_trace()
 
         return company
 
