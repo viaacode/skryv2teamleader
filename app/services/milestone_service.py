@@ -215,7 +215,7 @@ class MilestoneService(SkryvBase):
         dvals = document_body.document.document.value
         if 'bedrijfsvorm' in dvals:
             bedrijfsvorm = dvals['bedrijfsvorm']['selectedOption']
-            company['business_type'] = btype_mapping.get('bedrijfsvorm')
+            company['business_type'] = btype_mapping.get(bedrijfsvorm)
             print(
                 "DEBUG: bedrijfsvorm found=", bedrijfsvorm,
                 " -> business_type=", company['business_type']
@@ -296,12 +296,18 @@ class MilestoneService(SkryvBase):
                 company['website'] = ac['website']
 
             if 'btwnummer' in ac:
-                company['vat_number'] = ac['btwnummer']
+                vat_number = ac['btwnummer'].upper()
+                if 'BE' not in vat_number:
+                    vat_number = "BE {}".format(vat_number)
+                company['vat_number'] = vat_number
 
         return company
 
     def contacts_update(self, document_body, company):
-        print(f"TODO: Contacts update here on document={document_body}")
+        dvals = document_body.document.document.value
+        ac = dvals['adres_en_contactgegevens']
+        print(f"TODO: Contacts update here on document contactgegevens={ac}")
+
         return company
 
     def update_company_using_dossier(self, company, dossier_id):
