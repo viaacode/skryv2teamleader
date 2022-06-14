@@ -80,3 +80,10 @@ class SlackClient:
                 dossier.label
             )
         )
+
+    def company_not_found(self, company_id, or_id):
+        msg = 'Company UUID: {} with OR_ID: {} not found in Teamleader'.format(
+            company_id,
+            or_id
+        )
+        self.create_message(msg)

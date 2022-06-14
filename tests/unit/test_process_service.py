@@ -90,3 +90,14 @@ class TestProcessService:
         res = await ws.execute_webhook('process_event', test_process)
         # TODO check that updated_addendums document is properly found here!
         assert res == 'process event is handled'
+
+    @pytest.mark.asyncio
+    async def test_process_missing_document(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        proc = open("tests/fixtures/process/process_ended.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        proc.close()
+        res = await ws.execute_webhook('process_event', test_process)
+        assert res == 'process event is handled'

@@ -339,10 +339,7 @@ class MilestoneService(SkryvBase):
         company_id = ldap_org['x-be-viaa-externalUUID'].value
         company = self.tlc.get_company(company_id)
         if not company:
-            # TODO: make slack message here
-            print(
-                f"ERROR: company id={company_id} not found in teamleader for org {self.or_id}")
-            return
+            self.slack.company_not_found(company_id, self.or_id)
 
         status_changed, company = self.status_update(
             company,

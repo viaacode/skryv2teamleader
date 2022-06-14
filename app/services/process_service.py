@@ -18,6 +18,7 @@
 from app.models.process_body import ProcessBody
 from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
+from pydantic import ValidationError
 
 
 class ProcessService(SkryvBase):
@@ -80,15 +81,15 @@ class ProcessService(SkryvBase):
         company = self.set_toestemming_start(company, True)
         company = self.set_swo(company, True)
 
-        updated_document_json = self.redis.load_document(self.dossier.id)
-        if updated_document_json:
+        try:
+            updated_document_json = self.redis.load_document(self.dossier.id)
             company = self.addendums_update(
                 company,
                 DocumentBody.parse_raw(updated_document_json)
             )
-        else:
-            print(
-                f"ERROR: addendum update, could not find dossier id = {self.dossier.id}")
+
+        except ValidationError as e:
+            print(f"Missing or malformed dossier: {self.dossier.id} error: {e}")
 
         return company
 
@@ -96,8 +97,7 @@ class ProcessService(SkryvBase):
     # ITV gestart -> sets cp_status == pending.
     def teamleader_update(self):
         if self.action != "ended":
-            print(
-                "skipping process with action {self.action}, only handling ended")
+            print("Skipping process with action {self.action}")
             return
 
         ldap_org = self.ldap.find_company(self.or_id)
@@ -110,12 +110,12 @@ class ProcessService(SkryvBase):
         if self.process.processDefinitionKey == "so_ondertekenproces":
             company_id = ldap_org['x-be-viaa-externalUUID'].value
             company = self.tlc.get_company(company_id)
-            if company:
-                company = self.set_status_ondertekenproces(company)
-                self.tlc.update_company(company)
-            else:
-                # TODO: slack message here?
-                print("ERROR: company {company_id} not found in teamleader!")
+            if not company:
+                self.slack.company_not_found(company_id, self.or_id)
+                return
+
+            company = self.set_status_ondertekenproces(company)
+            self.tlc.update_company(company)
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body
@@ -126,8 +126,7 @@ class ProcessService(SkryvBase):
 
         # enkel behandeling type dossier 'contentpartner'
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
-            print(
-                f"{self.dossier.dossierDefinition} is not a content partner process")
+            print(f"Skipping {self.dossier.dossierDefinition}, it's not a CP process")
             return
 
         if(self.or_id):
