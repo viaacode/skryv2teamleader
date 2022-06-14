@@ -252,6 +252,44 @@ class MilestoneService(SkryvBase):
 
         return company
 
+    def update_company_email(self, company, mail_type, mail_value):
+        cp_mails = company['emails']
+        typeFound = False
+        if 'emails' not in company:
+            company['emails'] = []
+
+        for m in cp_mails:
+            if m['type'] == mail_type:
+                typeFound = True
+                m['email'] = mail_value
+
+        if not typeFound:
+            company['emails'].append({
+                'type': mail_type,
+                'email': mail_value 
+            })
+
+        return company
+
+    def update_company_phone(self, company, phone_number):
+        cp_phones = company['telephones']
+        phoneNumberFound = False
+        if 'telephones' not in company:
+            company['telephones'] = []
+
+        for p in cp_phones:
+            if p['type'] == 'phone':
+                phoneNumberFound = True
+                p['number'] = phone_number
+
+        if not phoneNumberFound:
+            company['telephones'].append({
+                'type': 'phone',
+                'number': phone_number
+            })
+
+        return company
+
     def algemeen_update(self, document_body, company):
         # update email, telefoon, website, btwnummer
         dvals = document_body.document.document.value
@@ -261,38 +299,24 @@ class MilestoneService(SkryvBase):
         ac = dvals['adres_en_contactgegevens']
 
         if 'algemeen_emailadres' in ac:
-            cp_mails = company['emails']
-            primaryFound = False
-            if 'emails' not in company:
-                company['emails'] = []
+            company = self.update_company_email(
+                company,
+                'primary',
+                ac['algemeen_emailadres']
+            )
 
-            for m in cp_mails:
-                if m['type'] == 'primary':
-                    primaryFound = True
-                    m['email'] = ac['algemeen_emailadres']
-
-            if not primaryFound:
-                company['emails'].append({
-                    'type': 'primary',
-                    'email': ac['algemeen_emailadres']
-                })
+        if 'facturatie_emailadres' in ac:
+            company = self.update_company_email(
+                company,
+                'invoicing',
+                ac['facturatie_emailadres']
+            )
 
         if 'algemeen_telefoonnummer' in ac:
-            cp_phones = company['telephones']
-            phoneNumberFound = False
-            if 'telephones' not in company:
-                company['telephones'] = []
-
-            for p in cp_phones:
-                if p['type'] == 'phone':
-                    phoneNumberFound = True
-                    p['number'] = ac['algemeen_telefoonnummer']
-
-            if not phoneNumberFound:
-                company['telephones'].append({
-                    'type': 'phone',
-                    'number': ac['algemeen_telefoonnummer']
-                })
+            company = self.update_company_phone(
+                company,
+                ac['algemeen_telefoonnummer']
+            )
 
         if 'website' in ac:
             company['website'] = ac['website']
@@ -302,10 +326,6 @@ class MilestoneService(SkryvBase):
             if 'BE' not in vat_number:
                 vat_number = "BE {}".format(vat_number)
             company['vat_number'] = vat_number
-
-        if 'facturatie_emailadres' in ac:
-            facturatie_email = ac['facturatie_emailadres']
-            print("TODO: facturatie email=", facturatie_email)
 
         if 'is_de_facturatienaam_verschillend_van_de_organisatienaam' in ac:
             fverschil = ac['is_de_facturatienaam_verschillend_van_de_organisatienaam']
