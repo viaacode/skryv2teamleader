@@ -61,12 +61,12 @@ platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 31 items                                                            
+collected 32 items                                                            
 
-tests/test_app.py ..........                                            [ 32%]
-tests/unit/test_auth_tokens.py .                                        [ 35%]
-tests/unit/test_document_service.py .....                               [ 51%]
-tests/unit/test_milestone_service.py .........                          [ 80%]
+tests/test_app.py ..........                                            [ 31%]
+tests/unit/test_auth_tokens.py .                                        [ 34%]
+tests/unit/test_document_service.py .....                               [ 50%]
+tests/unit/test_milestone_service.py ..........                         [ 81%]
 tests/unit/test_process_service.py ....                                 [ 93%]
 tests/unit/test_scheduler.py ..                                         [100%]
 
@@ -103,14 +103,14 @@ app/models/process_body.py              9      0   100%
 app/server.py                          25      7    72%
 app/services/__init__.py                0      0   100%
 app/services/document_service.py       43      4    91%
-app/services/milestone_service.py      85      5    94%
+app/services/milestone_service.py     199     13    93%
 app/services/process_service.py        69      7    90%
-app/services/skryv_base.py             57      6    89%
+app/services/skryv_base.py             59      6    90%
 app/services/webhook_service.py        22      0   100%
 -------------------------------------------------------
-TOTAL                                 919    235    74%
+TOTAL                                1035    243    77%
 Covemen to dir htmlcov
 
-============================= 31 passed in 2.28s ==============================
+============================= 32 passed in 2.16s ==============================
 ```
 
