@@ -344,19 +344,10 @@ class MilestoneService(SkryvBase):
     def contacts_update(self, document_body, company):
         dvals = document_body.document.document.value
         ac = dvals['adres_en_contactgegevens']
+        if not ac:
+            print("geen adres_en_contactgegevens aanwezig in document...")
+            return company
 
-        cdirect = ac['gegevens_directie']
-        # strange here: naam_1 but voornaam does not have underscore ???
-        cp_directie = {
-            'naam': cdirect.get('naam_1'),
-            'voornaam': cdirect.get('voornaam'),
-            'email': cdirect.get('email'),
-            'functie_categorie': cdirect.get('functietitel'),
-            'relatie_meemoo': 'contactpersoon contact'
-        }
-        print("TODO: save contact directie = ", cp_directie)
-
-        cdienst = ac['contactpersoon_dienstverlening']
         category_map = {
             'administratie': 'administratie',
             'archief_of_collectiebeheer': 'archief ofcollectiebeheer',
@@ -365,8 +356,24 @@ class MilestoneService(SkryvBase):
             'marketing__communicatie': 'marcom',
             'mediaproductie': 'mediaproductie',
             'onderzoek': 'kennis/onderzoek',
-            'publiekswerking_of_educatie': 'publiekswerking'
+            'publiekswerking_of_educatie': 'publiekswerking',
+            'directie': 'directie'
         }
+
+        cdirect = ac['gegevens_directie']
+        # strange here: naam_1 but voornaam does not have underscore ???
+        cp_directie = {
+            'naam': cdirect.get('naam_1'),
+            'voornaam': cdirect.get('voornaam'),
+            'email': cdirect.get('email'),
+            'functie_categorie': category_map.get(
+                cdirect.get('functietitel')
+            ),
+            'relatie_meemoo': 'contactpersoon contact'
+        }
+        print("TODO: save contact directie = ", cp_directie)
+
+        cdienst = ac['contactpersoon_dienstverlening']
         # how do these _5 or _6 work??? and is this always used ???
         cp_administratie = {
             'naam': cdienst.get('naam_5'),
