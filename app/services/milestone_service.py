@@ -123,7 +123,6 @@ class MilestoneService(SkryvBase):
 
                 return skryv_address
 
-
     def set_facturatienaam(self, company, facturatienaam):
         if 'addresses' not in company.keys():
             company['addresses'] = []
@@ -135,7 +134,8 @@ class MilestoneService(SkryvBase):
                 tad['address']['addressee'] = facturatienaam
 
         if not fnSaved:
-            print(f"warning: facturatienaam {facturatienaam} could not be saved")
+            print(
+                f"warning: facturatienaam {facturatienaam} could not be saved")
 
         return company
 
@@ -359,6 +359,7 @@ class MilestoneService(SkryvBase):
         return company
 
     def contacts_update(self, document_body, company):
+        # TODO: this should actually create + link company contacts here!!!
         dvals = document_body.document.document.value
         ac = dvals['adres_en_contactgegevens']
         if not ac:
@@ -377,8 +378,8 @@ class MilestoneService(SkryvBase):
             'directie': 'directie'
         }
 
+        # directie contact aanmaken of bestaande updaten
         cdirect = ac['gegevens_directie']
-        # strange here: naam_1 but voornaam does not have underscore ???
         cp_directie = {
             'naam': cdirect.get('naam_1'),
             'voornaam': cdirect.get('voornaam'),
@@ -388,61 +389,68 @@ class MilestoneService(SkryvBase):
             ),
             'relatie_meemoo': 'contactpersoon contract'
         }
-        company = self.set_relatie_meemoo(company, cp_directie['relatie_meemoo'])
-        company = self.set_functie_category(company, cp_directie['functie_categorie'])
-        print("TODO: save contact directie = ", cp_directie)
+        # FOR NOW A DUMMY PLACEHOLDER...
+        new_contact = {'custom_fields': []}
+        new_contact = self.set_relatie_meemoo(
+            new_contact, cp_directie['relatie_meemoo']
+        )
+        new_contact = self.set_functie_category(
+            new_contact, cp_directie['functie_categorie']
+        )
+        print("TODO: create + link contact directie = ", cp_directie)
 
+        # administratie contact aanmaken of updaten
+        cp_admin = ac['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie']  # noqa: E501
+        if cp_admin.get('selectedOption') == 'ja_5':
+            cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']
+            cp_administratie = {
+                'naam': cadmin.get('naam_2'),
+                'voornaam': cadmin.get('voornaam_1'),
+                'email': cadmin.get('email_1'),
+                'phone': cadmin.get('telefoonnummer_1'),
+                'functie': cadmin.get('functie'),
+                'functie_categorie': category_map.get(
+                    cadmin['functiecategorie']['selectedOption']
+                ),
+                'relatie_meemoo': 'contactpersoon contract'  # TODO: double check!
+            }
 
-        # "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie": {
-        #     "selectedOption": "ja_5",
-        #     "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten": {
-        #       "naam_2": "Tine",
-        #       "voornaam_1": "Administratie",
-        #       "email_1": "administratie@testorganisatievoorwalter.be",
-        #       "telefoonnummer_1": "03 456 79 78",
-        #       "functie": "administratie",
-        #       "functiecategorie": {
-        #         "selectedOption": "marketing__communicatie"
-        #       }
-        #     }
-        #   },
+            new_contact = {'custom_fields': []}  # todo create a contact here
+            new_contact = self.set_relatie_meemoo(
+                new_contact, cp_administratie['relatie_meemoo']
+            )
+            new_contact = self.set_functie_category(
+                new_contact, cp_administratie['functie_categorie']
+            )
+            print("TODO: create + link contact administratie= ", cp_administratie)
 
-
+        # dienstverlening 2 extra contacten aanmaken of updaten
         cdienst = ac['contactpersoon_dienstverlening']
-        # "naam_5": "Tine",
-        #     "voornaam_5": "Extra 1",
-        #     "emailadres_5": "extra1@testorganisatievoorwalter.be",
-        #     "telefoonnummer_5": "09 345 67 89",
-        #     "functietitel_5": "extra1",
-        #     "naam_6": "Tine",
-        #     "voornaam_6": "Extra 2",
-        #     "emailadres_6": "extra2@testorganisatievoorwalter.be",
-        #     "telefoonnummer_6": "04 567 34 45",
-        #     "functietitel_6": "extra2"
-        cp_administratie = {
+        cp_dienst_eerste = {
             'naam': cdienst.get('naam_5'),
             'voornaam': cdienst.get('voornaam_5'),
             'email': cdienst.get('emailadres_5'),
             'telephone': cdienst.get('telefoonnummer_5'),
-            'telephone2': cdienst.get('telefoonnummer_6'),
-            'relatie_meemoo': 'contactpersoon contact'
-        }
-
-        if cdienst.get('functietitel_5'):
-            cp_administratie['functie_categorie'] = category_map.get(
+            'functie': cdienst.get('functietitel_5'),
+            'functie_categorie': category_map.get(
                 cdienst.get('functietitel_5')
-            )
+            ),
+            'relatie_meemoo': 'contactpersoon contract'
+        }
+        print("TODO: save cp_dienst_eerste = ", cp_dienst_eerste)
 
-        if cdienst.get('functietitel_6'):
-            # wat hiermee ???
-            cp_administratie['functie_categorie_tweede'] = category_map.get(
+        cp_dienst_tweede = {
+            'naam': cdienst.get('naam_6'),
+            'voornaam': cdienst.get('voornaam_6'),
+            'email': cdienst.get('emailadres_6'),
+            'telephone': cdienst.get('telefoonnummer_6'),
+            'functie': cdienst.get('functietitel_6'),
+            'functie_categorie': category_map.get(
                 cdienst.get('functietitel_6')
-            )
-
-        print("TODO: save contact administratie = ", cp_administratie)
-
-        # if cdienst.get('naam_5'):
-        #     __import__('pdb').set_trace()
+            ),
+            'relatie_meemoo': 'contactpersoon contract'
+        }
+        print("TODO: save cp_dienst_tweede = ", cp_dienst_tweede)
 
         return company
 
