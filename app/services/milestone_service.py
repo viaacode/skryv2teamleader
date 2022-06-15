@@ -22,35 +22,26 @@ class MilestoneService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
-    def status_geen_interesse(self, company):
-        company = self.set_cp_status(company, 'nee')
-        company = self.set_intentieverklaring(company, 'ingevuld')
-        company = self.set_toestemming_start(company, False)
+    def set_company_status(self, company, cp_status, intentie, toestemming):
+        company = self.set_cp_status(company, cp_status)
+        company = self.set_intentieverklaring(company, intentie)
+        company = self.set_toestemming_start(company, toestemming)
         return company
+
+    def status_geen_interesse(self, company):
+        return self.set_company_status(company, 'nee', 'ingevuld', False)
 
     def status_misschien_later(self, company):
-        company = self.set_cp_status(company, 'pending')
-        company = self.set_intentieverklaring(company, 'pending')
-        company = self.set_toestemming_start(company, False)
-        return company
+        return self.set_company_status(company, 'pending', 'pending', False)
 
     def status_akkoord(self, company):
-        company = self.set_cp_status(company, 'ja')
-        company = self.set_intentieverklaring(company, 'ingevuld')
-        company = self.set_toestemming_start(company, True)
-        return company
+        return self.set_company_status(company, 'ja', 'ingevuld', True)
 
     def status_akkoord_geen_start(self, company):
-        company = self.set_cp_status(company, 'ja')
-        company = self.set_intentieverklaring(company, 'ingevuld')
-        company = self.set_toestemming_start(company, False)
-        return company
+        return self.set_company_status(company, 'ja', 'ingevuld', False)
 
     def status_interesse(self, company):
-        company = self.set_cp_status(company, 'pending')
-        company = self.set_intentieverklaring(company, 'pending')
-        company = self.set_toestemming_start(company, False)
-        return company
+        return self.set_company_status(company, 'pending', 'pending', False)
 
     def status_update(self, company, milestone_status):
         status_actions = {
@@ -62,7 +53,8 @@ class MilestoneService(SkryvBase):
         }
 
         if milestone_status not in status_actions:
-            # this happens for "SWO niet akkoord" and "SWO akkoord"
+            # this case happens for "SWO niet akkoord" and "SWO akkoord"
+            # return false -> we don't need teamleader update
             print(f"ignoring milestone status update for  {milestone_status}")
             return (False, company)
 
