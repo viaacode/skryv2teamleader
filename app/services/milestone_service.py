@@ -22,6 +22,18 @@ class MilestoneService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
+        self.category_map = {
+            'administratie': 'administratie',
+            'archief_of_collectiebeheer': 'archief ofcollectiebeheer',
+            'beleid': 'beleid',
+            'management': 'management',
+            'marketing__communicatie': 'marcom',
+            'mediaproductie': 'mediaproductie',
+            'onderzoek': 'kennis/onderzoek',
+            'publiekswerking_of_educatie': 'publiekswerking',
+            'directie': 'directie'
+        }
+
     def set_company_status(self, company, cp_status, intentie, toestemming):
         company = self.set_cp_status(company, cp_status)
         company = self.set_intentieverklaring(company, intentie)
@@ -350,33 +362,15 @@ class MilestoneService(SkryvBase):
 
         return company
 
-    def contacts_update(self, document_body, company):
-        # TODO: this should actually create + link company contacts here!!!
-        dvals = document_body.document.document.value
-        ac = dvals['adres_en_contactgegevens']
-        if not ac:
-            print("geen adres_en_contactgegevens aanwezig in document...")
-            return company
-
-        category_map = {
-            'administratie': 'administratie',
-            'archief_of_collectiebeheer': 'archief ofcollectiebeheer',
-            'beleid': 'beleid',
-            'management': 'management',
-            'marketing__communicatie': 'marcom',
-            'mediaproductie': 'mediaproductie',
-            'onderzoek': 'kennis/onderzoek',
-            'publiekswerking_of_educatie': 'publiekswerking',
-            'directie': 'directie'
-        }
-
+    def upsert_directie_contact(self, company, existing_contacts, contactgegevens):
+        # if contact already exists, update it, otherwise create it
         # directie contact aanmaken of bestaande updaten
-        cdirect = ac['gegevens_directie']
+        cdirect = contactgegevens['gegevens_directie']
         cp_directie = {
             'naam': cdirect.get('naam_1'),
             'voornaam': cdirect.get('voornaam'),
             'email': cdirect.get('email'),
-            'functie_categorie': category_map.get(
+            'functie_categorie': self.category_map.get(
                 cdirect.get('functietitel')
             ),
             'relatie_meemoo': 'contactpersoon contract'
@@ -391,40 +385,47 @@ class MilestoneService(SkryvBase):
         )
         print("TODO: create + link contact directie = ", cp_directie)
 
+    def upsert_administratie_contact(self, company, existing_contacts, contactgegevens):
+        # if contact already exists, update it, otherwise create it
         # administratie contact aanmaken of updaten
-        cp_admin = ac['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie']  # noqa: E501
-        if cp_admin.get('selectedOption') == 'ja_5':
-            cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']
-            cp_administratie = {
-                'naam': cadmin.get('naam_2'),
-                'voornaam': cadmin.get('voornaam_1'),
-                'email': cadmin.get('email_1'),
-                'phone': cadmin.get('telefoonnummer_1'),
-                'functie': cadmin.get('functie'),
-                'functie_categorie': category_map.get(
-                    cadmin['functiecategorie']['selectedOption']
-                ),
-                'relatie_meemoo': 'contactpersoon contract'  # TODO: double check!
-            }
+        cp_admin = contactgegevens['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie']  # noqa: E501
 
-            new_contact = {'custom_fields': []}  # todo create a contact here
-            new_contact = self.set_relatie_meemoo(
-                new_contact, cp_administratie['relatie_meemoo']
-            )
-            new_contact = self.set_functie_category(
-                new_contact, cp_administratie['functie_categorie']
-            )
-            print("TODO: create + link contact administratie= ", cp_administratie)
+        if cp_admin.get('selectedOption') != 'ja_5':
+            print("skipping administratie contact, because it's not selected")
+            return
 
+        cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']  # noqa: E501
+        cp_administratie = {
+            'naam': cadmin.get('naam_2'),
+            'voornaam': cadmin.get('voornaam_1'),
+            'email': cadmin.get('email_1'),
+            'phone': cadmin.get('telefoonnummer_1'),
+            'functie': cadmin.get('functie'),  # administratie
+            'functie_categorie': self.category_map.get(
+                cadmin['functiecategorie']['selectedOption']
+            ),
+            'relatie_meemoo': 'contactpersoon contract'  # TODO: double check!
+        }
+
+        new_contact = {'custom_fields': []}  # todo create a contact here
+        new_contact = self.set_relatie_meemoo(
+            new_contact, cp_administratie['relatie_meemoo']
+        )
+        new_contact = self.set_functie_category(
+            new_contact, cp_administratie['functie_categorie']
+        )
+        print("TODO: create + link contact administratie= ", cp_administratie)
+
+    def upsert_dienstverlening_contacts(self, company, existing_contacts, contactgegevens):
         # dienstverlening 2 extra contacten aanmaken of updaten
-        cdienst = ac['contactpersoon_dienstverlening']
+        cdienst = contactgegevens['contactpersoon_dienstverlening']
         cp_dienst_eerste = {
             'naam': cdienst.get('naam_5'),
             'voornaam': cdienst.get('voornaam_5'),
             'email': cdienst.get('emailadres_5'),
             'telephone': cdienst.get('telefoonnummer_5'),
             'functie': cdienst.get('functietitel_5'),
-            'functie_categorie': category_map.get(
+            'functie_categorie': self.category_map.get(
                 cdienst.get('functietitel_5')
             ),
             'relatie_meemoo': 'contactpersoon contract'
@@ -437,12 +438,31 @@ class MilestoneService(SkryvBase):
             'email': cdienst.get('emailadres_6'),
             'telephone': cdienst.get('telefoonnummer_6'),
             'functie': cdienst.get('functietitel_6'),
-            'functie_categorie': category_map.get(
+            'functie_categorie': self.category_map.get(
                 cdienst.get('functietitel_6')
             ),
             'relatie_meemoo': 'contactpersoon contract'
         }
         print("TODO: save cp_dienst_tweede = ", cp_dienst_tweede)
+
+    def contacts_update(self, document_body, company):
+        dvals = document_body.document.document.value
+        contactgegevens = dvals['adres_en_contactgegevens']
+        if not contactgegevens:
+            print("geen adres_en_contactgegevens aanwezig in document...")
+            return company
+
+        existing_contacts = self.tlc.company_contacts(company['id'])
+
+        self.upsert_directie_contact(
+            company, existing_contacts, contactgegevens
+        )
+        self.upsert_administratie_contact(
+            company, existing_contacts, contactgegevens
+        )
+        self.upsert_dienstverlening_contacts(
+            company, existing_contacts, contactgegevens
+        )
 
         return company
 
@@ -498,7 +518,8 @@ class MilestoneService(SkryvBase):
             )
 
             company = self.update_company_using_dossier(
-                company, self.dossier.id)
+                company, self.dossier.id
+            )
             self.tlc.update_company(company)
 
     def handle_event(self, milestone_body: MilestoneBody):

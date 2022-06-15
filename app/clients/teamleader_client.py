@@ -294,6 +294,9 @@ class TeamleaderClient:
         contact = self.prepare_custom_fields(contact)
         return self.post_item('/contacts.update', contact)
 
+    def add_contact(self, contact):
+        return self.post_item('/contacts.add', contact)
+
     def list_invoices(self, page=1, page_size=20, updated_since: datetime = None):
         return self.request_page('/invoices.list', page, page_size, updated_since)
 
@@ -397,35 +400,3 @@ class TeamleaderClient:
             ),
                 flush=True)
             return None
-
-    # not sure yet, these belong here or not?
-    def skryv_company_update():
-        pass
-        # <sub-flow name="crm_company_update">
-        # <set-variable variableName="http_post_body" value="#[payload]"
-        # 	doc:name="Set - http_post_body" />
-        # <until-successful maxRetries="5" synchronous="true"
-        # 	doc:name="Until Successful">
-        # 	<http:request config-ref="HTTP_Request_Configuration_Teamleader"
-        # 		path="/updateCompany.php" method="POST" doc:name="HTTP - UpdateCompany" />
-        # </until-successful>
-        # <byte-array-to-string-transformer
-        # 	doc:name="Byte Array to String" />
-        # <set-variable variableName="state" value="CRM_COMPANY_UPDATED"
-        # 	doc:name="Variable - state - CRM_COMPANY_UPDATED" />
-        # <flow-ref name="esearch_publish_log_message" doc:name="esearch_publish_log_message" />
-        # </sub-flow>
-
-    # contact updates also, do we need them here???
-    # https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L492
-    def skryv_contact_directie():
-        pass
-
-    # see https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L587
-    def skryv_contact_administratief():
-        pass
-
-    # see https://github.com/viaacode/skryv2crm/blob/6f31782e47eaba08265a34ae109518eb417127d0/src/main/app/crm.xml#L587
-    def skryv_contact_related():
-        pass
-        # contact_link_to_company and unlink is also defined here...

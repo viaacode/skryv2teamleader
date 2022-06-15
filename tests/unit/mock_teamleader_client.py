@@ -43,9 +43,12 @@ class MockTlClient(MockClient):
     def company_contacts(self, company_uuid):
         super().method_call(f"company_contacts: {company_uuid}")
 
-        # TODO: add a special case to return a linked contact here
-        # for a specific id to test edge_case for linking contacts
-        # on new company
+        if company_uuid == '178d8326-793a-0374-b871-ac2df29733c1':
+            contacts_fixture = open(
+                'tests/fixtures/teamleader/existing_company_contacts.json'
+            ).read()
+            return json.loads(contacts_fixture)
+
         return []  # for now always return empty array
 
     def get_contact(self, contact_uuid):

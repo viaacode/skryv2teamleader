@@ -1,0 +1,110 @@
+[
+  {
+    "id": "427ee6bc-d6c5-0e69-867b-dc3f9321ff4d",
+    "first_name": "Walter",
+    "last_name": "Schreppers",
+    "status": "active",
+    "vat_number": null,
+    "emails": [
+      {
+        "type": "primary",
+        "email": "walter@sitweb.eu"
+      }
+    ],
+    "salutation": null,
+    "telephones": [],
+    "website": null,
+    "gender": null,
+    "birthdate": null,
+    "iban": null,
+    "bic": null,
+    "national_identification_number": null,
+    "language": "nl",
+    "payment_term": null,
+    "invoicing_preferences": {
+      "electronic_invoicing_address": null
+    },
+    "added_at": "2021-12-17T10:47:56+00:00",
+    "updated_at": "2022-01-21T16:12:03+00:00",
+    "web_url": "https://focus.teamleader.eu/contact_detail.php?id=427ee6bc-d6c5-0e69-867b-dc3f9321ff4d",
+    "remarks": null,
+    "marketing_mails_consent": false,
+    "addresses": [
+      {
+        "type": "primary",
+        "address": {
+          "line_1": null,
+          "postal_code": null,
+          "city": null,
+          "country": "BE",
+          "area_level_two": null
+        }
+      }
+    ],
+    "companies": [
+      {
+        "position": null,
+        "decision_maker": false,
+        "company": {
+          "type": "company",
+          "id": "fb412c24-7c1c-052c-b778-3723029733a5"
+        }
+      },
+      {
+        "position": "directie",
+        "decision_maker": false,
+        "company": {
+          "type": "company",
+          "id": "178d8326-793a-0374-b871-ac2df29733c1"
+        }
+      }
+    ],
+    "tags": [],
+    "custom_fields": [
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "17348dda-11c7-0e35-855b-38a4e1123dd6"
+        },
+        "value": null
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "e670f8a7-0ce6-0ba4-8455-cc92ec623de4"
+        },
+        "value": [
+          "gebruiker ftp"
+        ]
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "3f18708e-2599-06cd-b550-22965c523de5"
+        },
+        "value": "858cba6a-2df8-1039-8868-05030a99f8c4"
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "b995ec27-5800-096f-a25b-7aa76b669345"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "af5161f2-b96f-035b-9951-602137069347"
+        },
+        "value": []
+      }
+    ]
+  }
+]
