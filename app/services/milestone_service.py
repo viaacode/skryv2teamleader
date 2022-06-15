@@ -364,26 +364,33 @@ class MilestoneService(SkryvBase):
 
     def upsert_directie_contact(self, company, existing_contacts, contactgegevens):
         # if contact already exists, update it, otherwise create it
-        # directie contact aanmaken of bestaande updaten
         cdirect = contactgegevens['gegevens_directie']
+        functie_titel = cdirect.get('functietitel')
+        functie_categorie = self.category_map.get(functie_titel)
         cp_directie = {
-            'naam': cdirect.get('naam_1'),
-            'voornaam': cdirect.get('voornaam'),
+            'last_name': cdirect.get('naam_1'),
+            'first_name': cdirect.get('voornaam'),
             'email': cdirect.get('email'),
-            'functie_categorie': self.category_map.get(
-                cdirect.get('functietitel')
-            ),
-            'relatie_meemoo': 'contactpersoon contract'
+            'custom_fields': []
         }
-        # FOR NOW A DUMMY PLACEHOLDER...
-        new_contact = {'custom_fields': []}
-        new_contact = self.set_relatie_meemoo(
-            new_contact, cp_directie['relatie_meemoo']
+        cp_directie = self.set_relatie_meemoo(
+            cp_directie, 'contactpersoon contract'
         )
-        new_contact = self.set_functie_category(
-            new_contact, cp_directie['functie_categorie']
+        cp_directie = self.set_functie_category(
+            cp_directie, functie_categorie
         )
-        print("TODO: create + link contact directie = ", cp_directie)
+
+        print("cp_directie for saving=", cp_directie)
+
+        # TODO: add check if contact already exists etc...
+        contact_response = self.tlc.add_contact(cp_directie)
+
+        self.tlc.link_to_company({
+            'id': contact_response['id'],
+            'company_id': company['id'],
+            'position': functie_categorie
+            # 'decision_maker': True/False?
+        })
 
     def upsert_administratie_contact(self, company, existing_contacts, contactgegevens):
         # if contact already exists, update it, otherwise create it

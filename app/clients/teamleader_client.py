@@ -223,7 +223,7 @@ class TeamleaderClient:
 
         time.sleep(RATE_LIMIT_SLEEP)
 
-        if res.status_code == 200:
+        if res.status_code == 200 or res.status_code == 201:
             return res.json()['data']
         elif res.status_code == 204:
             return None
@@ -297,48 +297,53 @@ class TeamleaderClient:
     def add_contact(self, contact):
         return self.post_item('/contacts.add', contact)
 
-    def list_invoices(self, page=1, page_size=20, updated_since: datetime = None):
-        return self.request_page('/invoices.list', page, page_size, updated_since)
+    def link_to_company(self, contact_link):
+        # contact_link == {'id':contact_id, 'company_id':...,
+        #                  'position': 'ceo', 'decision_maker': true }
+        return self.post_item('/contacts.linkToCompany', contact_link)
 
-    def get_invoice(self, uid):
-        return self.request_item('/invoices.info', uid)
+    # def list_invoices(self, page=1, page_size=20, updated_since: datetime = None):
+    #     return self.request_page('/invoices.list', page, page_size, updated_since)
 
-    def list_departments(self, page=1, page_size=20, updated_since: datetime = None):
-        # departments.list has no pagination and no updated_since support
-        # however its only 3 entries and full sync is always used
-        if page > 1:
-            # Departments has no pagination. We want a similar interface however.
-            # So if page > 1 we return []. Otherwise our sync goes into an infinite loop.
-            return []
-        else:
-            return self.request_page('/departments.list', page, page_size, updated_since)
+    # def get_invoice(self, uid):
+    #     return self.request_item('/invoices.info', uid)
 
-    def get_department(self, uid):
-        return self.request_item('/departments.info', uid)
+    # def list_departments(self, page=1, page_size=20, updated_since: datetime = None):
+    #     # departments.list has no pagination and no updated_since support
+    #     # however its only 3 entries and full sync is always used
+    #     if page > 1:
+    #         # Departments has no pagination. We want a similar interface however.
+    #         # So if page > 1 we return []. Otherwise our sync goes into an infinite loop.
+    #         return []
+    #     else:
+    #         return self.request_page('/departments.list', page, page_size, updated_since)
 
-    def list_events(self, page=1, page_size=20, updated_since: datetime = None):
-        # events.list has no updated_since support, always full sync here
-        return self.request_page('/events.list', page, page_size, updated_since)
+    # def get_department(self, uid):
+    #     return self.request_item('/departments.info', uid)
 
-    def get_event(self, uid):
-        return self.request_item('/events.info', uid)
+    # def list_events(self, page=1, page_size=20, updated_since: datetime = None):
+    #     # events.list has no updated_since support, always full sync here
+    #     return self.request_page('/events.list', page, page_size, updated_since)
 
-    def list_projects(self, page=1, page_size=20, updated_since: datetime = None):
-        # projects.list has no updated_since support, always full sync here
-        return self.request_page('/projects.list', page, page_size, updated_since)
+    # def get_event(self, uid):
+    #     return self.request_item('/events.info', uid)
 
-    def get_project(self, uid):
-        return self.request_item('/projects.info', uid)
+    # def list_projects(self, page=1, page_size=20, updated_since: datetime = None):
+    #     # projects.list has no updated_since support, always full sync here
+    #     return self.request_page('/projects.list', page, page_size, updated_since)
 
-    def list_users(self, page=1, page_size=20, updated_since: datetime = None):
-        # users.list has no updated_since support, always full sync here
-        return self.request_page('/users.list', page, page_size, updated_since)
+    # def get_project(self, uid):
+    #     return self.request_item('/projects.info', uid)
 
-    def get_user(self, uid):
-        return self.request_item('/users.info', uid)
+    # def list_users(self, page=1, page_size=20, updated_since: datetime = None):
+    #     # users.list has no updated_since support, always full sync here
+    #     return self.request_page('/users.list', page, page_size, updated_since)
 
-    def current_user(self):
-        return self.request_page('/users.me')
+    # def get_user(self, uid):
+    #     return self.request_item('/users.info', uid)
+
+    # def current_user(self):
+    #     return self.request_page('/users.me')
 
     def list_custom_fields(self, page=1, page_size=50):
         return self.request_page('/customFieldDefinitions.list', page, page_size)

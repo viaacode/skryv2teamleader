@@ -44,9 +44,19 @@ class SkryvBase:
                 return f['value']
 
     def set_custom_field(self, resource, field_name, value):
+        field_updated = False
         for f in resource['custom_fields']:
-            if f['definition']['id'] == self.custom_fields[field_name]['id']:
-                f['value'] = value
+            if f.get('definition'):
+                if f.get('definition').get('id') == self.custom_fields[field_name]['id']:
+                    f['value'] = value
+                    field_updated = True
+
+        # this happens on contact add call
+        if not field_updated:
+            resource['custom_fields'].append({
+                'id': self.custom_fields[field_name]['id'],
+                'value': value
+            })
 
         return resource
 

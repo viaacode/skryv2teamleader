@@ -30,8 +30,14 @@ class MockTlClient(MockClient):
         return json.loads(fields_fixture)
 
     def update_company(self, company):
-        # super().method_call(f"update_company: {company}")
-        super().method_call({"update_company": company})
+        super().method_call({'update_company': company})
+
+    def add_contact(self, contact):
+        super().method_call({'add_contact': contact})
+        return {'type': 'contact', 'id': '4570beef-69e2-096e-937d-0fdf93524d0c'}
+
+    def link_to_company(self, contact_link):
+        super().method_call({'link_to_company': contact_link})
 
     def update_contact(self, contact):
         super().method_call(f"update_contact: {contact}")
