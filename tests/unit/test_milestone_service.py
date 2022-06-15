@@ -69,6 +69,14 @@ class TestMilestoneService:
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
 
+        # check intentieverklaring  is pending status
+        tlc = mock_clients.teamleader
+        assert tlc.method_called('update_company')
+
+        updated_company = tlc.last_method_called()['update_company']
+        assert 'pending' in str(updated_company['custom_fields'])
+        assert 'ingevuld' not in str(updated_company['custom_fields'])
+
     @pytest.mark.asyncio
     async def test_milestone_geen_interesse(self, mock_clients):
         ws = WebhookScheduler()
@@ -80,6 +88,14 @@ class TestMilestoneService:
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
 
+        # check intentieverklaring  is pending status
+        tlc = mock_clients.teamleader
+        assert tlc.method_called('update_company')
+
+        updated_company = tlc.last_method_called()['update_company']
+        assert 'ingevuld' in str(updated_company['custom_fields'])
+        assert 'pending' not in str(updated_company['custom_fields'])
+
     @pytest.mark.asyncio
     async def test_milestone_interesse(self, mock_clients):
         ws = WebhookScheduler()
@@ -90,6 +106,14 @@ class TestMilestoneService:
         ms.close()
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
+
+        tlc = mock_clients.teamleader
+        assert tlc.method_called('update_company')
+
+        # check intentieverklaring  is pending status
+        updated_company = tlc.last_method_called()['update_company']
+        assert 'pending' in str(updated_company['custom_fields'])
+        assert 'ingevuld' not in str(updated_company['custom_fields'])
 
     @pytest.mark.asyncio
     async def test_milestone_swo(self, mock_clients):
@@ -174,12 +198,26 @@ class TestMilestoneService:
         assert res == 'milestone event is handled'
 
         tlc = mock_clients.teamleader
-        last_tl_call = tlc.calls[-1]
-        assert 'update_company' in last_tl_call
-        assert 'Testorganisatie voor Walter' in last_tl_call
-        # assert 'CUL - erfgoedbibliotheek' in last_tl_call  # value van skryv
-        assert 'CUL - museum (erkend)' in last_tl_call  # behouden van gezette teamleader org_type
+        last_tlc_call = tlc.last_method_called()
+        assert 'update_company' in last_tlc_call
+        updated_company = last_tlc_call['update_company']
 
-        assert 'straat 1234' in last_tl_call
-        assert 'Facturatiestraat 12' in last_tl_call
-        assert 'Leveringsstraat 12' in last_tl_call
+        assert updated_company['name'] == 'Testorganisatie voor Walter'
+        # update: we behouden van teamleader org_type ipv de skryv waarde te nemen
+        # assert 'CUL - erfgoedbibliotheek' in str(updated_company)  # value van skryv
+        assert 'CUL - museum (erkend)' in str(updated_company)
+
+        # facturatienaam is set on adresses
+        assert 'AGB Walter' in str(updated_company['addresses'])
+
+        # check some adresses
+        assert 'straat 1234' in str(updated_company['addresses'])
+        assert 'Facturatiestraat 12' in str(updated_company['addresses'])
+        assert 'Leveringsstraat 12' in str(updated_company['addresses'])
+
+        # check intentieverklaring value
+        assert 'ingevuld' in str(updated_company['custom_fields'])
+        assert 'pending' not in str(updated_company['custom_fields'])
+
+        assert 'BE' in updated_company['vat_number']
+        assert '0644.450.38' in updated_company['vat_number']

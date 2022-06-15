@@ -123,6 +123,22 @@ class MilestoneService(SkryvBase):
 
                 return skryv_address
 
+
+    def set_facturatienaam(self, company, facturatienaam):
+        if 'addresses' not in company.keys():
+            company['addresses'] = []
+
+        fnSaved = False
+        for tad in company['addresses']:
+            if tad['type'] == 'invoicing':
+                fnSaved = True
+                tad['address']['addressee'] = facturatienaam
+
+        if not fnSaved:
+            print(f"warning: facturatienaam {facturatienaam} could not be saved")
+
+        return company
+
     def update_teamleader_address(self, company, address_type, skryv_address):
         # adress types : primary, delivery, invoicing
         if not skryv_address or skryv_address == {}:
@@ -144,9 +160,6 @@ class MilestoneService(SkryvBase):
 
         if 'postbus_naam' in skryv_address:
             updated_address['address']['addressee'] = skryv_address['postbus_naam']
-
-        # TODO: see if we can somehow fill in this extra teamleader field:
-        # updated_address['address']['area_level_two'] = null
 
         if 'addresses' not in company.keys():
             company['addresses'] = []
@@ -329,9 +342,10 @@ class MilestoneService(SkryvBase):
         if 'is_de_facturatienaam_verschillend_van_de_organisatienaam' in ac:
             fverschil = ac['is_de_facturatienaam_verschillend_van_de_organisatienaam']
             if fverschil.get('selectedOption') == 'ja':
-                facturatienaam = fverschil['facturatienaam']
-                print("TODO: facturatienaam=", facturatienaam)
-                # -> moet bij addresses - invoicing / adressee
+                company = self.set_facturatienaam(
+                    company,
+                    fverschil['facturatienaam']
+                )
 
         if 'werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie' in ac:
             bestelbon_select = ac['werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie']
@@ -442,6 +456,8 @@ class MilestoneService(SkryvBase):
             # company = self.orgtype_update(mdoc, company)  # niet meer syncen!
             company = self.addresses_update(mdoc, company)
             company = self.algemeen_update(mdoc, company)
+
+            # contacts update also sets invoice adress adressee
             company = self.contacts_update(mdoc, company)
 
         except ValidationError as e:

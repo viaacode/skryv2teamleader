@@ -30,7 +30,8 @@ class MockTlClient(MockClient):
         return json.loads(fields_fixture)
 
     def update_company(self, company):
-        super().method_call(f"update_company: {company}")
+        # super().method_call(f"update_company: {company}")
+        super().method_call({"update_company": company})
 
     def update_contact(self, contact):
         super().method_call(f"update_contact: {contact}")

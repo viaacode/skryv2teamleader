@@ -35,3 +35,6 @@ class MockClient:
 
     def all_method_calls(self):
         return self.calls
+
+    def last_method_called(self):
+        return self.calls[-1]
