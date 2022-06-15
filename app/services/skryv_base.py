@@ -50,8 +50,93 @@ class SkryvBase:
 
         return company
 
-    def set_type_organisatie(self, company, value):
-        return self.set_custom_field(company, 'type_organisatie', value)
+    # deprecated, moest niet meer gezet worden van tine
+    # def set_type_organisatie(self, company, value):
+    #     return self.set_custom_field(company, 'type_organisatie', value)
+
+    def set_facturatie_email(self, company, email_value):
+        return self.set_custom_field(company, 'facturatie_email', email_value)
+
+    def set_bestelbon(self, company, boolean_value):
+        return self.set_custom_field(company, 'bestelbon', boolean_value)
+
+    # TL_RELATIE_MEEMOO
+    # relatie moet in custom field opgeslagen worden!
+    # {
+    #    "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7",
+    #    "context": "contact",
+    #    "type": "multi_select",
+    #    "label": "2 - Relatie met meemoo",
+    #    "group": "1 Algemeen",
+    #    "required": false,
+    #    "configuration": {
+    #      "options": [
+    #        "AIF contact",
+    #        "AIF contactpersoon beeldbeheer",
+    #        "AvO ambassadeur",
+    #        "AvO communicatiecontact",
+    #        "AvO contactpersoon CP",
+    #        "AvO gebruiker",
+    #        "centraal contactpersoon",
+    #        "contactpersoon contract",
+    #        "contactpersoon digitale instroom",
+    #        "contactpersoon digitalisering film en AV",
+    #        "contactpersoon GIVE-glasplaten",
+    #        "contactpersoon GIVE-kranten",
+    #        "contactpersoon GIVE-manuscripten",
+    #        "contactpersoon GIVE-topstukken",
+    #        "contactpersoon team interactie",
+    #        "gedetacheerde leerkracht",
+    #        "meemoo alumnus"
+    #      ],
+    #      "extra_option_allowed": true
+    #    }
+    #  },
+    def set_relatie_meemoo(self, company, value):
+        # OPGEPAST, FIX relatie_meemoo is multiselect!!!!
+        # we moeten eerder een append doen hier!!!
+        return self.set_custom_field(company, 'relatie_meemoo', value)
+
+
+    # idem voor functie category moet ook custom field zijn:
+    # {
+    #    "id": "17348dda-11c7-0e35-855b-38a4e1123dd6",
+    #    "context": "contact",
+    #    "type": "single_select",
+    #    "label": "1 - Functiecategorie",
+    #    "group": "1 Algemeen",
+    #    "required": false,
+    #    "configuration": {
+    #      "options": [
+    #        "administratie",
+    #        "archief en collectiebeheer",
+    #        "beleid",
+    #        "bestuur",
+    #        "consultancy",
+    #        "directie",
+    #        "effectief lid",
+    #        "IT en techniek",
+    #        "kennis en onderzoek",
+    #        "legal",
+    #        "management",
+    #        "marcom",
+    #        "mediaproductie",
+    #        "onderwijzend personeel",
+    #        "pedagogische begeleider",
+    #        "pers (geschreven)",
+    #        "pers (tv)",
+    #        "plaatsvervangend lid",
+    #        "publiekswerking en educatie",
+    #        "sales",
+    #        "uitgever/auteur"
+    #      ],
+    #      "extra_option_allowed": true
+    #    }
+    #  },
+    def set_functie_category(self, company, value):
+        # single select, maar validate dat het goede optie is!
+        return self.set_custom_field(company, 'functie_category', value)
+
 
     def set_cp_status(self, company, value):
         # 2.2 CP status -> 'ja', 'nee', 'pending'

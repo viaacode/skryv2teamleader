@@ -177,7 +177,8 @@ class TestMilestoneService:
         last_tl_call = tlc.calls[-1]
         assert 'update_company' in last_tl_call
         assert 'Testorganisatie voor Walter' in last_tl_call
-        assert 'CUL - erfgoedbibliotheek' in last_tl_call
+        # assert 'CUL - erfgoedbibliotheek' in last_tl_call  # value van skryv
+        assert 'CUL - museum (erkend)' in last_tl_call  # behouden van gezette teamleader org_type
 
         assert 'straat 1234' in last_tl_call
         assert 'Facturatiestraat 12' in last_tl_call

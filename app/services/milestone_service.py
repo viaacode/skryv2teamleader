@@ -307,22 +307,9 @@ class MilestoneService(SkryvBase):
             )
 
         if 'facturatie_emailadres' in ac:
-            #company = self.update_company_email(
-            #    company,
-            #    'invoicing',
-            #    ac['facturatie_emailadres']
-            #)
-            # AANPASSEN, moet ook in een custom field komen.
-            #{
-            #    "id": "15846b7e-104d-015f-8753-cb945d823db9",
-            #    "context": "company",
-            #    "type": "email",
-            #    "label": "E-mail Facturatie",
-            #    "group": "1.1 FACTURATIE",
-            #    "required": false
-            #  },
-            pass
-
+            company = self.set_facturatie_email(
+                company, ac['facturatie_emailadres']
+            )
 
         if 'algemeen_telefoonnummer' in ac:
             company = self.update_company_phone(
@@ -350,17 +337,10 @@ class MilestoneService(SkryvBase):
             bestelbon_select = ac['werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie']
             bestelbon_value = bestelbon_select.get('selectedOption')
             if bestelbon_value:
-                print("TODO: save bestelbon_value=", bestelbon_value)
-                # dit is een custom_field
-                #  {
-                #    "id": "fb842ba5-5372-0767-8752-e579d2e305b4",
-                #    "context": "company",
-                #    "type": "boolean",
-                #    "label": "1.5 - Bestelbon",
-                #    "group": "1.1 FACTURATIE",
-                #    "required": false
-                #  },
-
+                if bestelbon_value == 'ja':
+                    company = self.set_bestelbon(company, True)
+                else:
+                    company = self.set_bestelbon(company, False)
 
         return company
 
@@ -393,75 +373,9 @@ class MilestoneService(SkryvBase):
                 cdirect.get('functietitel')
             ),
             'relatie_meemoo': 'contactpersoon contract'
-            # relatie moet in custom field opgeslagen worden!
-            # {
-            #    "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7",
-            #    "context": "contact",
-            #    "type": "multi_select",
-            #    "label": "2 - Relatie met meemoo",
-            #    "group": "1 Algemeen",
-            #    "required": false,
-            #    "configuration": {
-            #      "options": [
-            #        "AIF contact",
-            #        "AIF contactpersoon beeldbeheer",
-            #        "AvO ambassadeur",
-            #        "AvO communicatiecontact",
-            #        "AvO contactpersoon CP",
-            #        "AvO gebruiker",
-            #        "centraal contactpersoon",
-            #        "contactpersoon contract",
-            #        "contactpersoon digitale instroom",
-            #        "contactpersoon digitalisering film en AV",
-            #        "contactpersoon GIVE-glasplaten",
-            #        "contactpersoon GIVE-kranten",
-            #        "contactpersoon GIVE-manuscripten",
-            #        "contactpersoon GIVE-topstukken",
-            #        "contactpersoon team interactie",
-            #        "gedetacheerde leerkracht",
-            #        "meemoo alumnus"
-            #      ],
-            #      "extra_option_allowed": true
-            #    }
-            #  },
-
-            # idem voor functie category moet ook custom field zijn:
-            # {
-            #    "id": "17348dda-11c7-0e35-855b-38a4e1123dd6",
-            #    "context": "contact",
-            #    "type": "single_select",
-            #    "label": "1 - Functiecategorie",
-            #    "group": "1 Algemeen",
-            #    "required": false,
-            #    "configuration": {
-            #      "options": [
-            #        "administratie",
-            #        "archief en collectiebeheer",
-            #        "beleid",
-            #        "bestuur",
-            #        "consultancy",
-            #        "directie",
-            #        "effectief lid",
-            #        "IT en techniek",
-            #        "kennis en onderzoek",
-            #        "legal",
-            #        "management",
-            #        "marcom",
-            #        "mediaproductie",
-            #        "onderwijzend personeel",
-            #        "pedagogische begeleider",
-            #        "pers (geschreven)",
-            #        "pers (tv)",
-            #        "plaatsvervangend lid",
-            #        "publiekswerking en educatie",
-            #        "sales",
-            #        "uitgever/auteur"
-            #      ],
-            #      "extra_option_allowed": true
-            #    }
-            #  },
-
         }
+        company = self.set_relatie_meemoo(company, cp_directie['relatie_meemoo'])
+        company = self.set_functie_category(company, cp_directie['functie_categorie'])
         print("TODO: save contact directie = ", cp_directie)
 
 

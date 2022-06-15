@@ -33,3 +33,7 @@ app:
     swo: !ENV ${TL_SWO}
     swo_addenda: !ENV ${TL_SWO_ADDENDA}
     type_organisatie: !ENV ${TL_TYPE_ORGANISATIE}
+    facturatie_email: !ENV ${TL_FACTURATIE_EMAIL}
+    bestelbon: !ENV ${TL_BESTELBON}
+    relatie_meemoo: !ENV ${TL_RELATIE_MEEMOO}
+    functie_category: !ENV ${TL_FUNCTIE_CATEGORY}
