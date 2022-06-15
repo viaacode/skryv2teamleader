@@ -223,34 +223,35 @@ class MilestoneService(SkryvBase):
 
         return company
 
-    def orgtype_update(self, document_body, company):
-        otype_mapping = {
-            'archief': 'CUL - archief',
-            'erfgoedbibliotheek': 'CUL - erfgoedbibliotheek',
-            'erfgoedcel': 'CUL - erfgoedcel',
-            'kunstenorganisatie': 'CUL - kunstenorganisatie',
-            'mediabedrijf': 'MED - mediabedrijf',
-            'museum': 'CUL - museum (erkend)',  # niet erkend is er ook!
-            'regionale_omroep': 'MED - regionale omroep',
-            'sectorinstituut': 'ALG - sectororganisatie',
-            'overheidsinstelling': 'OVH - overheidsdienst'
-        }
+    # is deprecated, gaan we niet meer syncen.
+    # def orgtype_update(self, document_body, company):
+    #     otype_mapping = {
+    #         'archief': 'CUL - archief',
+    #         'erfgoedbibliotheek': 'CUL - erfgoedbibliotheek',
+    #         'erfgoedcel': 'CUL - erfgoedcel',
+    #         'kunstenorganisatie': 'CUL - kunstenorganisatie',
+    #         'mediabedrijf': 'MED - mediabedrijf',
+    #         'museum': 'CUL - museum (erkend)',  # niet erkend is er ook!
+    #         'regionale_omroep': 'MED - regionale omroep',
+    #         'sectorinstituut': 'ALG - sectororganisatie',
+    #         'overheidsinstelling': 'OVH - overheidsdienst'
+    #     }
 
-        dvals = document_body.document.document.value
-        if 'adres_en_contactgegevens' in dvals:
-            ac = dvals['adres_en_contactgegevens']
-            if 'type_organisatie' in ac:
-                type_organisatie = ac['type_organisatie']['selectedOption']
-                tl_orgtype = otype_mapping[type_organisatie]
+    #     dvals = document_body.document.document.value
+    #     if 'adres_en_contactgegevens' in dvals:
+    #         ac = dvals['adres_en_contactgegevens']
+    #         if 'type_organisatie' in ac:
+    #             type_organisatie = ac['type_organisatie']['selectedOption']
+    #             tl_orgtype = otype_mapping[type_organisatie]
 
-                company = self.set_type_organisatie(company, tl_orgtype)
-                print(
-                    "DEBUG: type organisatie found =", type_organisatie,
-                    "mapped value=",
-                    self.get_custom_field(company, 'type_organisatie')
-                )
+    #             company = self.set_type_organisatie(company, tl_orgtype)
+    #             print(
+    #                 "DEBUG: type organisatie found =", type_organisatie,
+    #                 "mapped value=",
+    #                 self.get_custom_field(company, 'type_organisatie')
+    #             )
 
-        return company
+    #     return company
 
     def update_company_email(self, company, mail_type, mail_value):
         cp_mails = company['emails']
@@ -306,11 +307,22 @@ class MilestoneService(SkryvBase):
             )
 
         if 'facturatie_emailadres' in ac:
-            company = self.update_company_email(
-                company,
-                'invoicing',
-                ac['facturatie_emailadres']
-            )
+            #company = self.update_company_email(
+            #    company,
+            #    'invoicing',
+            #    ac['facturatie_emailadres']
+            #)
+            # AANPASSEN, moet ook in een custom field komen.
+            #{
+            #    "id": "15846b7e-104d-015f-8753-cb945d823db9",
+            #    "context": "company",
+            #    "type": "email",
+            #    "label": "E-mail Facturatie",
+            #    "group": "1.1 FACTURATIE",
+            #    "required": false
+            #  },
+            pass
+
 
         if 'algemeen_telefoonnummer' in ac:
             company = self.update_company_phone(
@@ -332,12 +344,23 @@ class MilestoneService(SkryvBase):
             if fverschil.get('selectedOption') == 'ja':
                 facturatienaam = fverschil['facturatienaam']
                 print("TODO: facturatienaam=", facturatienaam)
+                # -> moet bij addresses - invoicing / adressee
 
         if 'werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie' in ac:
             bestelbon_select = ac['werkt_uw_organisatie_met_bestelbonnen_voor_de_facturatie']
             bestelbon_value = bestelbon_select.get('selectedOption')
             if bestelbon_value:
                 print("TODO: save bestelbon_value=", bestelbon_value)
+                # dit is een custom_field
+                #  {
+                #    "id": "fb842ba5-5372-0767-8752-e579d2e305b4",
+                #    "context": "company",
+                #    "type": "boolean",
+                #    "label": "1.5 - Bestelbon",
+                #    "group": "1.1 FACTURATIE",
+                #    "required": false
+                #  },
+
 
         return company
 
@@ -369,12 +392,105 @@ class MilestoneService(SkryvBase):
             'functie_categorie': category_map.get(
                 cdirect.get('functietitel')
             ),
-            'relatie_meemoo': 'contactpersoon contact'
+            'relatie_meemoo': 'contactpersoon contract'
+            # relatie moet in custom field opgeslagen worden!
+            # {
+            #    "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7",
+            #    "context": "contact",
+            #    "type": "multi_select",
+            #    "label": "2 - Relatie met meemoo",
+            #    "group": "1 Algemeen",
+            #    "required": false,
+            #    "configuration": {
+            #      "options": [
+            #        "AIF contact",
+            #        "AIF contactpersoon beeldbeheer",
+            #        "AvO ambassadeur",
+            #        "AvO communicatiecontact",
+            #        "AvO contactpersoon CP",
+            #        "AvO gebruiker",
+            #        "centraal contactpersoon",
+            #        "contactpersoon contract",
+            #        "contactpersoon digitale instroom",
+            #        "contactpersoon digitalisering film en AV",
+            #        "contactpersoon GIVE-glasplaten",
+            #        "contactpersoon GIVE-kranten",
+            #        "contactpersoon GIVE-manuscripten",
+            #        "contactpersoon GIVE-topstukken",
+            #        "contactpersoon team interactie",
+            #        "gedetacheerde leerkracht",
+            #        "meemoo alumnus"
+            #      ],
+            #      "extra_option_allowed": true
+            #    }
+            #  },
+
+            # idem voor functie category moet ook custom field zijn:
+            # {
+            #    "id": "17348dda-11c7-0e35-855b-38a4e1123dd6",
+            #    "context": "contact",
+            #    "type": "single_select",
+            #    "label": "1 - Functiecategorie",
+            #    "group": "1 Algemeen",
+            #    "required": false,
+            #    "configuration": {
+            #      "options": [
+            #        "administratie",
+            #        "archief en collectiebeheer",
+            #        "beleid",
+            #        "bestuur",
+            #        "consultancy",
+            #        "directie",
+            #        "effectief lid",
+            #        "IT en techniek",
+            #        "kennis en onderzoek",
+            #        "legal",
+            #        "management",
+            #        "marcom",
+            #        "mediaproductie",
+            #        "onderwijzend personeel",
+            #        "pedagogische begeleider",
+            #        "pers (geschreven)",
+            #        "pers (tv)",
+            #        "plaatsvervangend lid",
+            #        "publiekswerking en educatie",
+            #        "sales",
+            #        "uitgever/auteur"
+            #      ],
+            #      "extra_option_allowed": true
+            #    }
+            #  },
+
         }
         print("TODO: save contact directie = ", cp_directie)
 
+
+        # "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie": {
+        #     "selectedOption": "ja_5",
+        #     "centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten": {
+        #       "naam_2": "Tine",
+        #       "voornaam_1": "Administratie",
+        #       "email_1": "administratie@testorganisatievoorwalter.be",
+        #       "telefoonnummer_1": "03 456 79 78",
+        #       "functie": "administratie",
+        #       "functiecategorie": {
+        #         "selectedOption": "marketing__communicatie"
+        #       }
+        #     }
+        #   },
+
+
         cdienst = ac['contactpersoon_dienstverlening']
-        # how do these _5 or _6 work??? and is this always used ???
+        # "naam_5": "Tine",
+        #     "voornaam_5": "Extra 1",
+        #     "emailadres_5": "extra1@testorganisatievoorwalter.be",
+        #     "telefoonnummer_5": "09 345 67 89",
+        #     "functietitel_5": "extra1",
+        #     "naam_6": "Tine",
+        #     "voornaam_6": "Extra 2",
+        #     "emailadres_6": "extra2@testorganisatievoorwalter.be",
+        #     "telefoonnummer_6": "04 567 34 45",
+        #     "functietitel_6": "extra2"
         cp_administratie = {
             'naam': cdienst.get('naam_5'),
             'voornaam': cdienst.get('voornaam_5'),
@@ -409,7 +525,7 @@ class MilestoneService(SkryvBase):
 
             company = self.bedrijfsnaam_update(mdoc, company)
             company = self.bedrijfsvorm_update(mdoc, company)
-            company = self.orgtype_update(mdoc, company)
+            # company = self.orgtype_update(mdoc, company)  # niet meer syncen!
             company = self.addresses_update(mdoc, company)
             company = self.algemeen_update(mdoc, company)
             company = self.contacts_update(mdoc, company)
