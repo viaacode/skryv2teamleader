@@ -240,7 +240,7 @@ class MilestoneService(SkryvBase):
 
         return company
 
-    # is deprecated, gaan we niet meer syncen.
+    # orgtype_update is deprecated (op aanvraag Tine)
     # def orgtype_update(self, document_body, company):
     #     otype_mapping = {
     #         'archief': 'CUL - archief',
@@ -362,35 +362,80 @@ class MilestoneService(SkryvBase):
 
         return company
 
+    def upsert_contact(self, company, existing_contacts, contact):
+        # pop some fields that need different location of storing in teamleader
+        primary_email = contact.pop('email')
+        functie_categorie = contact.pop('functie_categorie')
+        relaties_meemoo = contact.pop('relaties_meemoo')
+        position = contact.pop('position')
+        phone_number = contact.pop('phone')
+
+        # check if contact already exists by searching primary email
+        new_contact = True
+        for ec in existing_contacts:
+            if ec.get('emails') and len(ec.get('emails')) > 0:
+                for email in ec.get('emails'):
+                    if email == primary_email:
+                        print(f"found existing contact {email}, updating...")
+                        new_contact = False
+                        contact = ec
+
+        if new_contact:
+            contact['custom_fields'] = []
+            contact['emails'] = []
+            contact['emails'].append({
+                'type': 'primary',
+                'email': primary_email
+            })
+
+        contact = self.set_relatie_meemoo(contact, relaties_meemoo)
+        contact = self.set_functie_category(contact, functie_categorie)
+
+        if phone_number:
+            updated_phone = False
+            if contact.get('telephones'):
+                if len(contact.get('telephones')) > 0:
+                    for p in contact.get('telephones'):
+                        if p['type'] == 'phone':
+                            p['number'] = phone_number
+                            updated_phone = True
+            else:
+                contact['telephones'] = []
+
+            if not updated_phone:
+                contact['telephones'].append({
+                    'type': 'phone',
+                    'number': phone_number
+                })
+
+        print("saving company contact =", contact)
+
+        contact_response = self.tlc.add_contact(contact)
+        self.tlc.link_to_company({
+            'id': contact_response['id'],
+            'company_id': company['id'],
+            'position': position
+            # 'decision_maker': True/False?
+        })
+
     def upsert_directie_contact(self, company, existing_contacts, contactgegevens):
         # if contact already exists, update it, otherwise create it
         cdirect = contactgegevens['gegevens_directie']
-        functie_titel = cdirect.get('functietitel')
-        functie_categorie = self.category_map.get(functie_titel)
+        position = cdirect.get('functietitel')
         cp_directie = {
             'last_name': cdirect.get('naam_1'),
             'first_name': cdirect.get('voornaam'),
             'email': cdirect.get('email'),
-            'custom_fields': []
+            # of altijd directie?
+            'functie_categorie': self.category_map.get(position),
+            'relaties_meemoo': ['contactpersoon contract'],
+            'position': position,
+            'phone': None
         }
-        cp_directie = self.set_relatie_meemoo(
-            cp_directie, 'contactpersoon contract'
-        )
-        cp_directie = self.set_functie_category(
-            cp_directie, functie_categorie
-        )
 
-        print("cp_directie for saving=", cp_directie)
-
-        # TODO: add check if contact already exists etc...
-        contact_response = self.tlc.add_contact(cp_directie)
-
-        self.tlc.link_to_company({
-            'id': contact_response['id'],
-            'company_id': company['id'],
-            'position': functie_categorie
-            # 'decision_maker': True/False?
-        })
+        # TODO: append to relaties_meemoo
+        # contactpersoon digitalisering, contactpersoon instroom...
+        self.upsert_contact(company, existing_contacts, cp_directie)
 
     def upsert_administratie_contact(self, company, existing_contacts, contactgegevens):
         # if contact already exists, update it, otherwise create it
@@ -403,54 +448,51 @@ class MilestoneService(SkryvBase):
 
         cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']  # noqa: E501
         cp_administratie = {
-            'naam': cadmin.get('naam_2'),
-            'voornaam': cadmin.get('voornaam_1'),
+            'last_name': cadmin.get('naam_2'),
+            'first_name': cadmin.get('voornaam_1'),
             'email': cadmin.get('email_1'),
-            'phone': cadmin.get('telefoonnummer_1'),
-            'functie': cadmin.get('functie'),  # administratie
             'functie_categorie': self.category_map.get(
                 cadmin['functiecategorie']['selectedOption']
             ),
-            'relatie_meemoo': 'contactpersoon contract'  # TODO: double check!
+            'relaties_meemoo': ['contactpersoon contract'],
+            'position': cadmin.get('functie'),
+            'phone': cadmin.get('telefoonnummer_1')
         }
 
-        new_contact = {'custom_fields': []}  # todo create a contact here
-        new_contact = self.set_relatie_meemoo(
-            new_contact, cp_administratie['relatie_meemoo']
-        )
-        new_contact = self.set_functie_category(
-            new_contact, cp_administratie['functie_categorie']
-        )
-        print("TODO: create + link contact administratie= ", cp_administratie)
+        # TODO: append more optional relaties_meemoo here...
+        # cp_administratie['relaties_meemoo'].append(...)
+        self.upsert_contact(company, existing_contacts, cp_administratie)
 
     def upsert_dienstverlening_contacts(self, company, existing_contacts, contactgegevens):
         # dienstverlening 2 extra contacten aanmaken of updaten
         cdienst = contactgegevens['contactpersoon_dienstverlening']
         cp_dienst_eerste = {
-            'naam': cdienst.get('naam_5'),
-            'voornaam': cdienst.get('voornaam_5'),
+            'last_name': cdienst.get('naam_5'),
+            'first_name': cdienst.get('voornaam_5'),
             'email': cdienst.get('emailadres_5'),
-            'telephone': cdienst.get('telefoonnummer_5'),
-            'functie': cdienst.get('functietitel_5'),
-            'functie_categorie': self.category_map.get(
-                cdienst.get('functietitel_5')
-            ),
-            'relatie_meemoo': 'contactpersoon contract'
+            'functie_categorie': self.category_map.get(cdienst.get('functietitel_5')),
+            'relaties_meemoo': ['contactpersoon contract'],
+            'position': cdienst.get('functietitel_5'),
+            'phone': cdienst.get('telefoonnummer_5')
         }
-        print("TODO: save cp_dienst_eerste = ", cp_dienst_eerste)
+
+        # TODO: append relaties here...
+        # cp_dienst_eerste['relaties_meemoo'].append...
+        self.upsert_contact(company, existing_contacts, cp_dienst_eerste)
 
         cp_dienst_tweede = {
             'naam': cdienst.get('naam_6'),
             'voornaam': cdienst.get('voornaam_6'),
             'email': cdienst.get('emailadres_6'),
-            'telephone': cdienst.get('telefoonnummer_6'),
-            'functie': cdienst.get('functietitel_6'),
-            'functie_categorie': self.category_map.get(
-                cdienst.get('functietitel_6')
-            ),
-            'relatie_meemoo': 'contactpersoon contract'
+            'functie_categorie': self.category_map.get(cdienst.get('functietitel_6')),
+            'relaties_meemoo': ['contactpersoon contract'],
+            'position': cdienst.get('functietitel_6'),
+            'phone': cdienst.get('telefoonnummer_6')
         }
-        print("TODO: save cp_dienst_tweede = ", cp_dienst_tweede)
+
+        # TODO: append relaties here...
+        # cp_dienst_tweede['relaties_meemoo'].append...
+        self.upsert_contact(company, existing_contacts, cp_dienst_tweede)
 
     def contacts_update(self, document_body, company):
         dvals = document_body.document.document.value
