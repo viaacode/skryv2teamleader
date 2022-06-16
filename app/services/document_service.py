@@ -26,7 +26,7 @@ class DocumentService(SkryvBase):
     # reset_comapany is only used for testing on qas or dev
     def reset_company(self, or_id):
         # we clear all values here FOR DEBUGGING !!!!
-        print("DEBUG RESET COMPANY CALLED! teamleader company: or-id={or_id}")
+        print(f"DEBUG RESET COMPANY CALLED! teamleader company or-id = {or_id}")
 
         ldap_org = self.ldap.find_company(or_id)
         if not ldap_org:

@@ -131,61 +131,13 @@ class SkryvBase:
             return []
         return addenda
 
+    # orgtype_update is deprecated (op aanvraag Tine)
     # def set_type_organisatie(self, company, value):
-    #     deze is nu deprecated
     #     return self.set_custom_field(company, 'type_organisatie', value)
 
     # ====================== Contact custom fields ============================
-    def set_relatie_meemoo(self, contact, value):
-        # OPGEPAST, FIX relatie_meemoo is multiselect!!!!
-        # we moeten eerder een append doen hier!!!
-        # ook check dat value in deze lijst zit:
-        # "options": [
-        #   "AIF contact",
-        #   "AIF contactpersoon beeldbeheer",
-        #   "AvO ambassadeur",
-        #   "AvO communicatiecontact",
-        #   "AvO contactpersoon CP",
-        #   "AvO gebruiker",
-        #   "centraal contactpersoon",
-        #   "contactpersoon contract",
-        #   "contactpersoon digitale instroom",
-        #   "contactpersoon digitalisering film en AV",
-        #   "contactpersoon GIVE-glasplaten",
-        #   "contactpersoon GIVE-kranten",
-        #   "contactpersoon GIVE-manuscripten",
-        #   "contactpersoon GIVE-topstukken",
-        #   "contactpersoon team interactie",
-        #   "gedetacheerde leerkracht",
-        #   "meemoo alumnus"
-        # ],
-
-        return self.set_custom_field(contact, 'relatie_meemoo', value)
+    def set_relatie_meemoo(self, contact, array_values):
+        return self.set_custom_field(contact, 'relatie_meemoo', array_values)
 
     def set_functie_category(self, contact, value):
-        # single select, maar validate dat het goede optie is!
-        # "options": [
-        #   "administratie",
-        #   "archief en collectiebeheer",
-        #   "beleid",
-        #   "bestuur",
-        #   "consultancy",
-        #   "directie",
-        #   "effectief lid",
-        #   "IT en techniek",
-        #   "kennis en onderzoek",
-        #   "legal",
-        #   "management",
-        #   "marcom",
-        #   "mediaproductie",
-        #   "onderwijzend personeel",
-        #   "pedagogische begeleider",
-        #   "pers (geschreven)",
-        #   "pers (tv)",
-        #   "plaatsvervangend lid",
-        #   "publiekswerking en educatie",
-        #   "sales",
-        #   "uitgever/auteur"
-        # ],
-
         return self.set_custom_field(contact, 'functie_category', value)
