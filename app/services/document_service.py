@@ -24,6 +24,7 @@ class DocumentService(SkryvBase):
         self.read_configuration()
 
     # reset_comapany is only used for testing on qas or dev
+    # it clears all flags and removes all related contacts, use with caution!
     def reset_company(self, or_id):
         # we clear all values here FOR DEBUGGING !!!!
         print(f"DEBUG RESET COMPANY CALLED! teamleader company or-id = {or_id}")
@@ -61,7 +62,8 @@ class DocumentService(SkryvBase):
         print(f"saving document {self.dossier.id} in redis")
         self.redis.save_document(document_body)
 
-        # TODO: remove this reset when releasing !!!
+        # TODO: only uncomment reset_company for debugging purposes, after release this
+        # can be removed/deprecated including entire reset_company method above
         # self.reset_company(self.or_id)
 
     def handle_event(self, document_body: DocumentBody):
