@@ -23,8 +23,11 @@ class DocumentService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
+    # reset_comapany is only used for testing on qas or dev
     def reset_company(self, or_id):
         # we clear all values here FOR DEBUGGING !!!!
+        print("DEBUG RESET COMPANY CALLED! teamleader company: or-id={or_id}")
+
         ldap_org = self.ldap.find_company(or_id)
         if not ldap_org:
             print(f"company with OR-id {or_id} not found for process {self.action}")
@@ -33,27 +36,20 @@ class DocumentService(SkryvBase):
 
         company_id = ldap_org['x-be-viaa-externalUUID'].value
         company = self.tlc.get_company(company_id)
+
+        # clear all flags and addenda set by milestones or process service
         company = self.set_cp_status(company, 'nee')
-        company = self.set_intentieverklaring(company, None)  # clear it
+        company = self.set_intentieverklaring(company, None)
         company = self.set_toestemming_start(company, False)
         company = self.set_swo(company, False)
-        company = self.set_swo_addenda(company, [])  # clear addenda
-
-        print(
-            "DEBUG RESET teamleader company: or-id={}, comapny_id={}, document label={}, action={}".format(
-                self.or_id,
-                company_id,
-                self.document.definitionLabel,
-                self.action
-            )
-        )
+        company = self.set_swo_addenda(company, [])
 
         self.tlc.update_company(company)
 
         # also remove all contacts
-        # existing_contacts = self.tlc.company_contacts(company_id)
-        # for ec in existing_contacts:
-        #     self.tlc.delete_contact(ec['id'])
+        existing_contacts = self.tlc.company_contacts(company_id)
+        for ec in existing_contacts:
+            self.tlc.delete_contact(ec['id'])
 
     def save_cp_updated_document(self, document_body):
         if self.action != 'updated':
