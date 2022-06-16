@@ -250,7 +250,11 @@ class TeamleaderClient:
         return resource
 
     def list_companies(self, page=1, page_size=20, updated_since: datetime = None):
-        return self.request_page('/companies.list', page, page_size, updated_since)
+        return self.request_page(
+            '/companies.list',
+            page, page_size,
+            updated_since
+        )
 
     def get_company(self, uid):
         return self.request_item('/companies.info', uid)
@@ -261,7 +265,11 @@ class TeamleaderClient:
         return result
 
     def list_contacts(self, page=1, page_size=20, updated_since: datetime = None):
-        return self.request_page('/contacts.list', page, page_size, updated_since)
+        return self.request_page(
+            '/contacts.list',
+            page, page_size,
+            updated_since
+        )
 
     def linked_contacts(self, company_id, page=1, page_size=20):
         params = {}
@@ -308,57 +316,21 @@ class TeamleaderClient:
     def delete_contact(self, contact_id):
         return self.post_item('/contacts.delete', {'id': contact_id})
 
-    # def list_invoices(self, page=1, page_size=20, updated_since: datetime = None):
-    #     return self.request_page('/invoices.list', page, page_size, updated_since)
-
-    # def get_invoice(self, uid):
-    #     return self.request_item('/invoices.info', uid)
-
-    # def list_departments(self, page=1, page_size=20, updated_since: datetime = None):
-    #     # departments.list has no pagination and no updated_since support
-    #     # however its only 3 entries and full sync is always used
-    #     if page > 1:
-    #         # Departments has no pagination. We want a similar interface however.
-    #         # So if page > 1 we return []. Otherwise our sync goes into an infinite loop.
-    #         return []
-    #     else:
-    #         return self.request_page('/departments.list', page, page_size, updated_since)
-
-    # def get_department(self, uid):
-    #     return self.request_item('/departments.info', uid)
-
-    # def list_events(self, page=1, page_size=20, updated_since: datetime = None):
-    #     # events.list has no updated_since support, always full sync here
-    #     return self.request_page('/events.list', page, page_size, updated_since)
-
-    # def get_event(self, uid):
-    #     return self.request_item('/events.info', uid)
-
-    # def list_projects(self, page=1, page_size=20, updated_since: datetime = None):
-    #     # projects.list has no updated_since support, always full sync here
-    #     return self.request_page('/projects.list', page, page_size, updated_since)
-
-    # def get_project(self, uid):
-    #     return self.request_item('/projects.info', uid)
-
-    # def list_users(self, page=1, page_size=20, updated_since: datetime = None):
-    #     # users.list has no updated_since support, always full sync here
-    #     return self.request_page('/users.list', page, page_size, updated_since)
-
-    # def get_user(self, uid):
-    #     return self.request_item('/users.info', uid)
-
-    # def current_user(self):
-    #     return self.request_page('/users.me')
-
     def list_custom_fields(self, page=1, page_size=50):
-        return self.request_page('/customFieldDefinitions.list', page, page_size)
+        return self.request_page(
+            '/customFieldDefinitions.list',
+            page, page_size
+        )
 
     def get_custom_field(self, uid):
         return self.request_item('/customFieldDefinitions.info', uid)
 
     def list_webhooks(self, page=1, page_size=20, updated_since: datetime = None):
-        return self.request_page('/webhooks.list', page, page_size, updated_since)
+        return self.request_page(
+            '/webhooks.list',
+            page, page_size,
+            updated_since
+        )
 
     def secure_route(self, url):
         if self.webhook_jwt and len(self.webhook_jwt) > 0:
