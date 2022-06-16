@@ -302,6 +302,12 @@ class TeamleaderClient:
         #                  'position': 'ceo', 'decision_maker': true }
         return self.post_item('/contacts.linkToCompany', contact_link)
 
+    def update_company_link(self, contact_link):
+        return self.post_item('/contacts.updateCompanyLink', contact_link)
+
+    def delete_contact(self, contact_id):
+        return self.post_item('/contacts.delete', {'id': contact_id})
+
     # def list_invoices(self, page=1, page_size=20, updated_since: datetime = None):
     #     return self.request_page('/invoices.list', page, page_size, updated_since)
 

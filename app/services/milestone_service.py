@@ -112,7 +112,6 @@ class MilestoneService(SkryvBase):
                 if fadres == {}:
                     return None
 
-                # skryv has an anoying _1 here
                 skryv_address = {
                     'straat': fadres['straat_1'],
                     'huisnummer': fadres['huisnummer_1'],
@@ -372,11 +371,11 @@ class MilestoneService(SkryvBase):
 
         # check if contact already exists by searching primary email
         new_contact = True
+
         for ec in existing_contacts:
             if ec.get('emails') and len(ec.get('emails')) > 0:
-                for email in ec.get('emails'):
-                    if email == primary_email:
-                        print(f"found existing contact {email}, updating...")
+                for em in ec.get('emails'):
+                    if em['type'] == 'primary' and em['email'] == primary_email:
                         new_contact = False
                         contact = ec
 
@@ -408,25 +407,37 @@ class MilestoneService(SkryvBase):
                     'number': phone_number
                 })
 
-        print("saving company contact =", contact)
-
-        contact_response = self.tlc.add_contact(contact)
-        self.tlc.link_to_company({
-            'id': contact_response['id'],
-            'company_id': company['id'],
-            'position': position
-            # 'decision_maker': True/False?
-        })
+        if new_contact:
+            print("adding company contact {} {}".format(
+                position, primary_email
+            ))
+            contact_response = self.tlc.add_contact(contact)
+            self.tlc.link_to_company({
+                'id': contact_response['id'],
+                'company_id': company['id'],
+                'position': position
+                # 'decision_maker': True/False?
+            })
+        else:
+            print("updating company contact {} {} {}".format(
+                contact['id'], position, primary_email
+            ))
+            self.tlc.update_contact(contact)
+            self.tlc.update_company_link({
+                'id': contact['id'],
+                'company_id': company['id'],
+                'position': position
+                # 'decision_maker': True or False here?
+            })
 
     def upsert_directie_contact(self, company, existing_contacts, contactgegevens):
         # if contact already exists, update it, otherwise create it
         cdirect = contactgegevens['gegevens_directie']
         position = cdirect.get('functietitel')
         cp_directie = {
-            'last_name': cdirect.get('naam_1'),
             'first_name': cdirect.get('voornaam'),
+            'last_name': cdirect.get('naam_1'),
             'email': cdirect.get('email'),
-            # of altijd directie?
             'functie_categorie': self.category_map.get(position),
             'relaties_meemoo': ['contactpersoon contract'],
             'position': position,
@@ -448,8 +459,8 @@ class MilestoneService(SkryvBase):
 
         cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']  # noqa: E501
         cp_administratie = {
-            'last_name': cadmin.get('naam_2'),
             'first_name': cadmin.get('voornaam_1'),
+            'last_name': cadmin.get('naam_2'),
             'email': cadmin.get('email_1'),
             'functie_categorie': self.category_map.get(
                 cadmin['functiecategorie']['selectedOption']
@@ -467,8 +478,8 @@ class MilestoneService(SkryvBase):
         # dienstverlening 2 extra contacten aanmaken of updaten
         cdienst = contactgegevens['contactpersoon_dienstverlening']
         cp_dienst_eerste = {
-            'last_name': cdienst.get('naam_5'),
             'first_name': cdienst.get('voornaam_5'),
+            'last_name': cdienst.get('naam_5'),
             'email': cdienst.get('emailadres_5'),
             'functie_categorie': self.category_map.get(cdienst.get('functietitel_5')),
             'relaties_meemoo': ['contactpersoon contract'],
@@ -481,8 +492,8 @@ class MilestoneService(SkryvBase):
         self.upsert_contact(company, existing_contacts, cp_dienst_eerste)
 
         cp_dienst_tweede = {
-            'naam': cdienst.get('naam_6'),
-            'voornaam': cdienst.get('voornaam_6'),
+            'first_name': cdienst.get('voornaam_6'),
+            'last_name': cdienst.get('naam_6'),
             'email': cdienst.get('emailadres_6'),
             'functie_categorie': self.category_map.get(cdienst.get('functietitel_6')),
             'relaties_meemoo': ['contactpersoon contract'],

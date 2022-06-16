@@ -23,10 +23,16 @@ class DocumentService(SkryvBase):
         self.redis = common_clients.redis
         self.read_configuration()
 
-    def reset_company_status(self, company_id):
+    def reset_company(self, or_id):
         # we clear all values here FOR DEBUGGING !!!!
-        company = self.tlc.get_company(company_id)
+        ldap_org = self.ldap.find_company(or_id)
+        if not ldap_org:
+            print(f"company with OR-id {or_id} not found for process {self.action}")
+            self.slack.no_ldap_entry_found(self.dossier)
+            return
 
+        company_id = ldap_org['x-be-viaa-externalUUID'].value
+        company = self.tlc.get_company(company_id)
         company = self.set_cp_status(company, 'nee')
         company = self.set_intentieverklaring(company, None)  # clear it
         company = self.set_toestemming_start(company, False)
@@ -34,7 +40,7 @@ class DocumentService(SkryvBase):
         company = self.set_swo_addenda(company, [])  # clear addenda
 
         print(
-            "DEBUG RESET status with teamleader update: or-id={}, TL uuid={}, document label={}, action={}".format(
+            "DEBUG RESET teamleader company: or-id={}, comapny_id={}, document label={}, action={}".format(
                 self.or_id,
                 company_id,
                 self.document.definitionLabel,
@@ -43,6 +49,11 @@ class DocumentService(SkryvBase):
         )
 
         self.tlc.update_company(company)
+
+        # also remove all contacts
+        # existing_contacts = self.tlc.company_contacts(company_id)
+        # for ec in existing_contacts:
+        #     self.tlc.delete_contact(ec['id'])
 
     def save_cp_updated_document(self, document_body):
         if self.action != 'updated':
@@ -54,17 +65,8 @@ class DocumentService(SkryvBase):
         print(f"saving document {self.dossier.id} in redis")
         self.redis.save_document(document_body)
 
-        # TODO: remove this reset status when releasing !!!
-        # also, we only need to save the doc in redis and no furher handling is
-        # needed (for now)
-        ldap_org = self.ldap.find_company(self.or_id)
-        if not ldap_org:
-            print(f"OR-id {self.or_id} not found for process {self.action}")
-            self.slack.no_ldap_entry_found(self.dossier)
-            return
-
-        company_id = ldap_org['x-be-viaa-externalUUID'].value
-        self.reset_company_status(company_id)
+        # TODO: remove this reset when releasing !!!
+        # self.reset_company(self.or_id)
 
     def handle_event(self, document_body: DocumentBody):
         body = document_body
