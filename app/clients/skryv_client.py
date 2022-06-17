@@ -12,8 +12,9 @@
 
 
 class SkryvClient:
-    def __init__(self):
-        self.webhook_url = 'skryv_webhook_url'
+    def __init__(self, app_config: dict):
+        env_params = app_config['skryv']
+        self.webhook_url = env_params['webhook_url']
 
     def list_webhooks(self):
         return [
@@ -22,8 +23,3 @@ class SkryvClient:
             f'{self.webhook_url}/skryv/milestone',
         ]
 
-    # def register_webhook(self, url, event):
-    #     print("TODO: add skryv api call to create url=", url, 'for event=', event)
-
-    # def remove_webhook(self, url):
-    #     print("TODO: api call to skryv to remove webhook url=", url)

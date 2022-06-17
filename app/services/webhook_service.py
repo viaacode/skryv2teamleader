@@ -12,8 +12,8 @@ from app.clients.skryv_client import SkryvClient
 
 class WebhookService:
 
-    def __init__(self, teamleader_client):
-        self.sc = SkryvClient()
+    def __init__(self, skryv_client):
+        self.sc = skryv_client
 
     def list_webhooks(self):
         return {

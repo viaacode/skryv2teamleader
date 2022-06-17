@@ -7,5 +7,8 @@ def tst_app_config():
         'environment': 'TST',
         'teamleader': {
             'webhook_url': 'http://testing_webhook_url'
+        },
+        'skryv':{
+            'webhook_url': 'skryv_webhook_url'
         }
     }

@@ -11,6 +11,7 @@ import uuid
 
 from app.comm.webhook_scheduler import WebhookScheduler
 from app.clients.slack_client import SlackClient
+from app.clients.skryv_client import SkryvClient
 from app.clients.common_clients import CommonClients
 from app.models.process_body import ProcessBody
 from app.models.document_body import DocumentBody
@@ -33,6 +34,7 @@ class TestProcessService:
             MockTlClient(),
             MockLdapClient(),
             slack_client,
+            SkryvClient(tst_app_config()),
             MockRedisCache()
         )
 

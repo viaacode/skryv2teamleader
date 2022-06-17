@@ -72,7 +72,7 @@ class App:
         return {'status': 'document event received and scheduled for handling'}
 
     def list_webhooks(self):
-        ws = WebhookService(self.clients.teamleader)
+        ws = WebhookService(self.clients.skryv)
         return ws.list_webhooks()
 
 

@@ -14,6 +14,7 @@ import glob
 # from datetime import datetime, timedelta
 from fastapi.testclient import TestClient
 from app.clients.slack_client import SlackClient
+from app.clients.skryv_client import SkryvClient
 from app.clients.common_clients import CommonClients
 
 from tests.unit.mock_teamleader_client import MockTlClient
@@ -41,6 +42,7 @@ class TestAppRequests:
             MockTlClient(),
             MockLdapClient(),
             slack_client,
+            SkryvClient(tst_app_config()),
             MockRedisCache()
         )
 
