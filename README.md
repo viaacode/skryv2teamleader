@@ -2,6 +2,9 @@
 
 Receive webhook calls from Skryv meemoo and make updates in teamleader.
 We handle proces, milestone and document calls.
+More details on what the different incoming webhook calls implement can be found here:
+https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2teamleader
+
 
 # Installing
 Running make without args gives usage:
