@@ -114,3 +114,40 @@ Covemen to dir htmlcov
 ============================= 32 passed in 2.16s ==============================
 ```
 
+# Environment variables.
+There are some env vars that need to be set up. An example is given in .env.example
+
+```
+ENVIRONMENT=QAS
+LDAP_BIND=ldap_bind_str
+LDAP_URI=ldap_uri
+LDAP_PASSWORD=ldap_pass
+TL_AUTH_URI=https://app.teamleader.eu
+TL_API_URI=https://api.teamleader.eu
+TL_CLIENT_ID=tl_client_id
+TL_CLIENT_SECRET=client_secret
+TL_REDIRECT_URI=https://public_openshift_route/sync/oauth
+TL_SECRET_CODE_STATE=validate_callback_code
+TL_CODE=code_from_callback
+TL_AUTH_TOKEN=teamleader_token
+TL_REFRESH_TOKEN=teamleader_refresh_token
+TL_TOKEN_FILE=auth_tokens.pkl
+WEBHOOK_URL=webhook_api_url
+WEBHOOK_JWT=jwt_token_om_webhooks_af_te_schermen
+REDIS_URL=DISABLED
+SLACK_CHANNEL=slack_channel
+SLACK_TOKEN=slack_token
+SKRYV_DOSSIER_CP_ID=90d24d34-b5b3-4942-8504-b6d76dd86ccb
+TL_OPSTARTFASE=32053d1e-e1f6-0436-9f52-8a6ce7423db4
+TL_CPSTATUS=afe9268c-c6dd-0053-bc5d-d4da5e723daa
+TL_INTENTIEVERKLARING=bcf9ceba-a988-0fc6-805f-9e087ea23dac
+TL_TOESTEMMING_STARTEN=1d0cc259-4b07-01b8-aa5b-100344423db0
+TL_SWO=05cf38ba-2d6f-01fe-a85f-dd84aad23dae
+TL_SWO_ADDENDA=30aa7f48-8915-0a13-8853-4c04fee6bb11
+TL_TYPE_ORGANISATIE=2245baba-81b2-0872-b159-9c553d323da7
+TL_FACTURATIE_EMAIL=15846b7e-104d-015f-8753-cb945d823db9
+TL_BESTELBON=fb842ba5-5372-0767-8752-e579d2e305b4
+TL_RELATIE_MEEMOO=d46ecfe6-4329-0573-a85b-9c7d27023dd7
+TL_FUNCTIE_CATEGORY=17348dda-11c7-0e35-855b-38a4e1123dd6
+```
+
