@@ -19,13 +19,13 @@ api_router = APIRouter()
 api_router.include_router(
     skryv.router,
     prefix="/skryv",
-    tags=["Skryv webhooks (save changes to Teamleader)"]
+    tags=["Skryv webhooks that sync changes to Teamleader"]
 )
 
 api_router.include_router(
     webhook.router,
     prefix="/webhooks",
-    tags=["Manage Skryv Webhooks"]
+    tags=["Configured skryv webhooks"]
 )
 
 api_router.include_router(

@@ -27,11 +27,13 @@ class DocumentService(SkryvBase):
     # it clears all flags and removes all related contacts, use with caution!
     def reset_company(self, or_id):
         # we clear all values here FOR DEBUGGING !!!!
-        print(f"DEBUG RESET COMPANY CALLED! teamleader company or-id = {or_id}")
+        print(
+            f"DEBUG RESET COMPANY CALLED! teamleader company or-id = {or_id}")
 
         ldap_org = self.ldap.find_company(or_id)
         if not ldap_org:
-            print(f"company with OR-id {or_id} not found for process {self.action}")
+            print(
+                f"company with OR-id {or_id} not found for process {self.action}")
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
@@ -59,7 +61,8 @@ class DocumentService(SkryvBase):
             return
 
         # store updated document in redis for a following milestone or process webhook:
-        print(f"saving document {self.dossier.id} in redis for organization {self.or_id}")
+        print(
+            f"saving document {self.dossier.id} in redis for organization {self.or_id}")
         self.redis.save_document(document_body)
 
         # TODO: only uncomment reset_company for debugging purposes, after release this

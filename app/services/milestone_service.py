@@ -434,7 +434,8 @@ class MilestoneService(SkryvBase):
         cdirect = contactgegevens.get('gegevens_directie')
 
         if cdirect is None:
-            print("skipping directie contact, document gegevens_directie entry is not present")
+            print(
+                "skipping directie contact, document gegevens_directie entry is not present")
             return
 
         position = cdirect.get('functietitel')

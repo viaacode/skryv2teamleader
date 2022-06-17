@@ -75,17 +75,5 @@ class App:
         ws = WebhookService(self.clients.teamleader)
         return ws.list_webhooks()
 
-    def create_webhooks(self):
-        ws = WebhookService(self.clients.teamleader)
-        return ws.create_webhooks()
-
-    def update_webhooks(self):
-        ws = WebhookService(self.clients.teamleader)
-        return ws.update_webhooks()
-
-    def delete_webhooks(self):
-        ws = WebhookService(self.clients.teamleader)
-        return ws.delete_webhooks()
-
 
 main_app = App()
