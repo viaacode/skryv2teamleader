@@ -431,7 +431,12 @@ class MilestoneService(SkryvBase):
             })
 
     def upsert_directie_contact(self, company, existing_contacts, contactgegevens):
-        cdirect = contactgegevens['gegevens_directie']
+        cdirect = contactgegevens.get('gegevens_directie')
+
+        if cdirect is None:
+            print("skipping directie contact, document gegevens_directie entry is not present")
+            return
+
         position = cdirect.get('functietitel')
 
         cdienst = contactgegevens['contactpersoon_dienstverlening']
@@ -455,9 +460,9 @@ class MilestoneService(SkryvBase):
         self.upsert_contact(company, existing_contacts, cp_directie)
 
     def upsert_administratie_contact(self, company, existing_contacts, contactgegevens):
-        cp_admin = contactgegevens['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie']  # noqa: E501
+        cp_admin = contactgegevens.get('centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie')  # noqa: E501
 
-        if cp_admin.get('selectedOption') != 'ja_5':
+        if cp_admin is None or cp_admin.get('selectedOption') != 'ja_5':
             print("skipping administratie contact, because it's not selected")
             return
 
@@ -485,7 +490,10 @@ class MilestoneService(SkryvBase):
         self.upsert_contact(company, existing_contacts, cp_administratie)
 
     def upsert_dienstverlening_contacts(self, company, existing_contacts, contactgegevens):
-        cdienst = contactgegevens['contactpersoon_dienstverlening']
+        cdienst = contactgegevens.get('contactpersoon_dienstverlening')
+        if cdienst is None:
+            print("skipping dienstverlening contacts, document entry is not present")
+            return
 
         relaties = []
         relatie_flags = cdienst['dienstverlening_extra_1']['selectedOptions']
@@ -527,7 +535,7 @@ class MilestoneService(SkryvBase):
 
     def contacts_update(self, document_body, company):
         dvals = document_body.document.document.value
-        contactgegevens = dvals['adres_en_contactgegevens']
+        contactgegevens = dvals.get('adres_en_contactgegevens')
         if not contactgegevens:
             print("geen adres_en_contactgegevens aanwezig in document...")
             return company

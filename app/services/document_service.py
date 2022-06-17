@@ -59,7 +59,7 @@ class DocumentService(SkryvBase):
             return
 
         # store updated document in redis for a following milestone or process webhook:
-        print(f"saving document {self.dossier.id} in redis")
+        print(f"saving document {self.dossier.id} in redis for organization {self.or_id}")
         self.redis.save_document(document_body)
 
         # TODO: only uncomment reset_company for debugging purposes, after release this
