@@ -8,8 +8,8 @@ pipeline {
         metadata:
           labels:
             component: builder
-            lang: python
-            app: teamleader2ldap
+            lang: ${getBaseImageName()}
+            app: skryv2teamleader
         spec:
           containers:
           - name: default
@@ -31,11 +31,12 @@ pipeline {
         disableConcurrentBuilds()
     }
     environment {
-        OC_PROJECT = 'iam'
-        BASE_IMG = 'python:3.7.6-alpine3.11'
+        OC_PROJECT = 'etl'
+        BASE_IMG = "${getImageFromDockerfile()}"
+        BASE_IMG_NAME = "${getBaseImageName()}"
         OC_URL = 'https://c113-e.private.eu-de.containers.cloud.ibm.com:30227'
         JIRA_URL = 'meemoo.atlassian.net'
-        APP_NAME = 'teamleader2ldap'
+        APP_NAME = 'skryv2teamleader'
     }
 
     stages {
@@ -54,8 +55,7 @@ pipeline {
         }
         stage('Test code') {
             steps {
-                sh 'apk update && apk add make'
-                sh 'make -f ./openshift/Makefile test'
+                sh 'make -f ./.openshift/Makefile test'
             }
         }
         stage('Build code') {
@@ -70,10 +70,11 @@ pipeline {
                         sh '''#!/bin/bash
                         oc project $OC_PROJECT
                         oc import-image $BASE_IMG --confirm
+                        oc set image-lookup $BASE_IMG_NAME
                         oc new-build -l ref=$BRANCH_NAME --strategy=docker --name $APP_NAME-$GIT_SHORT_COMMIT --to $APP_NAME:$GIT_SHORT_COMMIT --binary --context-dir="" || echo "Probably already exists, start new build"
                         sleep 3
                         oc annotate --overwrite buildconfig/$APP_NAME-$GIT_SHORT_COMMIT ref=$BRANCH_NAME shortcommit=$GIT_SHORT_COMMIT
-                        oc start-build $APP_NAME-$GIT_SHORT_COMMIT --from-dir=. --wait=true
+                        oc start-build $APP_NAME-$GIT_SHORT_COMMIT --from-dir=. --follow=true --wait=true
                         '''
                     }
                 }
@@ -124,6 +125,11 @@ pipeline {
                     tagNewImage('prd')
                 }
             }
+            post {
+                always {
+                    jiraSendDeploymentInfo site: "${JIRA_URL}", environmentId: 'prd', environmentName: 'prd', environmentType: 'production'
+                }
+            }
         }
     }
     post {
@@ -158,7 +164,10 @@ pipeline {
 }
 
 void getImageFromDockerfile() {
-    return 'python:3.7.6-alpine3.11'
+    return 'python:3.7'
+}
+void getBaseImageName() {
+    return getImageFromDockerfile().split(':')[0]
 }
 
 void setGitHubBuildStatus(String message, String state) {
@@ -177,6 +186,6 @@ void tagNewImage(String environment) {
     oc project $OC_PROJECT
     oc tag $APP_NAME:$GIT_SHORT_COMMIT $APP_NAME:${environment}
     # Check the status of the rollout
-    oc rollout status deployment/$APP_NAME-${environment} --watch=true
+    oc rollout status deployment/$APP_NAME-${environment} --watch=true --timeout=10m
     """
 }
