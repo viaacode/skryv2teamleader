@@ -6,9 +6,9 @@ def tst_app_config():
         },
         'environment': 'TST',
         'teamleader': {
-            'webhook_url': 'http://testing_webhook_url'
+            'redis': 'redis://localhost:6543'
         },
         'skryv':{
-            'webhook_url': 'skryv_webhook_url'
+            'webhook_url': 'http://localhost:8080'
         }
     }
