@@ -430,6 +430,16 @@ class MilestoneService(SkryvBase):
                 # 'decision_maker': True or False here?
             })
 
+    def get_relaties(self, contactgegevens, relaties, relatie_key, instroom_key, digitalisering_key):
+        cdienst = contactgegevens['contactpersoon_dienstverlening']
+        relatie_flags = cdienst[relatie_key]['selectedOptions']
+        if relatie_flags[instroom_key]:
+            relaties.append("contactpersoon digitale instroom")
+        if relatie_flags[digitalisering_key]:
+            relaties.append("contactpersoon digitalisering film en AV")
+
+        return relaties
+
     def upsert_directie_contact(self, company, existing_contacts, contactgegevens):
         cdirect = contactgegevens.get('gegevens_directie')
 
@@ -439,21 +449,18 @@ class MilestoneService(SkryvBase):
             return
 
         position = cdirect.get('functietitel')
-
-        cdienst = contactgegevens['contactpersoon_dienstverlening']
-        relaties = ['contactpersoon contract']
-        relatie_flags = cdienst['dienstverlening_directie']['selectedOptions']
-        if relatie_flags['intake_van_de_digitale_collectie']:
-            relaties.append("contactpersoon digitale instroom")
-        if relatie_flags['digitalisering_van_de_analoge_collectie']:
-            relaties.append("contactpersoon digitalisering film en AV")
-
         cp_directie = {
             'first_name': cdirect.get('voornaam'),
             'last_name': cdirect.get('naam_1'),
             'email': cdirect.get('email'),
             'functie_categorie': self.category_map.get(position),
-            'relaties_meemoo': relaties,
+            'relaties_meemoo': self.get_relaties(
+                contactgegevens,
+                ['contactpersoon contract'],
+                'dienstverlening_directie',
+                'intake_van_de_digitale_collectie',
+                'digitalisering_van_de_analoge_collectie'
+            ),
             'position': position,
             'phone': None
         }
@@ -468,14 +475,6 @@ class MilestoneService(SkryvBase):
             return
 
         cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']  # noqa: E501
-        cdienst = contactgegevens['contactpersoon_dienstverlening']
-        relaties = ['contactpersoon contract']
-        relatie_flags = cdienst['dienstverlening_administratie']['selectedOptions']
-        if relatie_flags['intake_van_de_digitale_collectie_1']:
-            relaties.append("contactpersoon digitale instroom")
-        if relatie_flags['digitalisering_van_de_analoge_collectie_1']:
-            relaties.append("contactpersoon digitalisering film en AV")
-
         cp_administratie = {
             'first_name': cadmin.get('voornaam_1'),
             'last_name': cadmin.get('naam_2'),
@@ -483,7 +482,13 @@ class MilestoneService(SkryvBase):
             'functie_categorie': self.category_map.get(
                 cadmin['functiecategorie']['selectedOption']
             ),
-            'relaties_meemoo': relaties,
+            'relaties_meemoo': self.get_relaties(
+                contactgegevens,
+                ['contactpersoon contract'],
+                'dienstverlening_administratie',
+                'intake_van_de_digitale_collectie_1',
+                'digitalisering_van_de_analoge_collectie_1'
+            ),
             'position': cadmin.get('functie'),
             'phone': cadmin.get('telefoonnummer_1')
         }
@@ -494,44 +499,41 @@ class MilestoneService(SkryvBase):
         cdienst = contactgegevens.get('contactpersoon_dienstverlening')
         if cdienst is None:
             print("skipping dienstverlening contacts, document entry is not present")
-            return
-
-        relaties = []
-        relatie_flags = cdienst['dienstverlening_extra_1']['selectedOptions']
-        if relatie_flags['intake_van_de_digitale_collectie_3']:
-            relaties.append("contactpersoon digitale instroom")
-        if relatie_flags['digitalisering_van_de_analoge_collectie_3']:
-            relaties.append("contactpersoon digitalisering film en AV")
+            return []
 
         cp_dienst_eerste = {
             'first_name': cdienst.get('voornaam_5'),
             'last_name': cdienst.get('naam_5'),
             'email': cdienst.get('emailadres_5'),
             'functie_categorie': None,
-            'relaties_meemoo': relaties,
+            'relaties_meemoo': self.get_relaties(
+                contactgegevens,
+                [],
+                'dienstverlening_extra_1',
+                'intake_van_de_digitale_collectie_3',
+                'digitalisering_van_de_analoge_collectie_3'
+            ),
             'position': cdienst.get('functietitel_5'),
             'phone': cdienst.get('telefoonnummer_5')
         }
-
         self.upsert_contact(company, existing_contacts, cp_dienst_eerste)
-
-        relaties = []
-        relatie_flags = cdienst['dienstverlening_extra_2']['selectedOptions']
-        if relatie_flags['intake_van_de_digitale_collectie']:
-            relaties.append("contactpersoon digitale instroom")
-        if relatie_flags['digitalisering_van_de_analoge_collectie']:
-            relaties.append("contactpersoon digitalisering film en AV")
 
         cp_dienst_tweede = {
             'first_name': cdienst.get('voornaam_6'),
             'last_name': cdienst.get('naam_6'),
             'email': cdienst.get('emailadres_6'),
             'functie_categorie': None,
-            'relaties_meemoo': relaties,
+            'relaties_meemoo': self.get_relaties(
+                contactgegevens,
+                [],
+                'dienstverlening_extra_2',
+                'intake_van_de_digitale_collectie',
+                'digitalisering_van_de_analoge_collectie'
+            ),
+
             'position': cdienst.get('functietitel_6'),
             'phone': cdienst.get('telefoonnummer_6')
         }
-
         self.upsert_contact(company, existing_contacts, cp_dienst_tweede)
 
     def contacts_update(self, document_body, company):
