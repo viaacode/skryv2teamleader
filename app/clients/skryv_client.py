@@ -22,4 +22,3 @@ class SkryvClient:
             f'{self.webhook_url}/skryv/document',
             f'{self.webhook_url}/skryv/milestone',
         ]
-

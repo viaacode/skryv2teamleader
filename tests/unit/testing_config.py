@@ -8,7 +8,7 @@ def tst_app_config():
         'teamleader': {
             'redis': 'redis://localhost:6543'
         },
-        'skryv':{
+        'skryv': {
             'webhook_url': 'http://localhost:8080'
         }
     }
