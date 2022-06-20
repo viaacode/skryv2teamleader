@@ -17,7 +17,7 @@ class TeamleaderAuth():
     """Acts as a client to query and modify information from and to database"""
 
     def __init__(self, tl_config: dict, redis_cache: RedisCache = None):
-        self.token_key = 'teamleader_auth_tokens'
+        self.token_key = 'skryv_tl_auth_tokens'
         self.redis = redis_cache
 
     def save(self, code='', auth_token='', refresh_token=''):
