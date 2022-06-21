@@ -26,7 +26,7 @@ class SlackWrapper:
     def create_message(self, message):
         slack_text = f"({self.env}) {message}"
 
-        if self.env == 'QAS' or self.env == 'TST':
+        if self.env == 'DEV' or self.env == 'TST':
             print(f"DEBUG MODE: slack_message = {slack_text}")
             return
 
