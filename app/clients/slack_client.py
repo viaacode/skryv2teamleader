@@ -87,3 +87,14 @@ class SlackClient:
             or_id
         )
         self.create_message(msg)
+
+    def empty_last_name(self, company, contact):
+        company_url = 'https://focus.teamleader.eu/company_detail.php?id={}'.format(
+            company['id']
+        )
+
+        msg_part1 = f"Contact found with empty last_name, setting last_name = {contact['last_name']}"
+        msg_part2 = f'and linking to company in teamleader: {company_url}'
+        last_name_warning = f'{msg_part1} {msg_part2}'
+
+        self.create_message(last_name_warning)

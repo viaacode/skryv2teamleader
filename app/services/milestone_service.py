@@ -407,6 +407,10 @@ class MilestoneService(SkryvBase):
                     'number': phone_number
                 })
 
+        if contact['last_name'] is None:
+            contact['last_name'] = 'SKRYV: geen achternaam aanwezig'
+            self.slack.empty_last_name(company, contact)
+
         if new_contact:
             print("adding company contact {} {} {}".format(
                 position, primary_email, relaties_meemoo
