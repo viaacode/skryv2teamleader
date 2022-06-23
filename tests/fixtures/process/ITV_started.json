@@ -1,0 +1,22 @@
+{
+  "action": "created",
+  "dossier": {
+    "id": "0f9f6268-b17b-4efa-9ed3-19e6ec3e7088",
+    "label": "deSingel",
+    "externalId": "OR-cv4bt4v",
+    "dossierManager": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "dossierDefinition": "90d24d34-b5b3-4942-8504-b6d76dd86ccb",
+    "createdAt": "2022-06-14T11:43:26.000+0000",
+    "updatedAt": "2022-06-14T11:43:30.000+0000",
+    "creator": "33aeb47c-d027-1036-8f5f-d369bf7ac4f1",
+    "active": true
+  },
+  "process": {
+    "id": "3ed89657-f2d5-11ec-883a-0242ac130004",
+    "businessKey": "0f9f6268-b17b-4efa-9ed3-19e6ec3e7088",
+    "processDefinitionId": "Intentieverklaring_v2:16:b8d43a62-d695-11ec-a5e9-0242c0a8e002",
+    "processDefinitionKey": "Intentieverklaring_v2",
+    "startTime": "2022-06-23T09:17:04.000+0000",
+    "startActivityId": "StartEvent_10e3ss5"
+  }
+}
