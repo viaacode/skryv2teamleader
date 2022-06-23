@@ -94,32 +94,56 @@ class ProcessService(SkryvBase):
 
         return company
 
-    # TODO: double check if this process 'start event' is needed
-    # ITV gestart -> sets cp_status == pending.
-    def teamleader_update(self):
-        if self.action != "ended":
-            print(f"Skipping process with action {self.action}")
-            return
+    def set_status_intentieverklaring(self, company):
+        print(
+            "process ({}) -> teamleader status intentieverklaring: or-id={}, company={}".format(
+                self.process.id,
+                self.or_id,
+                company['id']
+            )
+        )
+        company = self.set_cp_status(company, 'pending')
+        company = self.set_intentieverklaring(company, 'pending')
+        company = self.set_toestemming_start(company, False)
+        company = self.set_swo(company, False)
 
-        ldap_org = self.ldap.find_company(self.or_id)
+        return company
+
+    def find_organization(self, or_id):
+        ldap_org = self.ldap.find_company(or_id)
         if not ldap_org:
-            print(f"ERROR in process: LDAP OR-ID not found {self.or_id}")
+            print(f"ERROR in process: LDAP OR-ID not found {or_id}")
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
-        # self.action == "ended"
-        if self.process.processDefinitionKey == "so_ondertekenproces":
-            company_id = ldap_org['x-be-viaa-externalUUID'].value
-            company = self.tlc.get_company(company_id)
-            if not company:
-                self.slack.company_not_found(company_id, self.or_id)
-                return
+        return ldap_org
 
-            company = self.set_status_ondertekenproces(company)
-            self.tlc.update_company(company)
-        else:
-            print(
-                f"process ended: skipping definitionkey = {self.process.processDefinitionKey}")
+    def update_company_status(self, status_update_method):
+        ldap_org = self.find_organization(self.or_id)
+        if not ldap_org:
+            return
+
+        company_id = ldap_org['x-be-viaa-externalUUID'].value
+        company = self.tlc.get_company(company_id)
+        if not company:
+            self.slack.company_not_found(company_id, self.or_id)
+            return
+
+        company = status_update_method(company)
+        self.tlc.update_company(company)
+        return
+
+    def teamleader_update(self):
+        process_definition = self.process.processDefinitionKey
+        if self.action == "ended" and process_definition == "so_ondertekenproces":
+            self.update_company_status(self.set_status_ondertekenproces)
+            return
+
+        if self.action == "created" and process_definition == "Intentieverklaring_v2":
+            self.update_company_status(self.set_status_intentieverklaring)
+            return
+
+        print(f"Process: skipping action={self.action} and process definition={process_definition}")
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body
