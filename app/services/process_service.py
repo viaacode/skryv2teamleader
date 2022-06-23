@@ -98,7 +98,7 @@ class ProcessService(SkryvBase):
     # ITV gestart -> sets cp_status == pending.
     def teamleader_update(self):
         if self.action != "ended":
-            print("Skipping process with action {self.action}")
+            print(f"Skipping process with action {self.action}")
             return
 
         ldap_org = self.ldap.find_company(self.or_id)
@@ -117,6 +117,9 @@ class ProcessService(SkryvBase):
 
             company = self.set_status_ondertekenproces(company)
             self.tlc.update_company(company)
+        else:
+            print(
+                f"process ended: skipping definitionkey = {self.process.processDefinitionKey}")
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body

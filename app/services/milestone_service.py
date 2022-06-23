@@ -291,6 +291,10 @@ class MilestoneService(SkryvBase):
     def update_company_phone(self, company, phone_number):
         cp_phones = company['telephones']
         phoneNumberFound = False
+
+        # remove / and spaces in skryv phone number
+        phone_number = phone_number.replace("/", "")
+        phone_number = phone_number.replace(" ", "")
         if 'telephones' not in company:
             company['telephones'] = []
 
@@ -581,7 +585,7 @@ class MilestoneService(SkryvBase):
 
         return company
 
-    def teamleader_update(self):
+    def update_company_and_contacts(self):
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
             print(
                 f"{self.dossier.dossierDefinition} is not a content partner milestone, skipping milestone event")
@@ -625,6 +629,6 @@ class MilestoneService(SkryvBase):
         self.or_id = self.dossier.externalId
 
         if(self.or_id):
-            self.teamleader_update()
+            self.update_company_and_contacts()
         else:
             self.slack.external_id_empty(self.dossier)

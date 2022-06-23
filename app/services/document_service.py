@@ -57,7 +57,7 @@ class DocumentService(SkryvBase):
     def save_cp_updated_document(self, document_body):
         if self.action != 'updated':
             print(
-                "skipping document {self.action}, waiting for document 'updated' action...")
+                f"skipping document {self.action}, waiting for document 'updated' action...")
             return
 
         # store updated document in redis for a following milestone or process webhook:
