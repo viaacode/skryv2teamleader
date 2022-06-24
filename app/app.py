@@ -54,7 +54,12 @@ class App:
         return {'status': 'proces event received and scheduled for handling'}
 
     def milestone_webhook(self, milestone_body):
-        logger.info(f"milestone event: {milestone_body}")
+        logger.info("milestone event: action={} dossier_id={} or_id=".format(
+                milestone_body.action,
+                milestone_body.dossier.id,
+                milestone_body.dossier.externalId
+            )
+        )
         self.whs.schedule('milestone_event', milestone_body)
         return {'status': milestone_body.milestone.status}
 
