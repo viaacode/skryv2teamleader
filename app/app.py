@@ -13,16 +13,14 @@
 #   this is instantiated
 #
 
-from viaa.configuration import ConfigParser
-from viaa.observability import logging
-
 from app.services.webhook_service import WebhookService
 from app.clients.common_clients import construct_clients
 from app.clients.redis_cache import redis_cache
 from app.comm.webhook_scheduler import WebhookScheduler
 
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
 
-# Initialize the logger and the configuration
 config = ConfigParser()
 logger = logging.get_logger(__name__, config=config)
 

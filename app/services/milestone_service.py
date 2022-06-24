@@ -13,6 +13,12 @@ from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
 from pydantic import ValidationError
 
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
+
 
 class MilestoneService(SkryvBase):
     def __init__(self, common_clients):
@@ -67,7 +73,7 @@ class MilestoneService(SkryvBase):
         if milestone_status not in status_actions:
             # this case happens for "SWO niet akkoord" and "SWO akkoord"
             # return false -> we don't need teamleader update
-            print(f"ignoring milestone status update for  {milestone_status}")
+            logger.info(f"ignoring milestone status update for  {milestone_status}")
             return (False, company)
 
         perform_status_update = status_actions.get(milestone_status)
@@ -137,8 +143,9 @@ class MilestoneService(SkryvBase):
                 tad['address']['addressee'] = facturatienaam
 
         if not fnSaved:
-            print(
-                f"warning: facturatienaam {facturatienaam} could not be saved")
+            logger.warning(
+                f"warning: facturatienaam {facturatienaam} could not be saved"
+            )
 
         return company
 
@@ -232,42 +239,14 @@ class MilestoneService(SkryvBase):
         if 'bedrijfsvorm' in dvals:
             bedrijfsvorm = dvals['bedrijfsvorm']['selectedOption']
             company['business_type'] = btype_mapping.get(bedrijfsvorm)
-            print(
-                "DEBUG: bedrijfsvorm found=", bedrijfsvorm,
-                " -> business_type=", company['business_type']
+            logger.info(
+                "DEBUG: bedrijfsvorm found={} -> business_type={} ".format(
+                    bedrijfsvorm,
+                    company['business_type']
+                )
             )
 
         return company
-
-    # orgtype_update is deprecated (op aanvraag Tine)
-    # def orgtype_update(self, document_body, company):
-    #     otype_mapping = {
-    #         'archief': 'CUL - archief',
-    #         'erfgoedbibliotheek': 'CUL - erfgoedbibliotheek',
-    #         'erfgoedcel': 'CUL - erfgoedcel',
-    #         'kunstenorganisatie': 'CUL - kunstenorganisatie',
-    #         'mediabedrijf': 'MED - mediabedrijf',
-    #         'museum': 'CUL - museum (erkend)',  # niet erkend is er ook!
-    #         'regionale_omroep': 'MED - regionale omroep',
-    #         'sectorinstituut': 'ALG - sectororganisatie',
-    #         'overheidsinstelling': 'OVH - overheidsdienst'
-    #     }
-
-    #     dvals = document_body.document.document.value
-    #     if 'adres_en_contactgegevens' in dvals:
-    #         ac = dvals['adres_en_contactgegevens']
-    #         if 'type_organisatie' in ac:
-    #             type_organisatie = ac['type_organisatie']['selectedOption']
-    #             tl_orgtype = otype_mapping[type_organisatie]
-
-    #             company = self.set_type_organisatie(company, tl_orgtype)
-    #             print(
-    #                 "DEBUG: type organisatie found =", type_organisatie,
-    #                 "mapped value=",
-    #                 self.get_custom_field(company, 'type_organisatie')
-    #             )
-
-    #     return company
 
     def update_company_email(self, company, mail_type, mail_value):
         cp_mails = company['emails']
@@ -416,7 +395,7 @@ class MilestoneService(SkryvBase):
             self.slack.empty_last_name(company, contact)
 
         if new_contact:
-            print("adding company contact {} {} {}".format(
+            logger.info("adding company contact {} {} {}".format(
                 position, primary_email, relaties_meemoo
             ))
             contact_response = self.tlc.add_contact(contact)
@@ -427,7 +406,7 @@ class MilestoneService(SkryvBase):
                 # 'decision_maker': True/False?
             })
         else:
-            print("updating company contact {} {} {} {}".format(
+            logger.info("updating company contact {} {} {} {}".format(
                 contact['id'], position, primary_email, relaties_meemoo
             ))
             self.tlc.update_contact(contact)
@@ -452,8 +431,9 @@ class MilestoneService(SkryvBase):
         cdirect = contactgegevens.get('gegevens_directie')
 
         if cdirect is None:
-            print(
-                "skipping directie contact, document gegevens_directie entry is not present")
+            logger.info(
+                "skipping directie contact, document gegevens_directie entry is not present"
+            )
             return
 
         position = cdirect.get('functietitel')
@@ -479,7 +459,7 @@ class MilestoneService(SkryvBase):
         cp_admin = contactgegevens.get('centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie')  # noqa: E501
 
         if cp_admin is None or cp_admin.get('selectedOption') != 'ja_5':
-            print("skipping administratie contact, because it's not selected")
+            logger.info("skipping administratie contact, because it's not selected")
             return
 
         cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']  # noqa: E501
@@ -506,7 +486,7 @@ class MilestoneService(SkryvBase):
     def upsert_dienstverlening_contacts(self, company, existing_contacts, contactgegevens):
         cdienst = contactgegevens.get('contactpersoon_dienstverlening')
         if cdienst is None:
-            print("skipping dienstverlening contacts, document entry is not present")
+            logger.info("skipping dienstverlening contacts, document entry is not present")
             return []
 
         cp_dienst_eerste = {
@@ -548,7 +528,7 @@ class MilestoneService(SkryvBase):
         dvals = document_body.document.document.value
         contactgegevens = dvals.get('adres_en_contactgegevens')
         if not contactgegevens:
-            print("geen adres_en_contactgegevens aanwezig in document...")
+            logger.info("geen adres_en_contactgegevens aanwezig in document...")
             return company
 
         existing_contacts = self.tlc.company_contacts(company['id'])
@@ -572,7 +552,6 @@ class MilestoneService(SkryvBase):
 
             company = self.bedrijfsnaam_update(mdoc, company)
             company = self.bedrijfsvorm_update(mdoc, company)
-            # company = self.orgtype_update(mdoc, company)  # niet meer syncen!
             company = self.addresses_update(mdoc, company)
             company = self.algemeen_update(mdoc, company)
 
@@ -580,15 +559,17 @@ class MilestoneService(SkryvBase):
             company = self.contacts_update(mdoc, company)
 
         except ValidationError as e:
-            print(
-                f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}")
+            logger.warning(
+                f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}"
+            )
 
         return company
 
     def update_company_and_contacts(self):
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
-            print(
-                f"{self.dossier.dossierDefinition} is not a content partner milestone, skipping milestone event")
+            logger.warning(
+                f"{self.dossier.dossierDefinition} is not a content partner milestone, skipping milestone event"
+            )
             return
 
         ldap_org = self.ldap.find_company(self.or_id)
@@ -607,7 +588,7 @@ class MilestoneService(SkryvBase):
         )
 
         if status_changed:
-            print(
+            logger.info(
                 "milestone teamleader update: or-id={}, company={}, milestone status={} action={}".format(
                     self.or_id,
                     company['id'],

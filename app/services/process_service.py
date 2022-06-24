@@ -20,6 +20,12 @@ from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
 from pydantic import ValidationError
 
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
+
 
 class ProcessService(SkryvBase):
     def __init__(self, common_clients):
@@ -48,12 +54,12 @@ class ProcessService(SkryvBase):
 
         addendums = self.get_addendums(document)
         if not addendums:
-            print("no new, addendums found in document")
+            logger.info("no new, addendums found in document")
             return company
 
         # keep existing addenda from previous process
         tl_addendums = self.get_existing_addenda(company)
-        print("existing company swo_addenda", tl_addendums)
+        logger.info(f"existing company swo_addenda = {tl_addendums}")
 
         for ad in addendums:
             ad_naam = tl_swo_map.get(ad['naam']['Specifieke addenda'])
@@ -62,13 +68,13 @@ class ProcessService(SkryvBase):
                     ad_naam
                 )
 
-        print("merged company swo_addenda = ", tl_addendums)
+        logger.info(f"merged company swo_addenda = {tl_addendums}")
         company = self.set_swo_addenda(company, tl_addendums)
 
         return company
 
     def set_status_ondertekenproces(self, company):
-        print(
+        logger.info(
             "process ({}) -> teamleader status ondertekenproces: or-id={}, company={}".format(
                 self.process.id,
                 self.or_id,
@@ -89,13 +95,14 @@ class ProcessService(SkryvBase):
             )
 
         except ValidationError as e:
-            print(
-                f"Missing or malformed dossier for ondertekenproces: {self.dossier.id} error: {e}")
+            logger.warning(
+                f"Missing or malformed dossier for ondertekenproces: {self.dossier.id} error: {e}"
+            )
 
         return company
 
     def set_status_intentieverklaring(self, company):
-        print(
+        logger.info(
             "process ({}) -> teamleader status intentieverklaring: or-id={}, company={}".format(
                 self.process.id,
                 self.or_id,
@@ -112,7 +119,7 @@ class ProcessService(SkryvBase):
     def find_organization(self, or_id):
         ldap_org = self.ldap.find_company(or_id)
         if not ldap_org:
-            print(f"ERROR in process: LDAP OR-ID not found {or_id}")
+            logger.info(f"ERROR in process: LDAP OR-ID not found {or_id}")
             self.slack.no_ldap_entry_found(self.dossier)
             return
 
@@ -143,7 +150,7 @@ class ProcessService(SkryvBase):
             self.update_company_status(self.set_status_intentieverklaring)
             return
 
-        print(f"Process: skipping action={self.action} and process definition={process_definition}")
+        logger.info(f"Process: skipping action={self.action} and process definition={process_definition}")
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body
@@ -154,8 +161,9 @@ class ProcessService(SkryvBase):
 
         # enkel behandeling type dossier 'contentpartner'
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
-            print(
-                f"Skipping {self.dossier.dossierDefinition}, it's not a CP process")
+            logger.info(
+                f"Skipping {self.dossier.dossierDefinition}, it's not a CP process"
+            )
             return
 
         if(self.or_id):
