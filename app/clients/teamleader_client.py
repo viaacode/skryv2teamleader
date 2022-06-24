@@ -20,10 +20,15 @@
 
 import requests
 import time
+import json
 from datetime import datetime
 from app.clients.teamleader_auth import TeamleaderAuth
 from app.clients.redis_cache import RedisCache
-import json
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
 
 # Avoid getting 429 Too Many Requests error
 RATE_LIMIT_SLEEP = 0.6
@@ -77,9 +82,8 @@ class TeamleaderClient:
         called with api route: /sync/oauth?code='supplied_by_teamleader'&state='self.secret_code_state'
         """
         if state != self.secret_code_state:
-            print(
-                "reject state={state} not equal to secret_state={self.secret_code_state}",
-                flush=True
+            logger.warning(
+                "reject state={state} not equal to secret_state={self.secret_code_state}"
             )
             return {'status': 'code rejected'}
 
@@ -98,13 +102,11 @@ class TeamleaderClient:
             self.refresh_token = response['refresh_token']
             self.token_store.save(self.code, self.token, self.refresh_token)
         else:
-            print(
-                f"Error {token_response.status_code}: {token_response.text} in handle_token_response",
-                flush=True
+            logger.error(
+                f"Error {token_response.status_code}: {token_response.text} in handle_token_response"
             )
-            print(
-                f"Login into teamleader and paste code callback link:\n {self.authcode_request_link()}\n\n",
-                flush=True
+            logger.info(
+                f"Login into teamleader and paste code callback link:\n {self.authcode_request_link()}\n\n"
             )
 
     def auth_token_request(self):
@@ -192,16 +194,15 @@ class TeamleaderClient:
         if res.status_code == 200:
             return res.json()['data']
         elif res.status_code == 404:
-            print(f"Warning: {path} responded with {res.text}", flush=True)
+            logger.warning(f"Warning: {path} responded with {res.text}")
             return []
         else:
-            print('GET {} failed:\n status={}\n response={}\n params={}\n'.format(
+            logger.warning('GET {} failed:\n status={}\n response={}\n params={}\n'.format(
                 path,
                 res.status_code,
                 res.text,
                 params
-            ),
-                flush=True)
+            ))
             return []
 
     def post_item(self, resource_path, payload):
@@ -228,12 +229,12 @@ class TeamleaderClient:
         elif res.status_code == 204:
             return None
         else:
-            print('POST {} failed:\n status={}\n response={}\n payload={}\n'.format(
+            logger.warning('POST {} failed:\n status={}\n response={}\n payload={}\n'.format(
                 path,
                 res.status_code,
                 res.text,
                 payload
-            ), flush=True)
+            ))
             return f'post call failed error response={res.text}'
 
     def prepare_custom_fields(self, resource):
@@ -375,11 +376,10 @@ class TeamleaderClient:
         if res.status_code == 200:
             return res.json()['data']['id']
         else:
-            print('call to {} failed\n error code={}\n error response {}\n used params {}\n'.format(
+            logger.warning('call to {} failed\n error code={}\n error response {}\n used params {}\n'.format(
                 path,
                 res.status_code,
                 res.text,
                 params
-            ),
-                flush=True)
+            ))
             return None

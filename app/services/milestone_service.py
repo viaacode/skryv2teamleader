@@ -73,7 +73,8 @@ class MilestoneService(SkryvBase):
         if milestone_status not in status_actions:
             # this case happens for "SWO niet akkoord" and "SWO akkoord"
             # return false -> we don't need teamleader update
-            logger.info(f"ignoring milestone status update for  {milestone_status}")
+            logger.info(
+                f"ignoring milestone status update for  {milestone_status}")
             return (False, company)
 
         perform_status_update = status_actions.get(milestone_status)
@@ -459,7 +460,8 @@ class MilestoneService(SkryvBase):
         cp_admin = contactgegevens.get('centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten_verschillend_van_de_directie')  # noqa: E501
 
         if cp_admin is None or cp_admin.get('selectedOption') != 'ja_5':
-            logger.info("skipping administratie contact, because it's not selected")
+            logger.info(
+                "skipping administratie contact, because it's not selected")
             return
 
         cadmin = cp_admin['centrale_contactpersoon_van_de_organisatie_voor_het_afsluiten_van_de_contracten']  # noqa: E501
@@ -486,7 +488,8 @@ class MilestoneService(SkryvBase):
     def upsert_dienstverlening_contacts(self, company, existing_contacts, contactgegevens):
         cdienst = contactgegevens.get('contactpersoon_dienstverlening')
         if cdienst is None:
-            logger.info("skipping dienstverlening contacts, document entry is not present")
+            logger.info(
+                "skipping dienstverlening contacts, document entry is not present")
             return []
 
         cp_dienst_eerste = {
@@ -528,7 +531,8 @@ class MilestoneService(SkryvBase):
         dvals = document_body.document.document.value
         contactgegevens = dvals.get('adres_en_contactgegevens')
         if not contactgegevens:
-            logger.info("geen adres_en_contactgegevens aanwezig in document...")
+            logger.info(
+                "geen adres_en_contactgegevens aanwezig in document...")
             return company
 
         existing_contacts = self.tlc.company_contacts(company['id'])

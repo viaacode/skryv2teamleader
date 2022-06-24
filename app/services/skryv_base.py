@@ -11,8 +11,12 @@
 #   to teamleader
 #
 
-from viaa.configuration import ConfigParser
 import uuid
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
 
 
 class SkryvBase:
@@ -28,13 +32,11 @@ class SkryvBase:
         )
 
     def custom_field_mapping(self, field_ids):
-        # print("field_ids=", field_ids)
         self.custom_fields = {}
         for f in self.tlc.list_custom_fields():
             for f_label, f_id in field_ids.items():
                 if f['id'] == f_id:
                     self.custom_fields[f_label] = f
-                    # print(f"custom_fields[{f_label}]={f}")  # debug
 
         return self.custom_fields
 
@@ -71,7 +73,7 @@ class SkryvBase:
         # 2.2 CP status -> 'ja', 'nee', 'pending'
         allowed_values = ['ja', 'nee', 'pending']
         if value not in allowed_values:
-            print("skipping cp_status, invalued value=", value)
+            logger.warning(f"skipping cp_status, invalid value = {value}")
             return company
 
         return self.set_custom_field(company, 'cp_status', value)
@@ -82,7 +84,8 @@ class SkryvBase:
         allowed_values = ['ingevuld', 'pending', None]
 
         if value not in allowed_values:
-            print("skipping invalid intentieverklaring value=", value)
+            logger.warning(
+                f"skipping invalid intentieverklaring value = {value}")
 
         return self.set_custom_field(company, 'intentieverklaring', value)
 
@@ -118,8 +121,8 @@ class SkryvBase:
             'swo_addenda')['configuration']['options']
         for d in addenda_list:
             if d not in allowed_addenda:
-                print(
-                    "skipping set_swo_addenda because we get an invalid addenda value d=", d
+                logger.warning(
+                    f"skipping set_swo_addenda because we get an invalid addenda value d={d}"
                 )
                 return company
 

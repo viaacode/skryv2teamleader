@@ -11,6 +11,11 @@
 
 import os
 from app.clients.redis_cache import RedisCache
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
 
 
 class TeamleaderAuth():
@@ -27,12 +32,12 @@ class TeamleaderAuth():
             'refresh_token': refresh_token
         }
 
-        print(f"Saving tokens in REDIS key: {self.token_key}")
+        logger.info(f"Saving tokens in REDIS key: {self.token_key}")
         self.redis.save(self.token_key, token_data)
 
     def read(self):
         token_data = self.redis.load(self.token_key)
-        print(f"Read tokens from REDIS key: {self.token_key}")
+        logger.info(f"Read tokens from REDIS key: {self.token_key}")
         return token_data['code'], token_data['token'], token_data['refresh_token']
 
     def reset(self):

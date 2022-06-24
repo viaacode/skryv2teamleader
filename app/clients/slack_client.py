@@ -11,6 +11,11 @@
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 from app.models.dossier import Dossier
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
 
 
 class SlackWrapper:
@@ -27,13 +32,14 @@ class SlackWrapper:
         slack_text = f"({self.env}) {message}"
 
         if self.env == 'DEV' or self.env == 'TST':
-            print(f"DEBUG MODE: slack_message = {slack_text}")
+            logger.info(f"DEBUG MODE: slack_message = {slack_text}")
             return
 
         try:
             if slack_text == self.previous_message:
-                print(
-                    f"Skipping send of duplicate slack message: {slack_text}")
+                logger.warning(
+                    f"Skipping send of duplicate slack message: {slack_text}"
+                )
                 return
 
             self.client.chat_postMessage(
@@ -44,7 +50,7 @@ class SlackWrapper:
             self.previous_message = slack_text
 
         except SlackApiError as e:
-            print(
+            logger.error(
                 f"SLACK ERROR: {e.response['error']} => Please check config.yml and .env"
             )
 

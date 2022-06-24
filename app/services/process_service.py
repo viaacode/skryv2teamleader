@@ -150,7 +150,8 @@ class ProcessService(SkryvBase):
             self.update_company_status(self.set_status_intentieverklaring)
             return
 
-        logger.info(f"Process: skipping action={self.action} and process definition={process_definition}")
+        logger.info(
+            f"Process: skipping action={self.action} and process definition={process_definition}")
 
     def handle_event(self, process_body: ProcessBody):
         self.body = process_body

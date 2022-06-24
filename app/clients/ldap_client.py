@@ -9,6 +9,11 @@
 #
 
 import ldap3
+from viaa.configuration import ConfigParser
+from viaa.observability import logging
+
+config = ConfigParser()
+logger = logging.get_logger(__name__, config=config)
 
 # LDAP_PEOPLE_PREFIX = 'ou=users'
 # LDAP_ORGS_PREFIX = 'ou=apps,ou=users'
@@ -61,7 +66,7 @@ class LdapClient:
             return conn.entries[0]
         elif len(conn.entries) > 1:
             # this shouldnt happen but if it does, we want it logged
-            print("WARNING multiple companies found:", conn.entries, flush=True)
+            logger.warning(f"WARNING multiple companies found {conn.entries}")
             return conn.entries[0]
         else:
             return None
@@ -78,7 +83,7 @@ class LdapClient:
             return conn.entries[0]
         elif len(conn.entries) > 1:
             # this shouldnt happen but if it does, we want it logged
-            print("WARNING multiple companies found:", conn.entries, flush=True)
+            logger.warning(f"WARNING multiple companies found {conn.entries}")
             return conn.entries[0]
         else:
             return None
