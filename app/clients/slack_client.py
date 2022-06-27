@@ -5,7 +5,7 @@
 #
 #   app/clients/slack_client.py
 #
-#   To easily post slack messages on channel: #skryvbot
+#   To easily post slack messages on channel: #crmbot
 #
 
 from slack_sdk import WebClient
