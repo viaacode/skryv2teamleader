@@ -160,7 +160,6 @@ class TeamleaderClient:
                 params
             )
             raise ValueError(error_msg)
-            return []
 
     def request_page(self, resource_path, page=None, page_size=None, updated_since: datetime = None):
         params = {}

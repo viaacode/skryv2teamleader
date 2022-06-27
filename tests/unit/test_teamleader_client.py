@@ -8,6 +8,7 @@
 
 import pytest
 import uuid
+import json
 import requests_mock
 from app.clients.teamleader_client import TeamleaderClient
 from testing_config import tst_app_config
@@ -31,6 +32,29 @@ class TestTeamleaderClient:
         result = tlc.get_company('company_uuid')
         assert result == {}
 
+    def test_update_company(self, tlc, requests_mock):
+        with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
+            mock_company = json.loads(f.read())
+
+        requests_mock.post(
+            f'{self.API_URL}/companies.update',
+            json={'data': mock_company}
+        )
+        result = tlc.update_company(mock_company)
+
+        assert result['id'] is not None
+        assert result['name'] == 'S.M.A.K.'
+        assert result['emails'][0]['type'] == 'primary'
+        assert result['emails'][0]['email'] == 'info@smak.be'
+
+    def test_list_companies(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/companies.list',
+            json={'data': []}
+        )
+        result = tlc.list_companies()
+        assert result == []
+
     def test_get_contact(self, tlc, requests_mock):
         requests_mock.get(
             f'{self.API_URL}/contacts.info?id=some_contact_uuid',
@@ -44,8 +68,29 @@ class TestTeamleaderClient:
             f'{self.API_URL}/contacts.list',
             json={'data': []}
         )
-        result = tlc.list_contacts('test_field_id')
+        result = tlc.list_contacts()
         assert result == []
+
+    def test_list_contacts_auth_error(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/contacts.list',
+            json={'data': []},
+            status_code=401
+        )
+
+        # as this is 401, this triggers an access_token call
+        access_token_response = {
+            'access_token': 'teamleader_test_access_token',
+            'refresh_token': 'teamleader_test_refresh_token'
+        }
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            json=access_token_response
+        )
+
+        with pytest.raises(ValueError, match='401'):
+            result = tlc.list_contacts()
+            assert result is None
 
     def test_add_contact(self, tlc, requests_mock):
         mock_contact = {
@@ -165,3 +210,14 @@ class TestTeamleaderClient:
         )
         result = tlc.get_custom_field('test_field_id')
         assert result['id'] == 'field_id'
+
+    def test_list_custom_fields(self, tlc, requests_mock):
+        with open('tests/fixtures/custom_fields.json') as cf_file:
+            custom_fields = json.loads(cf_file.read())
+
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list',
+            json={'data': custom_fields}
+        )
+        result = tlc.list_custom_fields()
+        assert len(result) >= 31
