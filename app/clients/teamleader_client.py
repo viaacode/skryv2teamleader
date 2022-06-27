@@ -327,13 +327,6 @@ class TeamleaderClient:
     def get_custom_field(self, uid):
         return self.request_item('/customFieldDefinitions.info', uid)
 
-    def list_webhooks(self, page=1, page_size=20, updated_since: datetime = None):
-        return self.request_page(
-            '/webhooks.list',
-            page, page_size,
-            updated_since
-        )
-
     def secure_route(self, url):
         if self.webhook_jwt and len(self.webhook_jwt) > 0:
             return f"{url}?jwtauth={self.webhook_jwt}"

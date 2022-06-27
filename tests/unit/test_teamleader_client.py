@@ -7,6 +7,7 @@
 #
 
 import pytest
+import uuid
 import requests_mock
 from app.clients.teamleader_client import TeamleaderClient
 from testing_config import tst_app_config
@@ -38,6 +39,106 @@ class TestTeamleaderClient:
         result = tlc.get_contact('some_contact_uuid')
         assert result['id'] == 'mocked_contact_id'
 
+    def test_list_contacts(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/contacts.list',
+            json={'data': []}
+        )
+        result = tlc.list_contacts('test_field_id')
+        assert result == []
+
+    def test_add_contact(self, tlc, requests_mock):
+        mock_contact = {
+            'id': str(uuid.uuid4()),
+            'first_name': 'test first name',
+            'last_name': 'test create name',
+            'custom_fields': [
+                {
+                    'id': 'some_custom_field_id',
+                    'value': 'some custom value'
+                }
+            ]
+        }
+
+        requests_mock.post(
+            f'{self.API_URL}/contacts.add',
+            json={'data': mock_contact}
+        )
+        result = tlc.add_contact(mock_contact)
+
+        assert result['id'] is not None
+        assert result['first_name'] == mock_contact['first_name']
+        assert result['last_name'] == mock_contact['last_name']
+        assert result['custom_fields'][0]['id'] == 'some_custom_field_id'
+        assert result['custom_fields'][0]['value'] == 'some custom value'
+
+    def test_update_contact(self, tlc, requests_mock):
+        # with update, the custom field format is a bit different
+        # existing contact has definition->id, whereas update needs other format
+        mock_contact = {
+            'id': str(uuid.uuid4()),
+            'first_name': 'test first name',
+            'last_name': 'test last name',
+            'custom_fields': [
+                {
+                    'definition': {
+                        'id': 'some_custom_field_id'
+                    },
+                    'value': 'some custom value'
+                }
+            ]
+        }
+
+        requests_mock.post(
+            f'{self.API_URL}/contacts.update',
+            json={'data': mock_contact}
+        )
+        result = tlc.update_contact(mock_contact)
+
+        assert result['id'] is not None
+        assert result['first_name'] == mock_contact['first_name']
+        assert result['last_name'] == mock_contact['last_name']
+        assert result['custom_fields'][0]['id'] == 'some_custom_field_id'
+        assert result['custom_fields'][0]['value'] == 'some custom value'
+
+    def test_link_to_company(self, tlc, requests_mock):
+        contact_link = {
+            'id': 'test_contact_id',
+            'company_id': 'test_company_id',
+            'position': 'ceo',
+            'decision_maker': True
+        }
+        requests_mock.post(
+            f'{self.API_URL}/contacts.linkToCompany',
+            json={'data': contact_link}
+        )
+        result = tlc.link_to_company(contact_link)
+
+        result['id'] is not None
+
+    def test_update_company_link(self, tlc, requests_mock):
+        contact_link = {
+            'id': 'test_contact_id',
+            'company_id': 'test_company_id',
+            'position': 'ceo',
+            'decision_maker': True
+        }
+        requests_mock.post(
+            f'{self.API_URL}/contacts.updateCompanyLink',
+            json={'data': contact_link}
+        )
+        result = tlc.update_company_link(contact_link)
+
+        result['id'] is not None
+
+    def test_delete_contact(self, tlc, requests_mock):
+        requests_mock.post(
+            f'{self.API_URL}/contacts.delete',
+            json={'data': {'id': 'test_contact_id'}}
+        )
+        result = tlc.delete_contact('test_contact_id')
+        assert result['id'] is not None
+
     def test_company_contacts(self, tlc, requests_mock):
         COMPANY_ID = 'some_company_uuid'
         FIRST_PAGE = 'page%5Bnumber%5D=1&page%5Bsize%5D=20'
@@ -56,3 +157,11 @@ class TestTeamleaderClient:
         )
         result = tlc.company_contacts('some_company_uuid')
         assert len(result) == 1
+
+    def test_custom_field(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.info?id=test_field_id',
+            json={'data': {'id': 'field_id'}}
+        )
+        result = tlc.get_custom_field('test_field_id')
+        assert result['id'] == 'field_id'
