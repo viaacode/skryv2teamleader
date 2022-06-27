@@ -6,3 +6,4 @@ pytest-mock==3.5.1
 autopep8>=1.5.5
 pycodestyle>=2.6.0
 fakeredis>=1.6.1
+requests_mock>=1.9.3
