@@ -345,6 +345,46 @@ class MilestoneService(SkryvBase):
 
         return company
 
+    def add_company_contact(self, company, contact, position):
+        contact_response = self.tlc.add_contact(contact)
+        if contact_response:
+            self.tlc.link_to_company({
+                'id': contact_response['id'],
+                'company_id': company['id'],
+                'position': position
+                # 'decision_maker': True/False?
+            })
+            
+            logger.info("ADDED contact={} to company_id={} ".format(
+                contact, company['id']
+            ))
+        else:
+            logger.warning("ERROR in ADD contact={} on company_id={} error={}".format(
+                contact,
+                company['id'],
+                e
+            ))
+
+    def update_company_contact(self, company, contact, position):
+        try:
+            self.tlc.update_contact(contact)
+            self.tlc.update_company_link({
+                'id': contact['id'],
+                'company_id': company['id'],
+                'position': position
+                # 'decision_maker': True or False here?
+            })
+
+            logger.info("UPDATED company contact {} {}".format(
+                contact, company['id']
+            ))
+        except ValueError as e:
+            logger.warning("ERROR in UPDATE contact={} on company_id={} error={}".format(
+                contact,
+                company['id'],
+                e
+            ))
+
     def upsert_contact(self, company, existing_contacts, contact):
         # pop some fields that need different location of storing in teamleader
         primary_email = contact.pop('email')
@@ -396,28 +436,10 @@ class MilestoneService(SkryvBase):
             self.slack.empty_last_name(company, contact)
 
         if new_contact:
-            logger.info("adding company contact {} {} {}".format(
-                position, primary_email, relaties_meemoo
-            ))
-            contact_response = self.tlc.add_contact(contact)
-            self.tlc.link_to_company({
-                'id': contact_response['id'],
-                'company_id': company['id'],
-                'position': position
-                # 'decision_maker': True/False?
-            })
+            self.add_company_contact(company, contact, position)
         else:
-            logger.info("updating company contact {} {} {} {}".format(
-                contact['id'], position, primary_email, relaties_meemoo
-            ))
-            self.tlc.update_contact(contact)
-            self.tlc.update_company_link({
-                'id': contact['id'],
-                'company_id': company['id'],
-                'position': position
-                # 'decision_maker': True or False here?
-            })
-
+            self.update_company_contact(company, contact, position)
+            
     def get_relaties(self, contactgegevens, relaties, relatie_key, instroom_key, digitalisering_key):
         cdienst = contactgegevens['contactpersoon_dienstverlening']
         relatie_flags = cdienst[relatie_key]['selectedOptions']

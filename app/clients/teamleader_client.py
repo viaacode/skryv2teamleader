@@ -229,13 +229,14 @@ class TeamleaderClient:
         elif res.status_code == 204:
             return None
         else:
+            # TODO: raise exception here?
             logger.warning('POST {} failed:\n status={}\n response={}\n payload={}\n'.format(
                 path,
                 res.status_code,
                 res.text,
                 payload
             ))
-            return f'post call failed error response={res.text}'
+            return None
 
     def prepare_custom_fields(self, resource):
         custom_fields = resource['custom_fields']
