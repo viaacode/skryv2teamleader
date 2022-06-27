@@ -2,11 +2,11 @@
 
 Receive webhook calls from Skryv meemoo and make updates in teamleader.
 We handle proces, milestone and document calls.
-More details on what the different incoming webhook calls implement can be found here:
+More documentation about the different incoming webhook calls implement can be found here:
 https://meemoo.atlassian.net/wiki/spaces/IK/pages/818086103/contract.meemoo.be+en+Teamleader+skryv2teamleader
 
 
-# Installing
+## Installing
 Running make without args gives usage:
 ```
 make
@@ -35,7 +35,7 @@ INFO:     Started reloader process [51089] using statreload
 INFO:     Started server process [51091]
 ```
 
-# Testing
+## Testing
 
 ```
 $ make test
@@ -119,7 +119,7 @@ Coverage HTML written to dir htmlcov
 ============================= 34 passed in 2.29s ==============================
 ```
 
-# Environment variables.
+## Environment and configmap
 There are some env vars that need to be set up. An example is given in .env.example
 
 Example openshift configmap QAS, look op openshift for the production uuid configuration:
