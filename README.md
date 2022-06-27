@@ -56,22 +56,24 @@ tests/unit/test_scheduler.py ..                                         [100%]
 ============================= 31 passed in 1.21s ==============================
 ```
 
-Also get testing code coverage:
+Run tests and get code coverage:
 ```
 $ make coverage
 ============================= test session starts =============================
 platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
-rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
+rootdir: Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 32 items                                                            
+collected 34 items                                                            
 
-tests/test_app.py ..........                                            [ 31%]
-tests/unit/test_auth_tokens.py .                                        [ 34%]
-tests/unit/test_document_service.py .....                               [ 50%]
-tests/unit/test_milestone_service.py ..........                         [ 81%]
-tests/unit/test_process_service.py ....                                 [ 93%]
-tests/unit/test_scheduler.py ..                                         [100%]
+tests/test_app.py .......                                               [ 20%]
+tests/test_app_startup.py .                                             [ 23%]
+tests/unit/test_auth_tokens.py .                                        [ 26%]
+tests/unit/test_document_service.py .....                               [ 41%]
+tests/unit/test_milestone_service.py ..........                         [ 70%]
+tests/unit/test_process_service.py .....                                [ 85%]
+tests/unit/test_scheduler.py ..                                         [ 91%]
+tests/unit/test_slack_messages.py ...                                   [100%]
 
 ---------- coverage: platform darwin, python 3.9.11-final-0 ----------
 Name                                Stmts   Miss  Cover
@@ -82,16 +84,16 @@ app/api/api.py                          6      0   100%
 app/api/routers/__init__.py             0      0   100%
 app/api/routers/health.py               5      0   100%
 app/api/routers/skryv.py               19      0   100%
-app/api/routers/webhook.py             45      3    93%
-app/app.py                             45      1    98%
+app/api/routers/webhook.py              6      0   100%
+app/app.py                             36      0   100%
 app/clients/__init__.py                 0      0   100%
-app/clients/common_clients.py          13      0   100%
-app/clients/ldap_client.py             37     18    51%
+app/clients/common_clients.py          15      0   100%
+app/clients/ldap_client.py             41     18    56%
 app/clients/redis_cache.py             32      7    78%
-app/clients/skryv_client.py             9      0   100%
-app/clients/slack_client.py            37     16    57%
-app/clients/teamleader_auth.py         22      1    95%
-app/clients/teamleader_client.py      222    156    30%
+app/clients/skryv_client.py             6      0   100%
+app/clients/slack_client.py            50      8    84%
+app/clients/teamleader_auth.py         26      1    96%
+app/clients/teamleader_client.py      177    120    32%
 app/comm/__init__.py                    0      0   100%
 app/comm/webhook_scheduler.py          45      4    91%
 app/models/__init__.py                  0      0   100%
@@ -103,24 +105,24 @@ app/models/milestone.py                 9      0   100%
 app/models/milestone_body.py            9      0   100%
 app/models/process.py                  10      0   100%
 app/models/process_body.py              9      0   100%
-app/server.py                          25      7    72%
+app/server.py                          25      1    96%
 app/services/__init__.py                0      0   100%
-app/services/document_service.py       43      4    91%
-app/services/milestone_service.py     199     13    93%
-app/services/process_service.py        69      7    90%
-app/services/skryv_base.py             59      6    90%
-app/services/webhook_service.py        22      0   100%
+app/services/document_service.py       31      1    97%
+app/services/milestone_service.py     298     31    90%
+app/services/process_service.py        94      9    90%
+app/services/skryv_base.py             73      6    92%
+app/services/webhook_service.py         6      0   100%
 -------------------------------------------------------
-TOTAL                                1035    243    77%
-Covemen to dir htmlcov
+TOTAL                                1072    206    81%
+Coverage HTML written to dir htmlcov
 
-============================= 32 passed in 2.16s ==============================
+============================= 34 passed in 2.29s ==============================
 ```
 
 # Environment variables.
 There are some env vars that need to be set up. An example is given in .env.example
 
-Example openshift configmap:
+Example openshift configmap QAS, look op openshift for the production uuid configuration:
 ```
 kind: ConfigMap
 apiVersion: v1
@@ -144,7 +146,7 @@ data:
   WEBHOOK_URL: https://services-qas.viaa.be/skryv
   LDAP_URI: ldaps://ldap-master-qas.do.viaa.be
   LDAP_BIND: "cn=root,..."
-  SLACK_CHANNEL: "#skryvbot"
+  SLACK_CHANNEL: "#crmbot"
   SKRYV_DOSSIER_CP_ID: 90d24d34-b5b3-4942-8504-b6d76dd86ccb
   TL_OPSTARTFASE: 32053d1e-e1f6-0436-9f52-8a6ce7423db4
   TL_CPSTATUS: afe9268c-c6dd-0053-bc5d-d4da5e723daa
