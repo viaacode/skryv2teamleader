@@ -354,7 +354,7 @@ class MilestoneService(SkryvBase):
                 'position': position
                 # 'decision_maker': True/False?
             })
-            
+
             logger.info("ADDED contact={} to company_id={} ".format(
                 contact, company['id']
             ))
@@ -439,7 +439,7 @@ class MilestoneService(SkryvBase):
             self.add_company_contact(company, contact, position)
         else:
             self.update_company_contact(company, contact, position)
-            
+
     def get_relaties(self, contactgegevens, relaties, relatie_key, instroom_key, digitalisering_key):
         cdienst = contactgegevens['contactpersoon_dienstverlening']
         relatie_flags = cdienst[relatie_key]['selectedOptions']

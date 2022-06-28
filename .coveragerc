@@ -1,2 +1,6 @@
 [run]
 omit = python_env/*, tests/**, main.py
+[html]
+skip_empty=true
+title=Skryv2Teamleader coverage report
+
