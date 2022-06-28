@@ -359,10 +359,9 @@ class MilestoneService(SkryvBase):
                 contact, company['id']
             ))
         else:
-            logger.warning("ERROR in ADD contact={} on company_id={} error={}".format(
+            logger.warning("ERROR in ADD contact={} on company_id={}".format(
                 contact,
-                company['id'],
-                e
+                company['id']
             ))
 
     def update_company_contact(self, company, contact, position):
