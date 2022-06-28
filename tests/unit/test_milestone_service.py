@@ -6,7 +6,6 @@
 #   tests/unit/test_milestone_service.py
 #
 
-import pytest
 import uuid
 import requests_mock
 import json
@@ -18,6 +17,8 @@ from app.clients.teamleader_client import TeamleaderClient
 from app.clients.common_clients import CommonClients
 from app.models.milestone_body import MilestoneBody
 from app.models.document_body import DocumentBody
+from app.services.milestone_service import MilestoneService
+from app.services.document_service import DocumentService
 
 from mock_teamleader_client import MockTlClient
 from mock_ldap_client import MockLdapClient
@@ -26,8 +27,11 @@ from mock_redis_cache import MockRedisCache
 
 from testing_config import tst_app_config
 
+import asyncio
+import pytest
 
-class TestMilestoneService:
+
+class TestMilestoneService():
     @pytest.fixture
     def mock_clients(self):
         slack_client = SlackClient(tst_app_config())
@@ -67,6 +71,105 @@ class TestMilestoneService:
         ms.close()
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'
+
+    # asyncio doesn't work here when we use requests_mock which take a little longer
+    # we call the services directly instead allowing more fine grained testing
+    # of what requests have been made
+    def test_milestone_error_in_contacts(self, mock_client_requests, requests_mock):
+        API_URL = 'https://api.teamleader.eu'
+
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        ds = DocumentService(mock_client_requests)
+        ds.handle_event(test_doc)
+
+        company_id = '1b2ab41a-7f59-103b-8cd4-1fcdd5140767'
+        test_company = self.teamleader_fixture('test_company.json')
+        requests_mock.get(
+            f'{API_URL}/companies.info?id={company_id}',
+            json={'data': test_company}
+        )
+
+        test_contacts = self.teamleader_fixture('test_contacts.json')
+        contact_filter = f'company_id%5D={company_id}&page%5Bnumber%5D=1&page%5Bsize%5D=20'
+        requests_mock.get(
+            f'{API_URL}/contacts.list?filter%5B{contact_filter}',
+            json={'data': test_contacts}
+        )
+
+        tc_administratie = self.teamleader_fixture(
+            'test_contact_administratie.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=93a20358-4b37-071f-8975-bde813530b50',
+            json={'data': tc_administratie}
+        )
+
+        tc_directie = self.teamleader_fixture('test_contact_directie.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=03d32499-4a3d-0be9-bd79-424bf3530b4e',
+            json={'data': tc_directie}
+        )
+
+        tc_extra1 = self.teamleader_fixture('test_contact_extra1.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=bf924044-c14e-053e-8077-df6f83530b51',
+            json={'data': tc_extra1}
+        )
+
+        tc_extra2 = self.teamleader_fixture('test_contact_extra2.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=0db5a988-59b6-056b-9c75-767943548544',
+            json={'data': tc_extra2}
+        )
+
+        # simulate error in contact update:
+        requests_mock.post(
+            f'{API_URL}/contacts.update',
+            body='some contact error here',
+            status_code=400
+        )
+
+        requests_mock.post(
+            f'{API_URL}/contacts.updateCompanyLink',
+            body='some update company link error',
+            status_code=400
+        )
+
+        requests_mock.post(
+            f'{API_URL}/companies.update',
+            json={'data': 'success'}
+        )
+
+        opstart = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(opstart.read())
+        opstart.close()
+
+        ms = MilestoneService(mock_client_requests)
+        ms.handle_event(test_milestone)
+
+        assert 'companies.update' in requests_mock.last_request.url
+        company_updated = requests_mock.last_request.body
+
+        # validate cp status is updated here
+        assert '"afe9268c-c6dd-0053-bc5d-d4da5e723daa", "value": "ja"' in company_updated
+        assert '"bcf9ceba-a988-0fc6-805f-9e087ea23dac", "value": "ingevuld"' in company_updated
+        assert '"05cf38ba-2d6f-01fe-a85f-dd84aad23dae", "value": true' in company_updated
+        assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
+
+        # TODO: simulate cases when contacts is empty
+        # TODO: simulate bad VAT number
+        # TODO: simulate bad email or missing email
+        # TODO: simulate bad last_name
+        # TODO: write errors to slack in case of 400 errors (and validate this happens)
+        # TODO: het huisnummer wordt niet apart in het 'huisnummer' veld gezet
 
     @pytest.mark.asyncio
     async def test_milestone_geen_opstart(self, mock_clients):
@@ -243,110 +346,6 @@ class TestMilestoneService:
         assert 'BE' in updated_company['vat_number']
         assert '0644.450.38' in updated_company['vat_number']
 
-    @pytest.mark.asyncio
-    async def test_milestone_error_in_contacts(self, mock_client_requests, requests_mock):
-        API_URL = 'https://api.teamleader.eu'
-
-        ws = WebhookScheduler()
-        ws.start(mock_client_requests)
-
-        with open("tests/fixtures/teamleader/custom_fields.json") as f:
-            custom_fields = json.loads(f.read())
-
-        requests_mock.get(
-            f'{API_URL}/customFieldDefinitions.list',
-            json={'data': custom_fields}
-        )
-
-        # send a document event, so mocked redis stores it for
-        # actual milestone call
-        doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
-        test_doc = DocumentBody.parse_raw(doc.read())
-        doc.close()
-        res = await ws.execute_webhook('document_event', test_doc)
-        assert res == 'document event is handled'
-
-        ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
-        test_milestone = MilestoneBody.parse_raw(ms.read())
-        ms.close()
-
-        company_id = '1b2ab41a-7f59-103b-8cd4-1fcdd5140767'
-        with open("tests/fixtures/teamleader/test_company.json") as f:
-            test_company = json.loads(f.read())
-
-        requests_mock.get(
-            f'{API_URL}/companies.info?id={company_id}',
-            json={'data': test_company}
-        )
-
-        with open("tests/fixtures/teamleader/test_contacts.json") as f:
-            test_contacts = json.loads(f.read())
-
-        contact_filter = f'company_id%5D={company_id}&page%5Bnumber%5D=1&page%5Bsize%5D=20'
-        requests_mock.get(
-            f'{API_URL}/contacts.list?filter%5B{contact_filter}',
-            json={'data': test_contacts}
-        )
-
-        with open("tests/fixtures/teamleader/test_contact_administratie.json") as f:
-            test_contact_administratie = json.loads(f.read())
-
-        requests_mock.get(
-            f'{API_URL}/contacts.info?id=93a20358-4b37-071f-8975-bde813530b50',
-            json={'data': test_contact_administratie}
-        )
-
-        with open("tests/fixtures/teamleader/test_contact_directie.json") as f:
-            test_contact_directie = json.loads(f.read())
-
-        requests_mock.get(
-            f'{API_URL}/contacts.info?id=03d32499-4a3d-0be9-bd79-424bf3530b4e',
-            json={'data': test_contact_directie}
-        )
-
-        with open("tests/fixtures/teamleader/test_contact_extra1.json") as f:
-            test_contact_extra1 = json.loads(f.read())
-
-        requests_mock.get(
-            f'{API_URL}/contacts.info?id=bf924044-c14e-053e-8077-df6f83530b51',
-            json={'data': test_contact_extra1}
-        )
-
-        with open("tests/fixtures/teamleader/test_contact_extra2.json") as f:
-            test_contact_extra2 = json.loads(f.read())
-
-        requests_mock.get(
-            f'{API_URL}/contacts.info?id=0db5a988-59b6-056b-9c75-767943548544',
-            json={'data': test_contact_extra2}
-        )
-
-        # simulate error in contact update:
-        requests_mock.post(
-            f'{API_URL}/contacts.update',
-            body='some contact error here',
-            status_code=400
-        )
-
-        requests_mock.post(
-            f'{API_URL}/contacts.updateCompanyLink',
-            body='some update company link error',
-            status_code=400
-        )
-
-        requests_mock.post(
-            f'{API_URL}/companies.update',
-            json={'data': 'success'}
-        )
-
-        res = await ws.execute_webhook('milestone_event', test_milestone)
-        assert res == 'milestone event is handled'
-
-        # TODO: simulate cases when contacts is empty
-
-        # TODO: simulate bad VAT number
-
-        # TODO: simulate bad email or missing email
-
-        # TODO: simulate bad last_name
-
-        # TODO: write errors to slack in case of 400 errors (and validate this happens)
+    def teamleader_fixture(self, json_file):
+        with open(f"tests/fixtures/teamleader/{json_file}") as f:
+            return json.loads(f.read())
