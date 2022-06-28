@@ -13,7 +13,7 @@ import pytest
 import uuid
 import json
 import httpretty
-#ADD this to requirements-test.txt httpretty==1.1.4
+# ADD this to requirements-test.txt httpretty==1.1.4
 
 from app.clients.teamleader_client import TeamleaderClient
 from testing_config import tst_app_config

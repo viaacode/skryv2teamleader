@@ -20,15 +20,17 @@ class TestTeamleaderClient:
 
     @pytest.fixture
     def tlc(self):
-        teamleader_client = TeamleaderClient(
-            tst_app_config(), MockRedisCache())
-        return teamleader_client
+        return TeamleaderClient(
+            tst_app_config(),
+            MockRedisCache()
+        )
 
     def test_get_company(self, tlc, requests_mock):
         requests_mock.get(
             f'{self.API_URL}/companies.info?id=company_uuid',
             json={'data': {}}
         )
+
         result = tlc.get_company('company_uuid')
         assert result == {}
 
@@ -40,6 +42,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/companies.update',
             json={'data': mock_company}
         )
+
         result = tlc.update_company(mock_company)
 
         assert result['id'] is not None
@@ -52,6 +55,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/companies.list',
             json={'data': []}
         )
+
         result = tlc.list_companies()
         assert result == []
 
@@ -60,6 +64,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/contacts.info?id=some_contact_uuid',
             json={'data': {'id': 'mocked_contact_id'}}
         )
+
         result = tlc.get_contact('some_contact_uuid')
         assert result['id'] == 'mocked_contact_id'
 
@@ -68,6 +73,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/contacts.list',
             json={'data': []}
         )
+
         result = tlc.list_contacts()
         assert result == []
 
@@ -109,6 +115,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/contacts.add',
             json={'data': mock_contact}
         )
+
         result = tlc.add_contact(mock_contact)
 
         assert result['id'] is not None
@@ -138,8 +145,8 @@ class TestTeamleaderClient:
             f'{self.API_URL}/contacts.update',
             json={'data': mock_contact}
         )
-        result = tlc.update_contact(mock_contact)
 
+        result = tlc.update_contact(mock_contact)
         assert result['id'] is not None
         assert result['first_name'] == mock_contact['first_name']
         assert result['last_name'] == mock_contact['last_name']
@@ -153,13 +160,14 @@ class TestTeamleaderClient:
             'position': 'ceo',
             'decision_maker': True
         }
+
         requests_mock.post(
             f'{self.API_URL}/contacts.linkToCompany',
             json={'data': contact_link}
         )
-        result = tlc.link_to_company(contact_link)
 
-        result['id'] is not None
+        result = tlc.link_to_company(contact_link)
+        assert result['id'] is not None
 
     def test_update_company_link(self, tlc, requests_mock):
         contact_link = {
@@ -168,19 +176,21 @@ class TestTeamleaderClient:
             'position': 'ceo',
             'decision_maker': True
         }
+
         requests_mock.post(
             f'{self.API_URL}/contacts.updateCompanyLink',
             json={'data': contact_link}
         )
-        result = tlc.update_company_link(contact_link)
 
-        result['id'] is not None
+        result = tlc.update_company_link(contact_link)
+        assert result['id'] is not None
 
     def test_delete_contact(self, tlc, requests_mock):
         requests_mock.post(
             f'{self.API_URL}/contacts.delete',
             json={'data': {'id': 'test_contact_id'}}
         )
+
         result = tlc.delete_contact('test_contact_id')
         assert result['id'] is not None
 
@@ -200,6 +210,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/contacts.info?id=company_contact_id',
             json={'data': {'first_name': 'testcontact_firstname'}}
         )
+
         result = tlc.company_contacts('some_company_uuid')
         assert len(result) == 1
 
@@ -208,6 +219,7 @@ class TestTeamleaderClient:
             f'{self.API_URL}/customFieldDefinitions.info?id=test_field_id',
             json={'data': {'id': 'field_id'}}
         )
+
         result = tlc.get_custom_field('test_field_id')
         assert result['id'] == 'field_id'
 
@@ -219,5 +231,6 @@ class TestTeamleaderClient:
             f'{self.API_URL}/customFieldDefinitions.list',
             json={'data': custom_fields}
         )
+
         result = tlc.list_custom_fields()
         assert len(result) >= 31
