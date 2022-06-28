@@ -26,7 +26,8 @@ class MockTlClient(MockClient):
 
     def list_custom_fields(self):
         # super().method_call(f"list_custom_fields")
-        fields_fixture = open('tests/fixtures/custom_fields.json').read()
+        fields_fixture = open(
+            'tests/fixtures/teamleader/custom_fields.json').read()
         return json.loads(fields_fixture)
 
     def update_company(self, company):

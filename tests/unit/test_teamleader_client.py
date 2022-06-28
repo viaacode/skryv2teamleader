@@ -224,7 +224,7 @@ class TestTeamleaderClient:
         assert result['id'] == 'field_id'
 
     def test_list_custom_fields(self, tlc, requests_mock):
-        with open('tests/fixtures/custom_fields.json') as cf_file:
+        with open('tests/fixtures/teamleader/custom_fields.json') as cf_file:
             custom_fields = json.loads(cf_file.read())
 
         requests_mock.get(

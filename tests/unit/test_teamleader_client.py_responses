@@ -243,7 +243,7 @@ class TestTeamleaderClient:
 
     @responses.activate
     def test_list_custom_fields(self, tlc):
-        with open('tests/fixtures/custom_fields.json') as cf_file:
+        with open('tests/fixtures/teamleader/custom_fields.json') as cf_file:
             custom_fields = json.loads(cf_file.read())
 
         responses.get(

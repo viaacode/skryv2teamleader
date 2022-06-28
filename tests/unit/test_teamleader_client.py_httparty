@@ -274,7 +274,7 @@ class TestTeamleaderClient:
 
     @httpretty.activate(verbose=True, allow_net_connect=False)
     def test_list_custom_fields(self, tlc):
-        with open('tests/fixtures/custom_fields.json') as cf_file:
+        with open('tests/fixtures/teamleader/custom_fields.json') as cf_file:
             custom_fields = json.loads(cf_file.read())
 
         httpretty.register_uri(
