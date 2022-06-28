@@ -384,7 +384,7 @@ class MilestoneService(SkryvBase):
                 company['id'],
                 e
             )
-            
+
     def upsert_contact(self, company, existing_contacts, contact):
         # pop some fields that need different location of storing in teamleader
         primary_email = contact.pop('email')
@@ -633,7 +633,6 @@ class MilestoneService(SkryvBase):
                     company['id'],
                     e
                 )
-
 
     def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body

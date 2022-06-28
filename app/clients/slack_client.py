@@ -105,7 +105,6 @@ class SlackClient:
 
         self.create_message(last_name_warning)
 
-
     def update_contact_failed(self, contact, company_id, error):
         msg = "Teamleader error when updating contact {} on company {} : {}".format(
             contact,
