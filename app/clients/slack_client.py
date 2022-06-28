@@ -104,3 +104,27 @@ class SlackClient:
         last_name_warning = f'{msg_part1} {msg_part2}'
 
         self.create_message(last_name_warning)
+
+
+    def update_contact_failed(self, contact, company_id, error):
+        msg = "Teamleader error when updating contact {} on company {} : {}".format(
+            contact,
+            company_id,
+            error
+        )
+        self.create_message(msg)
+
+    def add_contact_failed(self, contact, company_id, error):
+        msg = "Teamleader error when adding new contact {} on company {} : {}".format(
+            contact,
+            company_id,
+            error
+        )
+        self.create_message(msg)
+
+    def update_company_failed(self, company_id, error):
+        msg = "Teamleader error when updating company {} : {}".format(
+            company_id,
+            error
+        )
+        self.create_message(msg)

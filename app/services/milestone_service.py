@@ -346,8 +346,8 @@ class MilestoneService(SkryvBase):
         return company
 
     def add_company_contact(self, company, contact, position):
-        contact_response = self.tlc.add_contact(contact)
-        if contact_response:
+        try:
+            contact_response = self.tlc.add_contact(contact)
             self.tlc.link_to_company({
                 'id': contact_response['id'],
                 'company_id': company['id'],
@@ -358,11 +358,12 @@ class MilestoneService(SkryvBase):
             logger.info("ADDED contact={} to company_id={} ".format(
                 contact, company['id']
             ))
-        else:
-            logger.warning("ERROR in ADD contact={} on company_id={}".format(
+        except ValueError as e:
+            self.slack.add_contact_failed(
                 contact,
-                company['id']
-            ))
+                company['id'],
+                e
+            )
 
     def update_company_contact(self, company, contact, position):
         try:
@@ -378,12 +379,12 @@ class MilestoneService(SkryvBase):
                 contact, company['id']
             ))
         except ValueError as e:
-            logger.warning("ERROR in UPDATE contact={} on company_id={} error={}".format(
+            self.slack.update_contact_failed(
                 contact,
                 company['id'],
                 e
-            ))
-
+            )
+            
     def upsert_contact(self, company, existing_contacts, contact):
         # pop some fields that need different location of storing in teamleader
         primary_email = contact.pop('email')
@@ -625,7 +626,14 @@ class MilestoneService(SkryvBase):
             company = self.update_company_using_dossier(
                 company, self.dossier.id
             )
-            self.tlc.update_company(company)
+            try:
+                self.tlc.update_company(company)
+            except ValueError as e:
+                self.slack.update_company_failed(
+                    company['id'],
+                    e
+                )
+
 
     def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body

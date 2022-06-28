@@ -61,6 +61,12 @@ class TestMilestoneService():
             MockRedisCache()
         )
 
+    def teamleader_fixture(self, json_file):
+        f = open(f"tests/fixtures/teamleader/{json_file}")
+        data = json.loads(f.read())
+        f.close()
+        return data
+
     @pytest.mark.asyncio
     async def test_milestone_akkoord(self, mock_clients):
         ws = WebhookScheduler()
@@ -98,7 +104,7 @@ class TestMilestoneService():
             json={'data': test_company}
         )
 
-        test_contacts = self.teamleader_fixture('test_contacts.json')
+        test_contacts = self.teamleader_fixture('test_contacts_adding.json')
         contact_filter = f'company_id%5D={company_id}&page%5Bnumber%5D=1&page%5Bsize%5D=20'
         requests_mock.get(
             f'{API_URL}/contacts.list?filter%5B{contact_filter}',
@@ -124,22 +130,30 @@ class TestMilestoneService():
             json={'data': tc_extra1}
         )
 
-        tc_extra2 = self.teamleader_fixture('test_contact_extra2.json')
-        requests_mock.get(
-            f'{API_URL}/contacts.info?id=0db5a988-59b6-056b-9c75-767943548544',
-            json={'data': tc_extra2}
-        )
+        # tc_extra2 = self.teamleader_fixture('test_contact_extra2.json')
+        # requests_mock.get(
+        #     f'{API_URL}/contacts.info?id=0db5a988-59b6-056b-9c75-767943548544',
+        #     json={'data': tc_extra2}
+        # )
 
         # simulate error in contact update:
         requests_mock.post(
             f'{API_URL}/contacts.update',
-            body='some contact error here',
+            json={'data':'contact update error'},
             status_code=400
         )
 
+        # simulate error in contact add:
+        requests_mock.post(
+            f'{API_URL}/contacts.add',
+            json={'data':'contact add error'},
+            status_code=400
+        )
+
+
         requests_mock.post(
             f'{API_URL}/contacts.updateCompanyLink',
-            body='some update company link error',
+            json={'data':'company link error'},
             status_code=400
         )
 
@@ -346,6 +360,4 @@ class TestMilestoneService():
         assert 'BE' in updated_company['vat_number']
         assert '0644.450.38' in updated_company['vat_number']
 
-    def teamleader_fixture(self, json_file):
-        with open(f"tests/fixtures/teamleader/{json_file}") as f:
-            return json.loads(f.read())
+

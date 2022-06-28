@@ -1,0 +1,280 @@
+[
+  {
+    "id": "93a20358-4b37-071f-8975-bde813530b50",
+    "first_name": "Administratie",
+    "last_name": "Tine",
+    "status": "active",
+    "vat_number": null,
+    "emails": [
+      {
+        "type": "primary",
+        "email": "administratie@testorganisatievoorwalter.be"
+      }
+    ],
+    "salutation": null,
+    "telephones": [
+      {
+        "type": "phone",
+        "number": "03 456 79 78"
+      }
+    ],
+    "website": null,
+    "gender": null,
+    "birthdate": null,
+    "iban": null,
+    "bic": null,
+    "national_identification_number": null,
+    "language": "nl",
+    "payment_term": null,
+    "invoicing_preferences": {
+      "electronic_invoicing_address": null
+    },
+    "added_at": "2022-06-18T13:09:34+00:00",
+    "updated_at": "2022-06-24T11:46:00+00:00",
+    "web_url": "https://focus.teamleader.eu/contact_detail.php?id=93a20358-4b37-071f-8975-bde813530b50",
+    "remarks": null,
+    "marketing_mails_consent": false,
+    "addresses": [],
+    "companies": [
+      {
+        "position": "administratie",
+        "decision_maker": false,
+        "company": {
+          "type": "company",
+          "id": "1b2ab41a-7f59-103b-8cd4-1fcdd5140767"
+        }
+      }
+    ],
+    "tags": [],
+    "custom_fields": [
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "17348dda-11c7-0e35-855b-38a4e1123dd6"
+        },
+        "value": "marcom"
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7"
+        },
+        "value": [
+          "contactpersoon contract"
+        ]
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "e670f8a7-0ce6-0ba4-8455-cc92ec623de4"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "3f18708e-2599-06cd-b550-22965c523de5"
+        },
+        "value": "70c40102-81c3-103c-90e8-5b3f989f5d2f"
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "b995ec27-5800-096f-a25b-7aa76b669345"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "af5161f2-b96f-035b-9951-602137069347"
+        },
+        "value": []
+      }
+    ]
+  },
+  {
+    "id": "03d32499-4a3d-0be9-bd79-424bf3530b4e",
+    "first_name": "directie",
+    "last_name": "Tine",
+    "status": "active",
+    "vat_number": null,
+    "emails": [
+      {
+        "type": "primary",
+        "email": "directie@testorganisatievoorwalter.be"
+      }
+    ],
+    "salutation": null,
+    "telephones": [],
+    "website": null,
+    "gender": null,
+    "birthdate": null,
+    "iban": null,
+    "bic": null,
+    "national_identification_number": null,
+    "language": "nl",
+    "payment_term": null,
+    "invoicing_preferences": {
+      "electronic_invoicing_address": null
+    },
+    "added_at": "2022-06-18T13:09:32+00:00",
+    "updated_at": "2022-06-24T11:45:58+00:00",
+    "web_url": "https://focus.teamleader.eu/contact_detail.php?id=03d32499-4a3d-0be9-bd79-424bf3530b4e",
+    "remarks": null,
+    "marketing_mails_consent": false,
+    "addresses": [],
+    "companies": [
+      {
+        "position": "directie",
+        "decision_maker": false,
+        "company": {
+          "type": "company",
+          "id": "1b2ab41a-7f59-103b-8cd4-1fcdd5140767"
+        }
+      }
+    ],
+    "tags": [],
+    "custom_fields": [
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "17348dda-11c7-0e35-855b-38a4e1123dd6"
+        },
+        "value": "directie"
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7"
+        },
+        "value": [
+          "contactpersoon contract"
+        ]
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "e670f8a7-0ce6-0ba4-8455-cc92ec623de4"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "3f18708e-2599-06cd-b550-22965c523de5"
+        },
+        "value": "6d24b320-81c3-103c-90e7-5b3f989f5d2f"
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "b995ec27-5800-096f-a25b-7aa76b669345"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "af5161f2-b96f-035b-9951-602137069347"
+        },
+        "value": []
+      }
+    ]
+  },
+  {
+    "id": "bf924044-c14e-053e-8077-df6f83530b51",
+    "first_name": "Extra 1",
+    "last_name": "Tine",
+    "status": "active",
+    "vat_number": null,
+    "emails": [
+      {
+        "type": "primary",
+        "email": "extra1@testorganisatievoorwalter.be"
+      }
+    ],
+    "salutation": null,
+    "telephones": [
+      {
+        "type": "phone",
+        "number": "09 345 67 89"
+      }
+    ],
+    "website": null,
+    "gender": null,
+    "birthdate": null,
+    "iban": null,
+    "bic": null,
+    "national_identification_number": null,
+    "language": "nl",
+    "payment_term": null,
+    "invoicing_preferences": {
+      "electronic_invoicing_address": null
+    },
+    "added_at": "2022-06-18T13:09:36+00:00",
+    "updated_at": "2022-06-24T11:46:01+00:00",
+    "web_url": "https://focus.teamleader.eu/contact_detail.php?id=bf924044-c14e-053e-8077-df6f83530b51",
+    "remarks": null,
+    "marketing_mails_consent": false,
+    "addresses": [],
+    "companies": [
+      {
+        "position": "extra1",
+        "decision_maker": false,
+        "company": {
+          "type": "company",
+          "id": "1b2ab41a-7f59-103b-8cd4-1fcdd5140767"
+        }
+      }
+    ],
+    "tags": [],
+    "custom_fields": [
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "17348dda-11c7-0e35-855b-38a4e1123dd6"
+        },
+        "value": null
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7"
+        },
+        "value": [
+          "contactpersoon digitale instroom",
+          "contactpersoon digitalisering film en AV"
+        ]
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "e670f8a7-0ce6-0ba4-8455-cc92ec623de4"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "3f18708e-2599-06cd-b550-22965c523de5"
+        },
+        "value": "72bae796-81c3-103c-90e9-5b3f989f5d2f"
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "b995ec27-5800-096f-a25b-7aa76b669345"
+        },
+        "value": []
+      },
+      {
+        "definition": {
+          "type": "customFieldDefinition",
+          "id": "af5161f2-b96f-035b-9951-602137069347"
+        },
+        "value": []
+      }
+    ]
+  }
+]
