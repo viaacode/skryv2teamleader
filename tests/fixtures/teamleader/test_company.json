@@ -1,0 +1,277 @@
+{
+  "id": "1b2ab41a-7f59-103b-8cd4-1fcdd5140767",
+  "name": "Testorganisatie voor Walter",
+  "status": "active",
+  "business_type": null,
+  "vat_number": "BE 0644.450.380",
+  "national_identification_number": null,
+  "emails": [
+    {
+      "type": "primary",
+      "email": "test@voorwalter.be"
+    }
+  ],
+  "telephones": [
+    {
+      "type": "phone",
+      "number": "031234567"
+    }
+  ],
+  "website": "www.walter.be",
+  "iban": null,
+  "bic": null,
+  "activity_code": null,
+  "language": "nl",
+  "payment_term": null,
+  "preferred_currency": null,
+  "invoicing_preferences": {
+    "electronic_invoicing_address": null
+  },
+  "added_at": "2021-12-16T16:06:46+00:00",
+  "updated_at": "2022-06-28T12:50:00+00:00",
+  "web_url": "https://focus.teamleader.eu/company_detail.php?id=178d8326-793a-0374-b871-ac2df29733c1",
+  "remarks": null,
+  "marketing_mails_consent": false,
+  "addresses": [
+    {
+      "type": "primary",
+      "address": {
+        "line_1": "straat 1234",
+        "postal_code": "9000",
+        "city": "Gent",
+        "country": "BE",
+        "area_level_two": null
+      }
+    },
+    {
+      "type": "delivery",
+      "address": {
+        "line_1": "Leveringsstraat 12",
+        "postal_code": "9000",
+        "city": "Gent",
+        "country": "BE",
+        "area_level_two": null
+      }
+    },
+    {
+      "type": "invoicing",
+      "address": {
+        "line_1": "Facturatiestraat 12",
+        "postal_code": "9000",
+        "city": "Gent",
+        "country": "BE",
+        "area_level_two": null,
+        "addressee": "AGB Walter"
+      }
+    }
+  ],
+  "responsible_user": {
+    "type": "user",
+    "id": "16b19c64-05c2-05c4-9e5a-3a1aeed57c75"
+  },
+  "tags": [],
+  "custom_fields": [
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "bb5def60-32e5-06fc-a455-e53016923d9e"
+      },
+      "value": "OR-np1wh8z"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "2245baba-81b2-0872-b159-9c553d323da7"
+      },
+      "value": "CUL - erfgoedbibliotheek"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "5888fb72-503f-0165-a55b-113f48e23da8"
+      },
+      "value": []
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "afe9268c-c6dd-0053-bc5d-d4da5e723daa"
+      },
+      "value": "ja"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "bcf9ceba-a988-0fc6-805f-9e087ea23dac"
+      },
+      "value": "ingevuld"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "05cf38ba-2d6f-01fe-a85f-dd84aad23dae"
+      },
+      "value": true
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "1d0cc259-4b07-01b8-aa5b-100344423db0"
+      },
+      "value": false
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "32053d1e-e1f6-0436-9f52-8a6ce7423db4"
+      },
+      "value": [
+        "kring 1"
+      ]
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "b732b771-bce9-04ae-b256-aa6fc9c23db5"
+      },
+      "value": [
+        "u-Matic",
+        "betacam SP",
+        "audiocassette",
+        "1/4\" audiotape",
+        "open reel video",
+        "audio CD-r",
+        "VHS",
+        "betacam SX",
+        "VCR",
+        "minidisc",
+        "DAT",
+        "video8",
+        "hi8",
+        "DV-formaten"
+      ]
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "903dab5d-cee3-06c5-8d56-16e578a23db6"
+      },
+      "value": [
+        "golf 1",
+        "golf 2",
+        "golf 3",
+        "golf 4",
+        "golf 6",
+        "film",
+        "golf 7"
+      ]
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "15846b7e-104d-015f-8753-cb945d823db9"
+      },
+      "value": "facturatie@meemoo.be"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "fb842ba5-5372-0767-8752-e579d2e305b4"
+      },
+      "value": true
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "9987d9fa-0230-0205-b75e-6cd219362f46"
+      },
+      "value": false
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "9adf7d6f-b63f-0fcf-b350-b94201462f4a"
+      },
+      "value": "Het S.M.A.K. is het Stedelijk Museum voor Actuele Kunst in Gent. Het heeft als ambitie de realisatie van een autonoom museum, gericht op de eigentijdse tendensen in de kunstwereld."
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "98b1b8b5-4970-0422-a55a-17855b262f4b"
+      },
+      "value": ""
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "86043746-8f73-0852-9750-275458264e12"
+      },
+      "value": "info@smak.be"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "afc8bfab-53cc-0421-b052-1a7b0d865628"
+      },
+      "value": null
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "10d22b5f-72db-0ce7-ba58-d7013fb65b61"
+      },
+      "value": []
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "9f0f8e69-1fe7-0d3c-8d5b-0bd324e66396"
+      },
+      "value": [
+        "0"
+      ]
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "efc39617-3241-0564-a350-71dfa9f66914"
+      },
+      "value": false
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "667de27f-e39a-07d8-b659-d7c995467397"
+      },
+      "value": null
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "61f6a334-a2a5-0cc1-8f5b-b793f386933d"
+      },
+      "value": null
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "91844aa8-788b-0223-a151-d825d5a6933e"
+      },
+      "value": null
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "84bedd97-bde2-093f-855c-71874ec69340"
+      },
+      "value": null
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "30aa7f48-8915-0a13-8853-4c04fee6bb11"
+      },
+      "value": []
+    }
+  ]
+}

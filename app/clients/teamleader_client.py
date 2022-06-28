@@ -196,13 +196,13 @@ class TeamleaderClient:
             logger.warning(f"Warning: {path} responded with {res.text}")
             return []
         else:
-            logger.warning('GET {} failed:\n status={}\n response={}\n params={}\n'.format(
+            error_msg = 'GET {} failed:\n status={}\n response={}\n params={}\n'.format(
                 path,
                 res.status_code,
                 res.text,
                 params
-            ))
-            return []
+            )
+            raise ValueError(error_msg)
 
     def post_item(self, resource_path, payload):
         path = self.api_uri + resource_path
@@ -228,14 +228,13 @@ class TeamleaderClient:
         elif res.status_code == 204:
             return None
         else:
-            # TODO: raise exception here?
-            logger.warning('POST {} failed:\n status={}\n response={}\n payload={}\n'.format(
+            error_msg = 'POST {} failed:\n status={}\n response={}\n payload={}\n'.format(
                 path,
                 res.status_code,
                 res.text,
                 payload
-            ))
-            return None
+            )
+            raise ValueError(error_msg)
 
     def prepare_custom_fields(self, resource):
         custom_fields = resource['custom_fields']

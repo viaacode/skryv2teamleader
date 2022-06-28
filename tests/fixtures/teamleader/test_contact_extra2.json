@@ -1,0 +1,95 @@
+{
+  "id": "0db5a988-59b6-056b-9c75-767943548544",
+  "first_name": "Extra 2",
+  "last_name": "Tine",
+  "status": "active",
+  "vat_number": null,
+  "emails": [
+    {
+      "type": "primary",
+      "email": "extra2@testorganisatievoorwalter.be"
+    }
+  ],
+  "salutation": null,
+  "telephones": [
+    {
+      "type": "phone",
+      "number": "04 567 34 45"
+    }
+  ],
+  "website": null,
+  "gender": null,
+  "birthdate": null,
+  "iban": null,
+  "bic": null,
+  "national_identification_number": null,
+  "language": "nl",
+  "payment_term": null,
+  "invoicing_preferences": {
+    "electronic_invoicing_address": null
+  },
+  "added_at": "2022-06-24T11:08:44+00:00",
+  "updated_at": "2022-06-24T11:46:03+00:00",
+  "web_url": "https://focus.teamleader.eu/contact_detail.php?id=0db5a988-59b6-056b-9c75-767943548544",
+  "remarks": null,
+  "marketing_mails_consent": false,
+  "addresses": [],
+  "companies": [
+    {
+      "position": "extra2",
+      "decision_maker": false,
+      "company": {
+        "type": "company",
+        "id": "1b2ab41a-7f59-103b-8cd4-1fcdd5140767"
+      }
+    }
+  ],
+  "tags": [],
+  "custom_fields": [
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "17348dda-11c7-0e35-855b-38a4e1123dd6"
+      },
+      "value": null
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "d46ecfe6-4329-0573-a85b-9c7d27023dd7"
+      },
+      "value": [
+        "contactpersoon digitale instroom",
+        "contactpersoon digitalisering film en AV"
+      ]
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "e670f8a7-0ce6-0ba4-8455-cc92ec623de4"
+      },
+      "value": []
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "3f18708e-2599-06cd-b550-22965c523de5"
+      },
+      "value": "f17e51da-81c3-103c-90ea-5b3f989f5d2f"
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "b995ec27-5800-096f-a25b-7aa76b669345"
+      },
+      "value": []
+    },
+    {
+      "definition": {
+        "type": "customFieldDefinition",
+        "id": "af5161f2-b96f-035b-9951-602137069347"
+      },
+      "value": []
+    }
+  ]
+}

@@ -137,8 +137,13 @@ class ProcessService(SkryvBase):
             return
 
         company = status_update_method(company)
-        self.tlc.update_company(company)
-        return
+        try:
+            self.tlc.update_company(company)
+        except ValueError as e:
+            self.slack.update_company_failed(
+                company['id'],
+                e
+            )
 
     def teamleader_update(self):
         process_definition = self.process.processDefinitionKey
