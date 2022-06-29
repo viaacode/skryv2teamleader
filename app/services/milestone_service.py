@@ -226,7 +226,7 @@ class MilestoneService(SkryvBase):
             if business_type_id:
                 company['business_type_id'] = business_type_id
                 logger.info(
-                    "DEBUG: bedrijfsvorm {} maps to business_type_id={} ".format(
+                    "DEBUG: bedrijfsvorm {} maps to business_type_id={}".format(
                         bedrijfsvorm,
                         business_type_id
                     )
@@ -617,7 +617,9 @@ class MilestoneService(SkryvBase):
             )
             try:
                 self.tlc.update_company(company)
+                logger.info(f"Saved company {company['id']} type={company['business_type_id']}")
             except ValueError as e:
+                logger.info(f"Error while updating company {company['id']}, writing slack warning")
                 self.slack.update_company_failed(
                     company['id'],
                     e
