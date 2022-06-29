@@ -322,6 +322,12 @@ class TeamleaderClient:
             page, page_size
         )
 
+    def list_business_types(self, page=1, page_size=50):
+        return self.request_page(
+            '/businessTypes.list',
+            page, page_size
+        )
+
     def get_custom_field(self, uid):
         return self.request_item('/customFieldDefinitions.info', uid)
 
