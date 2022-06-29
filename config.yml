@@ -37,3 +37,20 @@ app:
     bestelbon: !ENV ${TL_BESTELBON}
     relatie_meemoo: !ENV ${TL_RELATIE_MEEMOO}
     functie_category: !ENV ${TL_FUNCTIE_CATEGORY}
+  business_types:
+    ag: !ENV ${TL_BT_AG}
+    bvba: !ENV ${TL_BT_BVBA}
+    cvba: !ENV ${TL_BT_CVBA}
+    cvoa: !ENV ${TL_BT_CVOA}
+    comm.v: !ENV ${TL_BT_COMMV}
+    comm.va: !ENV ${TL_BT_COMMVA}
+    esv: !ENV ${TL_BT_ESV}
+    ebvba: !ENV ${TL_BT_EBVBA}
+    eenmanszaak: !ENV ${TL_BT_EENMANSZAAK}
+    lv: !ENV ${TL_BT_LV}
+    nv: !ENV ${TL_BT_NV}
+    sbvba: !ENV ${TL_BT_SBVBA}
+    se: !ENV ${TL_BT_SE}
+    vof: !ENV ${TL_BT_VOF}
+    vzw: !ENV ${TL_BT_VZW}
+    vereniging: !ENV ${TL_BT_VERENIGING}

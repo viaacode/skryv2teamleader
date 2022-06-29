@@ -27,6 +27,7 @@ class MilestoneService(SkryvBase):
         self.slack = common_clients.slack
         self.redis = common_clients.redis
         self.read_configuration()
+        self.business_types = []
 
         self.category_map = {
             'administratie': 'administratie',
@@ -216,36 +217,24 @@ class MilestoneService(SkryvBase):
         return company
 
     def bedrijfsvorm_update(self, document_body, company):
-        btype_mapping = {
-            'ag': 'AG',
-            'bvba': 'BVBA',
-            'cvba': 'CVBA',
-            'cvoa': 'CVOA',
-            'comm.v': 'Comm.V',
-            'comm.va': 'Comm.VA',
-            'esv': 'ESV',
-            'ebvba': 'EBVBA',
-            'eenmanszaak': 'Eenmanszaak',
-            'lv': 'LV',
-            'nv': 'NV',
-            'sbvba': 'SBVBA',
-            'se': 'SE',
-            'vof': 'VOF',
-            'vzw': 'VZW',
-            'vereniging': 'Vereniging',
-            'overige': None
-        }
-
         dvals = document_body.document.document.value
         if 'bedrijfsvorm' in dvals:
-            bedrijfsvorm = dvals['bedrijfsvorm']['selectedOption']
-            company['business_type'] = btype_mapping.get(bedrijfsvorm)
-            logger.info(
-                "DEBUG: bedrijfsvorm found={} -> business_type={} ".format(
-                    bedrijfsvorm,
-                    company['business_type']
-                )
+            bedrijfsvorm = dvals['bedrijfsvorm']['selectedOption'].lower()
+            business_type_id = self.bedrijfsvorm_mapping.get(
+                bedrijfsvorm
             )
+            if business_type_id:
+                company['business_type_id'] = business_type_id
+                logger.info(
+                    "DEBUG: bedrijfsvorm {} maps to business_type_id={} ".format(
+                        bedrijfsvorm,
+                        business_type_id
+                    )
+                )
+            else:
+                logger.warning(
+                    f"DEBUG: bedrijfsvorm {bedrijfsvorm} not found in mapping"
+                )
 
         return company
 

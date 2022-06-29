@@ -31,6 +31,51 @@ class SkryvBase:
             config.app_cfg['custom_field_ids']
         )
 
+        self.bedrijfsvorm_mapping = self.get_business_types(
+            config.app_cfg['business_types']
+        )
+
+    def get_business_types(self, bt_ids):
+        return {
+            'ag': bt_ids['ag'],
+            'bvba': bt_ids['bvba'],
+            'cvba': bt_ids['cvba'],
+            'cvoa': bt_ids['cvoa'],
+            'comm.v': bt_ids['comm.v'],
+            'comm.va': bt_ids['comm.va'],
+            'esv': bt_ids['esv'],
+            'ebvba': bt_ids['ebvba'],
+            'eenmanszaak': bt_ids['eenmanszaak'],
+            'lv': bt_ids['lv'],
+            'nv': bt_ids['nv'],
+            'sbvba': bt_ids['sbvba'],
+            'se': bt_ids['se'],
+            'vof': bt_ids['vof'],
+            'vzw': bt_ids['vzw'],
+            'vereniging': bt_ids['vereniging'],
+            'overige': None
+        }
+
+    # Normally this is what we needed to do, fetch business types with api
+    # but this does not work on QAS where we get back incorrect id's.
+    # On production it works, but we're doing a lot of requests
+    # to get static id's that are not going to change much
+    # def load_business_types(self, country):
+    #     # load cache of business types
+    #     page = 1
+    #     business_types = []
+    #     while True:
+    #         bts = self.tlc.list_business_types(page,50)
+    #         page+=1
+    #         if len(bts)==0:
+    #             break
+    #
+    #         for bt in bts:
+    #             if bt['country'] == country:
+    #                 business_types.append(bt)
+    #
+    #     return business_types
+
     def custom_field_mapping(self, field_ids):
         self.custom_fields = {}
         for f in self.tlc.list_custom_fields():
