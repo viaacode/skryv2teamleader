@@ -42,6 +42,9 @@ class App:
     def auth_callback(self, code, state):
         return self.clients.teamleader.authcode_callback(code, state)
 
+    def oauth_check(self):
+        return self.clients.teamleader.oauth_check()
+
     def process_webhook(self, process_body):
         logger.info(
             "process event: action={} dossier_id={} or_id={}".format(

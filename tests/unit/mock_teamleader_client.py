@@ -24,6 +24,9 @@ class MockTlClient(MockClient):
         # self.mock_id = 'teamleader api mock'
         # self.webhook_url = 'http://localhost:8080'
 
+    def oauth_check(self):
+        return {"status": "ok"}
+
     def list_custom_fields(self):
         # super().method_call(f"list_custom_fields")
         fields_fixture = open(

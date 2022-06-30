@@ -61,15 +61,18 @@ class TestAppRequests:
         assert response.status_code == 200
         assert response.text == '"OK"'
 
+    def test_oauth_check(self, app_client):
+        response = app_client.get("/health/oauth")
+        assert response.status_code == 200
+        assert response.json()['status'] == 'ok'
+
     def test_oauth_rejection(self, app_client):
         response = app_client.get("/skryv/oauth")
         assert response.status_code == 422
 
-    # TODO: test /sync/oauth get call (with correct code)
-    def test_oauth_bad_code(self, app_client):
+    def test_oauth_code(self, app_client):
         response = app_client.get("/skryv/oauth?code=123")
         assert response.status_code == 200
-        # assert response.json() == 'code rejected'
 
     def test_milestone_events(self, app_client):
         for milestone_fixture in glob.glob("tests/fixtures/milestone/*.json"):

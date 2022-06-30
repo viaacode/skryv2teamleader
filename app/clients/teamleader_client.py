@@ -57,6 +57,17 @@ class TeamleaderClient:
         else:
             self.code, self.token, self.refresh_token = self.token_store.read()
 
+    def oauth_check(self):
+        try:
+            result = self.list_custom_fields(page=1, page_size=1)
+            return {'status': 'ok'}
+        except ValueError:
+            link = self.authcode_request_link()
+            return {
+                'status': 'authorization expired',
+                'authorization_refresh_link': link
+            }
+
     def authcode_request_link(self):
         """ First request that results in a callback to redirect_uri that supplies a code
         for auth_token_request. We return a link to be opened in browser while the user

@@ -30,6 +30,29 @@ class TestTeamleaderClient:
 
         return tlc_fast
 
+    def test_oauth_check(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list?page%5Bnumber%5D=1&page%5Bsize%5D=1',
+            json={'data': []}
+        )
+        result = tlc.oauth_check()
+        assert result['status'] == 'ok'
+
+    def test_oauth_check_expired(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list?page%5Bnumber%5D=1&page%5Bsize%5D=1',
+            json={'data': []},
+            status_code=401
+        )
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            json={},
+            status_code=400
+        )
+        result = tlc.oauth_check()
+        assert result['status'] != "ok"
+        assert 'authorization_refresh_link' in result
+
     def test_get_company(self, tlc, requests_mock):
         requests_mock.get(
             f'{self.API_URL}/companies.info?id=company_uuid',
