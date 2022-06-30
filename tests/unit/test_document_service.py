@@ -90,8 +90,9 @@ class TestDocumentService:
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
-        doc = open("tests/fixtures/document/created_example.json", "r")
+        doc = open("tests/fixtures/document/updated_example.json", "r")
         test_doc = DocumentBody.parse_raw(doc.read())
         doc.close()
+        test_doc.dossier.externalId = None
         res = await ws.execute_webhook('document_event', test_doc)
         assert res == 'document event is handled'

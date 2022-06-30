@@ -47,8 +47,7 @@ def startup_event():
 
 @app.on_event('shutdown')
 async def shutdown_event():
-    if config.app_cfg['teamleader']['redis_url'] != 'DISABLED':
-        main_app.redis_cache.close()
+    main_app.redis_cache.close()
 
 
 @app.get("/", include_in_schema=False)
