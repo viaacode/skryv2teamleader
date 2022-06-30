@@ -111,6 +111,7 @@ class SkryvBase:
         if value not in allowed_values:
             logger.warning(
                 f"skipping invalid intentieverklaring value = {value}")
+            return company
 
         return self.set_custom_field(company, 'intentieverklaring', value)
 

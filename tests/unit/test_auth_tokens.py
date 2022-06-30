@@ -5,7 +5,7 @@
 #
 #   tests/unit/test_auth_tokens.py
 #
-
+import pytest
 from app.clients.teamleader_auth import TeamleaderAuth
 from mock_redis_cache import MockRedisCache
 
@@ -22,4 +22,8 @@ class TestTeamleaderAuth:
         assert ta.read() == ('somecode', 'some_auth', 'some_refresh')
 
         ta.reset()
+        assert ta.tokens_available() is False
+
+    def test_redis_not_passed(self):
+        ta = TeamleaderAuth({}, None)
         assert ta.tokens_available() is False

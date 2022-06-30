@@ -46,10 +46,18 @@ class TestScheduler:
         res = await ws.execute_webhook('something_bad', 'some_id')
         assert res is None
 
-    def test_scheduling(self, mock_clients):
+    @pytest.mark.asyncio
+    async def test_scheduling(self, mock_clients):
         ws = WebhookScheduler()
         ws.start(mock_clients)
         assert ws.webhook_queue.empty()
 
-        ws.schedule('document_event', 'some_data')
+        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+
+        ws.schedule('document_event', test_doc)
         assert not ws.webhook_queue.empty()
+
+        await ws.webhook_processing()
+        assert ws.webhook_queue.empty()

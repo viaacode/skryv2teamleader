@@ -1,10 +1,10 @@
 def tst_app_config():
     return {
+        'environment': 'TST',
         'slack': {
             'token': 'test_token',
             'channel': 'test_channel',
         },
-        'environment': 'TST',
         'teamleader': {
             'auth_uri': 'https://app.teamleader.eu',
             'api_uri': 'https://api.teamleader.eu',

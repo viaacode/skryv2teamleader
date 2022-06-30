@@ -36,8 +36,10 @@ class TeamleaderClient:
 
     def __init__(self, app_config: dict, redis_cache: RedisCache = None):
         params = app_config['teamleader']
+
         # Avoid getting 429 Too Many Requests error
         self.RATE_LIMIT = 0.4
+
         self.auth_uri = params['auth_uri']
         self.api_uri = params['api_uri']
         self.client_id = params['client_id']
@@ -64,7 +66,8 @@ class TeamleaderClient:
             return {'status': 'ok'}
         except ValueError:
             link = self.authcode_request_link()
-            logger.warning("Teamleader authorization expired. Use refresh link to renew tokens")
+            logger.warning(
+                "Teamleader authorization expired. Use refresh link to renew tokens")
             return {
                 'status': 'authorization expired',
                 'authorization_refresh_link': link
