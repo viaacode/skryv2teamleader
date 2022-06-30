@@ -1,0 +1,252 @@
+[
+  {
+    "id": "9b3c402b-13dd-0a1a-9725-4cb32f3c6adf",
+    "name": "Maatschap/Société Simple",
+    "country": "BE"
+  },
+  {
+    "id": "dc2b8ea9-d0ab-05cf-ae28-037b266abfde",
+    "name": "Maatschap",
+    "country": "NL"
+  },
+  {
+    "id": "4465bdcf-b6cf-070e-8c22-0c98dd61bfdd",
+    "name": "VvE",
+    "country": "NL"
+  },
+  {
+    "id": "9e854a06-cfca-0b67-9927-a444b7d20cdc",
+    "name": "VME",
+    "country": "NL"
+  },
+  {
+    "id": "daaa6db6-814e-0bd5-8327-1909f05fe0db",
+    "name": "UG",
+    "country": "AT"
+  },
+  {
+    "id": "86f6f637-876e-098e-a120-dd0f6972a2da",
+    "name": "Verein",
+    "country": "AT"
+  },
+  {
+    "id": "7a7acb85-8aec-0cc3-9b2f-dea7795a9cd9",
+    "name": "Einzelunternehmen",
+    "country": "AT"
+  },
+  {
+    "id": "1fa4242b-6d1f-0b59-b528-9663daede7d8",
+    "name": "GmbH",
+    "country": "AT"
+  },
+  {
+    "id": "5c9ca26d-b41c-06dd-aa21-7a8a1590f7d7",
+    "name": "OG",
+    "country": "AT"
+  },
+  {
+    "id": "5ca563bd-3ba0-0df1-b024-2149aefc2bd6",
+    "name": "Associazione",
+    "country": "IT"
+  },
+  {
+    "id": "caceb04b-f068-013c-9521-a65b9ad795d5",
+    "name": "Pubblica Amministrazione",
+    "country": "IT"
+  },
+  {
+    "id": "b15b229f-e73b-0d5f-bb26-1a0b294e71d4",
+    "name": "BV/SRL",
+    "country": "BE"
+  },
+  {
+    "id": "b7613d47-0417-046a-aa24-cb2e085d60d3",
+    "name": "CV/SC",
+    "country": "BE"
+  },
+  {
+    "id": "0cb8f00c-a292-0f65-b42d-c3c0d80126d2",
+    "name": "Verein/Association",
+    "country": "CH"
+  },
+  {
+    "id": "574a2d84-7b72-006b-9625-808a56951dd1",
+    "name": "Föderation/Fédération",
+    "country": "CH"
+  },
+  {
+    "id": "e5c5ebe7-9daf-0c8a-8321-26e9baa4c4d0",
+    "name": "Stiftung/Fondation",
+    "country": "CH"
+  },
+  {
+    "id": "cf281998-fc9a-0cbd-872f-f0f94f774ccf",
+    "name": "GmbH/Sàrl",
+    "country": "CH"
+  },
+  {
+    "id": "c9d13d8a-c722-028a-8e21-bdae9507b9ce",
+    "name": "Einzelfirma/Raison individuelle",
+    "country": "CH"
+  },
+  {
+    "id": "5dea719d-9171-0982-ab2e-fc91c55127cd",
+    "name": "S.c.r.l.",
+    "country": "IT"
+  },
+  {
+    "id": "5ceac3a4-a64a-0b30-ad29-517b2aa772cc",
+    "name": "S.r.l.s.",
+    "country": "IT"
+  },
+  {
+    "id": "3c2f2320-dc3b-034e-ab24-c8b5a64baccb",
+    "name": "S.a.s.",
+    "country": "IT"
+  },
+  {
+    "id": "a074fe05-fa71-0e1c-a324-a6702cc713ca",
+    "name": "S.n.c.",
+    "country": "IT"
+  },
+  {
+    "id": "2b87a1dd-6ca2-08a2-b32b-6ef092468ec9",
+    "name": "S.s.",
+    "country": "IT"
+  },
+  {
+    "id": "33644af2-010b-09bf-9820-7a856c565ac8",
+    "name": "Libero professionista",
+    "country": "IT"
+  },
+  {
+    "id": "bc67db03-a78e-054d-bd24-fe4c19fcbec7",
+    "name": "Lavoratore autonomo",
+    "country": "IT"
+  },
+  {
+    "id": "a352ba2f-385a-0034-b32c-9ac8920e06c6",
+    "name": "VVaG",
+    "country": "DE"
+  },
+  {
+    "id": "18eb5275-4e81-0c8f-b12d-375d282d54c5",
+    "name": "UG & Co. KG",
+    "country": "DE"
+  },
+  {
+    "id": "1f397b68-2b5f-0a0e-8f26-d4813ae868c4",
+    "name": "Stille Gesellschaft",
+    "country": "DE"
+  },
+  {
+    "id": "787e66d6-f5c5-043e-9123-bc9f2590f4c3",
+    "name": "Stiftung GmbH & Co. KG",
+    "country": "DE"
+  },
+  {
+    "id": "9518231b-c428-0a4d-9127-0dc8e8260dc2",
+    "name": "Stiftung & Co. KGaA",
+    "country": "DE"
+  },
+  {
+    "id": "53c593c3-51fe-0f2d-bd23-1bfc712f91c1",
+    "name": "Stiftung & Co. KG",
+    "country": "DE"
+  },
+  {
+    "id": "e9864f92-32c2-0e21-982e-e3a93d0a06c0",
+    "name": "Stiftung",
+    "country": "DE"
+  },
+  {
+    "id": "d621da9a-6451-0539-9e20-238c00ba3ebf",
+    "name": "Limited & Co. KG",
+    "country": "DE"
+  },
+  {
+    "id": "96e04c67-6527-09e6-8d25-50e3cace68be",
+    "name": "KöR",
+    "country": "DE"
+  },
+  {
+    "id": "7c3ff859-a731-0ac1-a92b-016b1a1684bd",
+    "name": "InvAG",
+    "country": "DE"
+  },
+  {
+    "id": "d37f23dc-194a-064b-b72f-05998e04b2bc",
+    "name": "GmbH & Co. OHG",
+    "country": "DE"
+  },
+  {
+    "id": "f46781d6-71b3-0999-b626-3ef469e8f1bb",
+    "name": "GmbH & Co. KGaA",
+    "country": "DE"
+  },
+  {
+    "id": "4d6fdce2-4ed9-08fb-b720-7592bed37aba",
+    "name": "gGmbH",
+    "country": "DE"
+  },
+  {
+    "id": "37d5083f-8c17-0995-8524-dc31b9e9fab9",
+    "name": "gAG",
+    "country": "DE"
+  },
+  {
+    "id": "c761ded8-b29d-052c-9625-be3fbdfc1ab8",
+    "name": "Einzelunternehmen",
+    "country": "DE"
+  },
+  {
+    "id": "4dc0860a-81c4-0a11-b42a-c91cbb953ab7",
+    "name": "Eigenbetrieb",
+    "country": "DE"
+  },
+  {
+    "id": "5aea1bbc-2bfc-0976-8529-21dbd701a0b6",
+    "name": "eG",
+    "country": "DE"
+  },
+  {
+    "id": "f744cacb-fb7a-0afa-822d-72a94d7dc6b5",
+    "name": "eV",
+    "country": "DE"
+  },
+  {
+    "id": "a206746f-3511-0090-a92b-7e459b12fdb4",
+    "name": "AöR",
+    "country": "DE"
+  },
+  {
+    "id": "11e6b9b9-11e6-006a-a827-a93436941fb3",
+    "name": "AG & Co. OHG",
+    "country": "DE"
+  },
+  {
+    "id": "dd925030-c052-0065-9223-07bd797ca0b2",
+    "name": "AG & Co. KGaA",
+    "country": "DE"
+  },
+  {
+    "id": "7ffce398-0b52-0fa3-892b-f2b3689daab1",
+    "name": "AG & Co. KG",
+    "country": "DE"
+  },
+  {
+    "id": "ce6d8f4f-5e15-08ed-9d2e-449f2ad18fb0",
+    "name": "GmbH & Co. KG",
+    "country": "DE"
+  },
+  {
+    "id": "8811dacc-e557-01bc-8220-0407622203af",
+    "name": "LV/SAGR",
+    "country": "BE"
+  },
+  {
+    "id": "f3cdbaaf-2fbd-0f99-a921-9a1c486a5eae",
+    "name": "AG",
+    "country": "DE"
+  }
+]
