@@ -141,7 +141,8 @@ class ProcessService(SkryvBase):
             self.tlc.update_company(company)
             logger.info(f"Saved changes to teamleader company {company['id']}")
         except ValueError as e:
-            logger.info(f"Errors during update of company {company['id']}, sending slack message")
+            logger.info(
+                f"Errors during update of company {company['id']}, sending slack message")
             self.slack.update_company_failed(
                 company['id'],
                 e

@@ -17,13 +17,18 @@ from tests.unit.mock_redis_cache import MockRedisCache
 
 class TestTeamleaderClient:
     API_URL = 'https://api.teamleader.eu'
+    AUTH_URL = 'https://app.teamleader.eu'
 
     @pytest.fixture
     def tlc(self):
-        return TeamleaderClient(
+        tlc_fast = TeamleaderClient(
             tst_app_config(),
             MockRedisCache()
         )
+        # switch off rate limiting for fast tests
+        tlc_fast.RATE_LIMIT = 0.0
+
+        return tlc_fast
 
     def test_get_company(self, tlc, requests_mock):
         requests_mock.get(
@@ -33,6 +38,26 @@ class TestTeamleaderClient:
 
         result = tlc.get_company('company_uuid')
         assert result == {}
+
+    def test_get_company_unauthorized(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/companies.info?id=company_uuid',
+            json={'data': {}},
+            status_code=401
+        )
+
+        requests_mock.post(
+            f'{self.AUTH_URL}/oauth2/access_token',
+            json={
+                'access_token': 'test_access',
+                'refresh_token': 'test_refresh',
+            },
+            status_code=401
+        )
+
+        with pytest.raises(ValueError):
+            result = tlc.get_company('company_uuid')
+            assert result == {}
 
     def test_update_company(self, tlc, requests_mock):
         with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
@@ -234,3 +259,15 @@ class TestTeamleaderClient:
 
         result = tlc.list_custom_fields()
         assert len(result) >= 31
+
+    def test_list_business_types(self, tlc, requests_mock):
+        with open('tests/fixtures/teamleader/business_types.json') as f:
+            business_types = json.loads(f.read())
+
+        requests_mock.get(
+            f'{self.API_URL}/businessTypes.list',
+            json={'data': business_types}
+        )
+
+        result = tlc.list_business_types()
+        assert len(result) > 10

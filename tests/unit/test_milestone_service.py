@@ -50,11 +50,15 @@ class TestMilestoneService():
         slack_client = SlackClient(tst_app_config())
         slack_client.slack_wrapper = MockSlackWrapper()
 
+        tlc = TeamleaderClient(
+            tst_app_config(),
+            MockRedisCache()
+        )
+        # switch off rate limiting for fast tests
+        tlc.RATE_LIMIT = 0.0
+
         return CommonClients(
-            TeamleaderClient(
-                tst_app_config(),
-                MockRedisCache()
-            ),
+            tlc,
             MockLdapClient(),
             slack_client,
             SkryvClient(tst_app_config()),
@@ -88,7 +92,8 @@ class TestMilestoneService():
         # actual milestone call
         requests_mock.get(
             f'{API_URL}/customFieldDefinitions.list',
-            json={'data': self.teamleader_fixture('custom_fields.json')}
+            json={'data': self.teamleader_fixture('custom_fields.json')},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
@@ -101,33 +106,38 @@ class TestMilestoneService():
         test_company = self.teamleader_fixture('test_company.json')
         requests_mock.get(
             f'{API_URL}/companies.info?id={company_id}',
-            json={'data': test_company}
+            json={'data': test_company},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         test_contacts = self.teamleader_fixture('test_contacts_adding.json')
         contact_filter = f'company_id%5D={company_id}&page%5Bnumber%5D=1&page%5Bsize%5D=20'
         requests_mock.get(
             f'{API_URL}/contacts.list?filter%5B{contact_filter}',
-            json={'data': test_contacts}
+            json={'data': test_contacts},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         tc_administratie = self.teamleader_fixture(
             'test_contact_administratie.json')
         requests_mock.get(
             f'{API_URL}/contacts.info?id=93a20358-4b37-071f-8975-bde813530b50',
-            json={'data': tc_administratie}
+            json={'data': tc_administratie},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         tc_directie = self.teamleader_fixture('test_contact_directie.json')
         requests_mock.get(
             f'{API_URL}/contacts.info?id=03d32499-4a3d-0be9-bd79-424bf3530b4e',
-            json={'data': tc_directie}
+            json={'data': tc_directie},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         tc_extra1 = self.teamleader_fixture('test_contact_extra1.json')
         requests_mock.get(
             f'{API_URL}/contacts.info?id=bf924044-c14e-053e-8077-df6f83530b51',
-            json={'data': tc_extra1}
+            json={'data': tc_extra1},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         # tc_extra2 = self.teamleader_fixture('test_contact_extra2.json')
@@ -140,6 +150,8 @@ class TestMilestoneService():
         requests_mock.post(
             f'{API_URL}/contacts.update',
             json={'data': 'contact update error'},
+            headers={'Content-Type': 'application/json',
+                     'Connection': 'Close'},
             status_code=400
         )
 
@@ -147,18 +159,23 @@ class TestMilestoneService():
         requests_mock.post(
             f'{API_URL}/contacts.add',
             json={'data': 'contact add error'},
+            headers={'Content-Type': 'application/json',
+                     'Connection': 'Close'},
             status_code=400
         )
 
         requests_mock.post(
             f'{API_URL}/contacts.updateCompanyLink',
             json={'data': 'company link error'},
+            headers={'Content-Type': 'application/json',
+                     'Connection': 'Close'},
             status_code=400
         )
 
         requests_mock.post(
             f'{API_URL}/companies.update',
-            json={'data': 'success'}
+            json={'data': 'success'},
+            headers={'Content-Type': 'application/json', 'Connection': 'Close'}
         )
 
         opstart = open("tests/fixtures/milestone/milestone_opstart.json", "r")

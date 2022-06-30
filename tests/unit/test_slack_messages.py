@@ -46,6 +46,11 @@ class TestSlackMessages:
         slack.company_not_found(uuid.uuid4(), 'OR-testid')
         assert slack.slack_wrapper.method_called('create_message')
 
+    def test_teamleader_updated_failed(self, slack):
+        slack.update_company_failed(
+            uuid.uuid4(), 'company update failure: invalid vat number')
+        assert slack.slack_wrapper.method_called('create_message')
+
     # these are already covered with other tests
     # def test_empty_last_name()
     # def test_external_id_empty()

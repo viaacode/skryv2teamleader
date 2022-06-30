@@ -617,9 +617,11 @@ class MilestoneService(SkryvBase):
             )
             try:
                 self.tlc.update_company(company)
-                logger.info(f"Saved changes to teamleader company {company['id']}")
+                logger.info(
+                    f"Saved changes to teamleader company {company['id']}")
             except ValueError as e:
-                logger.info(f"Error while updating company {company['id']}, writing slack warning")
+                logger.info(
+                    f"Error while updating company {company['id']}, writing slack warning")
                 self.slack.update_company_failed(
                     company['id'],
                     e

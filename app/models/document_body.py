@@ -45,7 +45,7 @@ class DocumentBody(BaseModel):
                         "value": {
                             "raadpleeg_hier_de_samenwerkingsovereenkomst_met_viaa": "https://meemoo.docx"
                         },
-                         "bedrijfsvorm": {
+                        "bedrijfsvorm": {
                             "selectedOption": "cvba"
                         }
                     },

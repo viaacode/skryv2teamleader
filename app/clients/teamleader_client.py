@@ -30,16 +30,14 @@ from viaa.observability import logging
 config = ConfigParser()
 logger = logging.get_logger(__name__, config=config)
 
-# Avoid getting 429 Too Many Requests error
-RATE_LIMIT_SLEEP = 0.6
-
 
 class TeamleaderClient:
     """Acts as a client to query relevant information from Teamleader API"""
 
     def __init__(self, app_config: dict, redis_cache: RedisCache = None):
         params = app_config['teamleader']
-
+        # Avoid getting 429 Too Many Requests error
+        self.RATE_LIMIT = 0.4
         self.auth_uri = params['auth_uri']
         self.api_uri = params['api_uri']
         self.client_id = params['client_id']
@@ -120,7 +118,7 @@ class TeamleaderClient:
             'grant_type': 'authorization_code'
         }
         r = requests.post(req_uri, data=req_params)
-        time.sleep(RATE_LIMIT_SLEEP)
+        time.sleep(self.RATE_LIMIT)
         self.handle_token_response(r)
 
     def auth_token_refresh(self):
@@ -135,7 +133,7 @@ class TeamleaderClient:
                 'grant_type': 'refresh_token'
             }
         )
-        time.sleep(RATE_LIMIT_SLEEP)
+        time.sleep(self.RATE_LIMIT)
         self.handle_token_response(r)
 
     def request_endpoint(self, resource_path, params={}, headers={}):
@@ -148,7 +146,7 @@ class TeamleaderClient:
             headers = {'Authorization': "Bearer {}".format(self.token)}
             res = requests.get(path, params=params, headers=headers)
 
-        time.sleep(RATE_LIMIT_SLEEP)
+        time.sleep(self.RATE_LIMIT)
 
         if res.status_code == 200:
             return res.json()['data']
@@ -188,7 +186,7 @@ class TeamleaderClient:
             headers = {'Authorization': "Bearer {}".format(self.token)}
             res = requests.get(path, params=params, headers=headers)
 
-        time.sleep(RATE_LIMIT_SLEEP)
+        time.sleep(self.RATE_LIMIT)
 
         if res.status_code == 200:
             return res.json()['data']
@@ -221,7 +219,7 @@ class TeamleaderClient:
             res = requests.post(
                 path, data=json.dumps(payload), headers=headers)
 
-        time.sleep(RATE_LIMIT_SLEEP)
+        time.sleep(self.RATE_LIMIT)
 
         if res.status_code == 200 or res.status_code == 201:
             return res.json()['data']
