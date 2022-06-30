@@ -41,7 +41,6 @@ class DocumentService(SkryvBase):
             f"saving document {self.dossier.id} in redis for organization {self.or_id}"
         )
         self.redis.save_document(document_body)
-        # self.reset_company(self.or_id)  # debugging: clear all fields and contacts
 
     def handle_event(self, document_body: DocumentBody):
         body = document_body
@@ -61,32 +60,3 @@ class DocumentService(SkryvBase):
             self.save_cp_updated_document(document_body)
         else:
             self.slack.external_id_empty(self.dossier)
-
-    # def reset_company(self, or_id):
-    #     # we clear all values here FOR DEBUGGING !!!!
-    #     print(
-    #         f"DEBUG RESET COMPANY CALLED! teamleader company or-id = {or_id}")
-
-    #     ldap_org = self.ldap.find_company(or_id)
-    #     if not ldap_org:
-    #         print(
-    #             f"company with OR-id {or_id} not found for process {self.action}")
-    #         self.slack.no_ldap_entry_found(self.dossier)
-    #         return
-
-    #     company_id = ldap_org['x-be-viaa-externalUUID'].value
-    #     company = self.tlc.get_company(company_id)
-
-    #     # clear all flags and addenda set by milestones or process service
-    #     company = self.set_cp_status(company, 'nee')
-    #     company = self.set_intentieverklaring(company, None)
-    #     company = self.set_toestemming_start(company, False)
-    #     company = self.set_swo(company, False)
-    #     company = self.set_swo_addenda(company, [])
-
-    #     self.tlc.update_company(company)
-
-    #     # also remove all contacts
-    #     existing_contacts = self.tlc.company_contacts(company_id)
-    #     for ec in existing_contacts:
-    #         self.tlc.delete_contact(ec['id'])
