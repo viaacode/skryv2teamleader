@@ -294,3 +294,40 @@ class TestTeamleaderClient:
 
         result = tlc.list_business_types()
         assert len(result) > 10
+
+    def test_authcode_callback_bad_state(self, tlc, requests_mock):
+        test_code = 'code1234'
+        test_state = 'bad_state'
+        res = tlc.authcode_callback(test_code, test_state)
+        assert res['status'] == 'code rejected'
+        assert tlc.code != 'code1234'
+
+    # def test_authcode_callback_wrong_code(self, tlc, requests_mock):
+    #     test_code = 'code1234'
+    #     test_state = 'test_secret_code_state'
+
+    #     requests_mock.post(
+    #         'https://app.teamleader.eu/oauth2/access_token',
+    #         json={},
+    #         status_code=400
+    #     )
+    #     res = tlc.authcode_callback(test_code, test_state)
+    #     assert res['status'] == 'code rejected'
+    #     assert tlc.code != 'code1234'
+
+    def test_authcode_callback(self, tlc, requests_mock):
+        test_code = 'code1234'
+        test_state = 'test_secret_code_state'
+
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            json={
+                'access_token': 'new_test_access_token',
+                'refresh_token': 'new_test_refresh_token'
+            }
+        )
+        res = tlc.authcode_callback(test_code, test_state)
+        assert res['status'] == 'code accepted'
+        assert tlc.code == 'code1234'
+        assert tlc.token == 'new_test_access_token'
+        assert tlc.refresh_token == 'new_test_refresh_token'
