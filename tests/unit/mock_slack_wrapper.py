@@ -20,3 +20,8 @@ class MockSlackWrapper(MockClient):
         super().method_call(
             f"create_message: message={message}"
         )
+
+    def chat_postMessage(self, channel, text):
+        super().method_call(
+            f"chat_postMessage: {channel} {text}"
+        )

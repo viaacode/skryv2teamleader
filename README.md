@@ -42,18 +42,21 @@ $ make test
 ============================= test session starts =============================
 platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
-plugins: asyncio-0.18.3, cov-2.8.1, mock-3.5.1
+plugins: asyncio-0.18.3, requests-mock-1.9.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 31 items                                                            
+collected 54 items                                                            
 
-tests/test_app.py ..........                                            [ 32%]
-tests/unit/test_auth_tokens.py .                                        [ 35%]
-tests/unit/test_document_service.py .....                               [ 51%]
-tests/unit/test_milestone_service.py .........                          [ 80%]
-tests/unit/test_process_service.py ....                                 [ 93%]
-tests/unit/test_scheduler.py ..                                         [100%]
+tests/test_app.py .......                                               [ 12%]
+tests/test_app_startup.py .                                             [ 14%]
+tests/unit/test_auth_tokens.py .                                        [ 16%]
+tests/unit/test_document_service.py .....                               [ 25%]
+tests/unit/test_milestone_service.py ............                       [ 48%]
+tests/unit/test_process_service.py .....                                [ 57%]
+tests/unit/test_scheduler.py ..                                         [ 61%]
+tests/unit/test_slack_messages.py .....                                 [ 70%]
+tests/unit/test_teamleader_client.py ................                   [100%]
 
-============================= 31 passed in 1.21s ==============================
+============================= 54 passed in 1.98s ==============================
 ```
 
 Run tests and get code coverage:
@@ -64,17 +67,17 @@ platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, requests-mock-1.9.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 48 items                                                            
+collected 54 items                                                            
 
-tests/test_app.py .......                                               [ 14%]
-tests/test_app_startup.py .                                             [ 16%]
-tests/unit/test_auth_tokens.py .                                        [ 18%]
-tests/unit/test_document_service.py .....                               [ 29%]
-tests/unit/test_milestone_service.py ..........                         [ 50%]
-tests/unit/test_process_service.py .....                                [ 60%]
-tests/unit/test_scheduler.py ..                                         [ 64%]
-tests/unit/test_slack_messages.py ...                                   [ 70%]
-tests/unit/test_teamleader_client.py ..............                     [100%]
+tests/test_app.py .......                                               [ 12%]
+tests/test_app_startup.py .                                             [ 14%]
+tests/unit/test_auth_tokens.py .                                        [ 16%]
+tests/unit/test_document_service.py .....                               [ 25%]
+tests/unit/test_milestone_service.py ............                       [ 48%]
+tests/unit/test_process_service.py .....                                [ 57%]
+tests/unit/test_scheduler.py ..                                         [ 61%]
+tests/unit/test_slack_messages.py .....                                 [ 70%]
+tests/unit/test_teamleader_client.py ................                   [100%]
 
 ---------- coverage: platform darwin, python 3.9.11-final-0 ----------
 Name                                Stmts   Miss  Cover
@@ -92,9 +95,9 @@ app/clients/common_clients.py          15      0   100%
 app/clients/ldap_client.py             41     18    56%
 app/clients/redis_cache.py             32      7    78%
 app/clients/skryv_client.py             6      0   100%
-app/clients/slack_client.py            50      8    84%
+app/clients/slack_client.py            56      0   100%
 app/clients/teamleader_auth.py         26      1    96%
-app/clients/teamleader_client.py      174     36    79%
+app/clients/teamleader_client.py      176     22    88%
 app/comm/__init__.py                    0      0   100%
 app/comm/webhook_scheduler.py          45      4    91%
 app/models/__init__.py                  0      0   100%
@@ -109,15 +112,15 @@ app/models/process_body.py              9      0   100%
 app/server.py                          25      1    96%
 app/services/__init__.py                0      0   100%
 app/services/document_service.py       31      1    97%
-app/services/milestone_service.py     307     36    88%
-app/servicesslack_client.py      9    90%
-app/services/skryv_base.py             73      6    92%
+app/services/milestone_service.py     316     22    93%
+app/servicesslack_client.py     12    88%
+app/services/skryv_base.py             76      6    92%
 app/services/webhook_service.py         6      0   100%
 -------------------------------------------------------
-TOTAL                                1078    127    88%
+TOTAL                                1102     94    91%
 Coverage HTML written to dir htmlcov
 
-============================= 48 passed in 12.02s =============================
+============================= 54 passed in 2.72s ==============================
 ```
 
 ## Environment and configmap

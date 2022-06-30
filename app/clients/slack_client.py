@@ -30,11 +30,6 @@ class SlackWrapper:
 
     def create_message(self, message):
         slack_text = f"({self.env}) {message}"
-
-        if self.env == 'DEV' or self.env == 'TST':
-            logger.info(f"DEBUG MODE: slack_message = {slack_text}")
-            return
-
         try:
             if slack_text == self.previous_message:
                 logger.warning(
