@@ -60,9 +60,11 @@ class TeamleaderClient:
     def oauth_check(self):
         try:
             result = self.list_custom_fields(page=1, page_size=1)
+            logger.info("Teamleader authorization status = OK")
             return {'status': 'ok'}
         except ValueError:
             link = self.authcode_request_link()
+            logger.warning("Teamleader authorization expired. Use refresh link to renew tokens")
             return {
                 'status': 'authorization expired',
                 'authorization_refresh_link': link
