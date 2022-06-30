@@ -20,5 +20,10 @@ def tst_app_config():
         'skryv': {
             'webhook_url': 'http://localhost:8080',
             'webhook_jwt': 'some_jwt_here_to_secure_route'
+        },
+        'ldap': {
+            'bind': 'cn=root,dc=qas,dc=test,dc=be',
+            'password': 'some_ldap_pass',
+            'URI': 'ldap://some_uri'
         }
     }
