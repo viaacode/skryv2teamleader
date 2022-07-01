@@ -46,9 +46,11 @@ class DocumentBody(BaseModel):
                             "raadpleeg_hier_de_samenwerkingsovereenkomst_met_viaa": "https://meemoo.docx",
                             "bedrijfsvorm": {
                                 "selectedOption": "cvba"
+                            },
+                            "adres_en_contactgegevens": {
+                                "btwnummer": "BE 0818.203.809"
                             }
                         }
-
                     },
                     "createdAt": "2022-05-20T13:47:34.000+00:00",
                     "updatedAt": "2022-05-20T13:47:34.000+00:00",
