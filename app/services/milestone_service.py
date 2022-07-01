@@ -309,12 +309,6 @@ class MilestoneService(SkryvBase):
         if 'website' in ac:
             company['website'] = ac['website']
 
-        if 'btwnummer' in ac:
-            vat_number = ac['btwnummer'].upper()
-            if 'BE' not in vat_number:
-                vat_number = "BE {}".format(vat_number)
-            company['vat_number'] = vat_number
-
         if 'is_de_facturatienaam_verschillend_van_de_organisatienaam' in ac:
             fverschil = ac['is_de_facturatienaam_verschillend_van_de_organisatienaam']
             if fverschil.get('selectedOption') == 'ja':
@@ -560,25 +554,54 @@ class MilestoneService(SkryvBase):
 
         return company
 
-    def update_company_using_dossier(self, company, dossier_id):
-        try:
-            mdoc_json = self.redis.load_document(dossier_id)
-            mdoc = DocumentBody.parse_raw(mdoc_json)
+    def update_company_using_dossier(self, document_body, company):
+        company = self.bedrijfsnaam_update(document_body, company)
+        company = self.bedrijfsvorm_update(document_body, company)
+        company = self.addresses_update(document_body, company)
+        company = self.algemeen_update(document_body, company)
 
-            company = self.bedrijfsnaam_update(mdoc, company)
-            company = self.bedrijfsvorm_update(mdoc, company)
-            company = self.addresses_update(mdoc, company)
-            company = self.algemeen_update(mdoc, company)
-
-            # contacts update also sets invoice adress adressee
-            company = self.contacts_update(mdoc, company)
-
-        except ValidationError as e:
-            logger.warning(
-                f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}"
-            )
+        # contacts update also sets invoice adress adressee
+        company = self.contacts_update(document_body, company)
 
         return company
+
+    def update_btw(self, document_body, company):
+        # update vat number seperately in teamleader
+        dvals = document_body.document.document.value
+        if 'adres_en_contactgegevens' not in dvals:
+            return
+
+        ac = dvals['adres_en_contactgegevens']
+        if 'btwnummer' in ac:
+            vat_number = ac['btwnummer'].upper()
+            if 'BE' not in vat_number:
+                vat_number = "BE {}".format(vat_number)
+            company['vat_number'] = vat_number
+        else:
+            return
+
+        try:
+            self.tlc.update_company(company)
+            logger.info(
+                f"Saved VAT number on company {company['id']}")
+        except ValueError as e:
+            logger.info(
+                f"Error while updating VAT {company['id']}")
+            self.slack.update_company_failed(
+                company['id'],
+                e
+            )
+
+    def save_company(self, company):
+        try:
+            self.tlc.update_company(company)
+            logger.info(f"Saved company {company['id']} to teamleader.")
+        except ValueError as e:
+            logger.info(f"Errors when updating company {company['id']}")
+            self.slack.update_company_failed(
+                company['id'],
+                e
+            )
 
     def update_company_and_contacts(self):
         if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
@@ -612,19 +635,18 @@ class MilestoneService(SkryvBase):
                 )
             )
 
-            company = self.update_company_using_dossier(
-                company, self.dossier.id
-            )
             try:
-                self.tlc.update_company(company)
-                logger.info(
-                    f"Saved changes to teamleader company {company['id']}")
-            except ValueError as e:
-                logger.info(
-                    f"Error while updating company {company['id']}, writing slack warning")
-                self.slack.update_company_failed(
-                    company['id'],
-                    e
+                mdoc_json = self.redis.load_document(self.dossier.id)
+                doc_body = DocumentBody.parse_raw(mdoc_json)
+                company = self.update_company_using_dossier(
+                    doc_body, company
+                )
+
+                self.save_company(company)
+                self.update_btw(doc_body, company)
+            except ValidationError as e:
+                logger.warning(
+                    f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}"
                 )
 
     def handle_event(self, milestone_body: MilestoneBody):

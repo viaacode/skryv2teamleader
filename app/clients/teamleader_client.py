@@ -254,10 +254,14 @@ class TeamleaderClient:
         custom_fields = resource['custom_fields']
         update_fields = []
         for f in custom_fields:
-            update_field = {}
-            update_field['id'] = f['definition']['id']
-            update_field['value'] = f['value']
-            update_fields.append(update_field)
+            if 'definition' in f:
+                update_field = {}
+                update_field['id'] = f['definition']['id']
+                update_field['value'] = f['value']
+                update_fields.append(update_field)
+
+            if 'id' in f:
+                update_fields.append(f)
 
         resource['custom_fields'] = update_fields
 

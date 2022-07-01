@@ -313,6 +313,12 @@ class TestMilestoneService():
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
+        doc = open("tests/fixtures/document/updated_example.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
         ms = open("tests/fixtures/milestone/milestone_later.json", "r")
         test_milestone = MilestoneBody.parse_raw(ms.read())
         ms.close()
@@ -332,6 +338,12 @@ class TestMilestoneService():
         ws = WebhookScheduler()
         ws.start(mock_clients)
 
+        doc = open("tests/fixtures/document/updated_example.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
         ms = open("tests/fixtures/milestone/milestone_geen_interesse.json", "r")
         test_milestone = MilestoneBody.parse_raw(ms.read())
         ms.close()
@@ -350,6 +362,12 @@ class TestMilestoneService():
     async def test_milestone_interesse(self, mock_clients):
         ws = WebhookScheduler()
         ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/updated_example.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
 
         ms = open("tests/fixtures/milestone/milestone_interesse.json", "r")
         test_milestone = MilestoneBody.parse_raw(ms.read())
