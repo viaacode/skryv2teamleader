@@ -138,16 +138,20 @@ class MilestoneService(SkryvBase):
         if 'addresses' not in company.keys():
             company['addresses'] = []
 
-        fnSaved = False
+        fnUpdated = False
         for tad in company['addresses']:
             if tad['type'] == 'invoicing':
-                fnSaved = True
+                fnUpdated = True
                 tad['address']['addressee'] = facturatienaam
 
-        if not fnSaved:
-            logger.warning(
-                f"warning: facturatienaam {facturatienaam} could not be saved"
-            )
+        if not fnUpdated:
+            facturatie_adres = {
+                'type': 'invoicing',
+                'address': {
+                    'addressee': facturatienaam
+                }
+            }
+            company['addresses'].append(facturatie_adres)
 
         return company
 

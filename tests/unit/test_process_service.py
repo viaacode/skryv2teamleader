@@ -17,7 +17,7 @@ from app.models.process_body import ProcessBody
 from app.models.document_body import DocumentBody
 
 from mock_teamleader_client import MockTlClient
-from mock_ldap_client import MockLdapClient
+from mock_ldap_client import MockLdapClient, UNKNOWN_OR_ID, UNMAPPED_OR_ID
 from mock_slack_wrapper import MockSlackWrapper
 from mock_redis_cache import MockRedisCache
 
@@ -90,7 +90,24 @@ class TestProcessService:
         test_process = ProcessBody.parse_raw(proc.read())
         proc.close()
         res = await ws.execute_webhook('process_event', test_process)
-        # TODO check that updated_addendums document is properly found here!
+        assert res == 'process event is handled'
+
+    @pytest.mark.asyncio
+    async def test_process_ended_empty_addendums(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        test_doc.document.document.value['te_ondertekenen_documenten'] = []
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+        proc = open("tests/fixtures/process/process_ended.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        proc.close()
+        res = await ws.execute_webhook('process_event', test_process)
         assert res == 'process event is handled'
 
     @pytest.mark.asyncio
@@ -100,6 +117,56 @@ class TestProcessService:
 
         proc = open("tests/fixtures/process/process_ended.json", "r")
         test_process = ProcessBody.parse_raw(proc.read())
+        proc.close()
+        res = await ws.execute_webhook('process_event', test_process)
+        assert res == 'process event is handled'
+
+    @pytest.mark.asyncio
+    async def test_process_ended_unknown_org(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        doc = open("tests/fixtures/document/updated_addendums.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        test_doc.dossier.externalId = UNKNOWN_OR_ID
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+        proc = open("tests/fixtures/process/process_ended.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        proc.close()
+        test_process.dossier.externalId = UNKNOWN_OR_ID
+        res = await ws.execute_webhook('process_event', test_process)
+        assert res == 'process event is handled'
+
+    # @pytest.mark.asyncio
+    # async def test_process_ended_unknown_company(self, mock_clients):
+    #     ws = WebhookScheduler()
+    #     ws.start(mock_clients)
+
+    #     doc = open("tests/fixtures/document/updated_addendums.json", "r")
+    #     test_doc = DocumentBody.parse_raw(doc.read())
+    #     doc.close()
+    #     test_doc.dossier.externalId = UNMAPPED_OR_ID
+    #     res = await ws.execute_webhook('document_event', test_doc)
+    #     assert res == 'document event is handled'
+
+    #     proc = open("tests/fixtures/process/process_ended.json", "r")
+    #     test_process = ProcessBody.parse_raw(proc.read())
+    #     proc.close()
+    #     test_process.dossier.externalId = UNMAPPED_OR_ID
+    #     res = await ws.execute_webhook('process_event', test_process)
+    #     assert res == 'process event is handled'
+
+    @pytest.mark.asyncio
+    async def test_process_unknown_action(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        proc = open("tests/fixtures/process/process_ended.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        test_process.action = "something else"
         proc.close()
         res = await ws.execute_webhook('process_event', test_process)
         assert res == 'process event is handled'

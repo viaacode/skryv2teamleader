@@ -13,12 +13,15 @@ import uuid
 
 from tests.unit.mock_client import MockClient
 from dataclasses import dataclass, field
+from tests.unit.mock_teamleader_client import UNKNOWN_COMPANY_UUID
 
 
 UNKNOWN_LDAP_UUID = 'non_existing_ldap_externalid'
 MOCK_DN_STRING = 'dn: o=OR-ddeeff2,ou=apps,ou=users,dc=qas,dc=viaa,dc=be'
 MOCK_CONTACT_DN_STRING = 'dn: mail=schreppers_anytest@gmail.com,o=OR-ddeeff2,ou=apps,ou=users,dc=qas,dc=viaa,dc=be'
 NEW_COMPANY_UUID = '8ac514fc-9247-0280-be7c-9ba5627c9b8e'
+UNKNOWN_OR_ID = "OR-unknown"
+UNMAPPED_OR_ID = "OR-unmapped"
 
 
 class KeyValMock:
@@ -113,6 +116,13 @@ class MockLdapClient(MockClient):
         return self.company_mock
 
     def find_company(self, or_id):
-        company_uuid = f'some_uuid_belonging_to_{or_id}'
+        if or_id == UNKNOWN_OR_ID:
+            return None
+
+        if or_id == UNMAPPED_OR_ID:
+            company_uuid = UNKNOWN_COMPANY_UUID
+        else:
+            company_uuid = f'some_uuid_belonging_to_{or_id}'
+
         self.company_mock = LdapEntryMock(company_uuid)
         return self.company_mock
