@@ -630,6 +630,7 @@ class MilestoneService(SkryvBase):
         company = self.tlc.get_company(company_id)
         if not company:
             self.slack.company_not_found(company_id, self.or_id)
+            return
 
         status_changed, company = self.status_update(
             company,

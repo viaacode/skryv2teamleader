@@ -21,7 +21,7 @@ from app.services.milestone_service import MilestoneService
 from app.services.document_service import DocumentService
 
 from mock_teamleader_client import MockTlClient
-from mock_ldap_client import MockLdapClient
+from mock_ldap_client import MockLdapClient, UNKNOWN_OR_ID
 from mock_slack_wrapper import MockSlackWrapper
 from mock_redis_cache import MockRedisCache
 
@@ -194,13 +194,6 @@ class TestMilestoneService():
         assert '"05cf38ba-2d6f-01fe-a85f-dd84aad23dae", "value": true' in company_updated
         assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
 
-        # TODO: simulate cases when contacts is empty
-        # TODO: simulate bad VAT number
-        # TODO: simulate bad email or missing email
-        # TODO: simulate bad last_name
-        # TODO: write errors to slack in case of 400 errors (and validate this happens)
-        # TODO: het huisnummer wordt niet apart in het 'huisnummer' veld gezet
-
     def test_milestone_error_in_contacts_link(self, mock_client_requests, requests_mock):
         API_URL = 'https://api.teamleader.eu'
 
@@ -297,7 +290,7 @@ class TestMilestoneService():
         assert '"05cf38ba-2d6f-01fe-a85f-dd84aad23dae", "value": true' in company_updated
         assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
 
-    def test_milestone_edge_cases(self, mock_client_requests, requests_mock):
+    def test_milestone_edge_cases_1(self, mock_client_requests, requests_mock):
         API_URL = 'https://api.teamleader.eu'
 
         # send a document event, so mocked redis stores it for
@@ -397,6 +390,222 @@ class TestMilestoneService():
         requests_mock.post(
             f'{API_URL}/companies.update',
             json={'data': 'success'}
+        )
+
+        opstart = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(opstart.read())
+        opstart.close()
+
+        ms = MilestoneService(mock_client_requests)
+        ms.handle_event(test_milestone)
+
+        assert 'companies.update' in requests_mock.last_request.url
+        company_updated = requests_mock.last_request.body
+
+        # validate cp status is updated here
+        assert '"afe9268c-c6dd-0053-bc5d-d4da5e723daa", "value": "ja"' in company_updated
+        assert '"bcf9ceba-a988-0fc6-805f-9e087ea23dac", "value": "ingevuld"' in company_updated
+        assert '"05cf38ba-2d6f-01fe-a85f-dd84aad23dae", "value": true' in company_updated
+        assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
+
+    def test_milestone_edge_cases_2(self, mock_client_requests, requests_mock):
+        API_URL = 'https://api.teamleader.eu'
+
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        ds = DocumentService(mock_client_requests)
+
+        # remove some values to trigger edge case handling
+        test_doc.document.document.value.pop('adres_en_contactgegevens')
+        test_doc.document.document.value.pop('bedrijfsvorm')
+
+        ds.handle_event(test_doc)
+
+        company_id = '1b2ab41a-7f59-103b-8cd4-1fcdd5140767'
+        test_company = self.teamleader_fixture('test_company.json')
+        # remove some keys so that we trigger edge cases
+        test_company.pop('addresses')
+        test_company.pop('emails')
+        test_company.pop('telephones')
+        requests_mock.get(
+            f'{API_URL}/companies.info?id={company_id}',
+            json={'data': test_company}
+        )
+
+        test_contacts = self.teamleader_fixture('test_contacts_adding.json')
+        contact_filter = f'company_id%5D={company_id}&page%5Bnumber%5D=1&page%5Bsize%5D=20'
+        # make first update fail, but have vat still saved
+        requests_mock.post(
+            f'{API_URL}/companies.update',
+            [
+                {'json': {'data': 'some failure in saving'}, 'status_code': 400},
+                {'json': {'data': 'vat saved ok'}, 'status_code': 200}
+            ]
+        )
+
+        opstart = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(opstart.read())
+        opstart.close()
+
+        ms = MilestoneService(mock_client_requests)
+        ms.handle_event(test_milestone)
+
+        assert 'companies.update' in requests_mock.last_request.url
+        company_updated = requests_mock.last_request.body
+
+        # validate cp status is updated here
+        assert '"afe9268c-c6dd-0053-bc5d-d4da5e723daa", "value": "ja"' in company_updated
+        assert '"bcf9ceba-a988-0fc6-805f-9e087ea23dac", "value": "ingevuld"' in company_updated
+        assert '"05cf38ba-2d6f-01fe-a85f-dd84aad23dae", "value": true' in company_updated
+        assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
+
+    def test_milestone_company_not_found(self, mock_client_requests, requests_mock):
+        API_URL = 'https://api.teamleader.eu'
+
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        ds = DocumentService(mock_client_requests)
+
+        # remove some values to trigger edge case handling
+        test_doc.document.document.value.pop('adres_en_contactgegevens')
+        test_doc.document.document.value.pop('bedrijfsvorm')
+
+        ds.handle_event(test_doc)
+
+        company_id = '1b2ab41a-7f59-103b-8cd4-1fcdd5140767'
+        test_company = self.teamleader_fixture('test_company.json')
+        # remove some keys so that we trigger edge cases
+        test_company.pop('addresses')
+        test_company.pop('emails')
+        test_company.pop('telephones')
+        requests_mock.get(
+            f'{API_URL}/companies.info?id={company_id}',
+            json={'data': None},
+            status_code=404
+        )
+
+        # make first update fail, but have vat still saved
+        requests_mock.post(
+            f'{API_URL}/companies.update',
+            [
+                {'json': {'data': 'some failure in saving'}, 'status_code': 400},
+                {'json': {'data': 'vat saved ok'}, 'status_code': 200}
+            ]
+        )
+
+        opstart = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(opstart.read())
+        opstart.close()
+
+        ms = MilestoneService(mock_client_requests)
+        ms.handle_event(test_milestone)
+
+        assert 'companies.update' not in requests_mock.last_request.url
+
+    def test_milestone_edge_case_invalid_btw(self, mock_client_requests, requests_mock):
+        API_URL = 'https://api.teamleader.eu'
+
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        doc = open("tests/fixtures/document/update_contacts_itv.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        doc.close()
+        ds = DocumentService(mock_client_requests)
+
+        # remove some values to trigger edge case handling
+        ds.handle_event(test_doc)
+
+        company_id = '1b2ab41a-7f59-103b-8cd4-1fcdd5140767'
+        test_company = self.teamleader_fixture('test_company.json')
+        # remove some keys so that we trigger edge cases
+        test_company.pop('addresses')
+        test_company.pop('emails')
+        test_company.pop('telephones')
+        requests_mock.get(
+            f'{API_URL}/companies.info?id={company_id}',
+            json={'data': test_company}
+        )
+
+        test_contacts = self.teamleader_fixture('test_contacts_adding.json')
+        contact_filter = f'company_id%5D={company_id}&page%5Bnumber%5D=1&page%5Bsize%5D=20'
+        requests_mock.get(
+            f'{API_URL}/contacts.list?filter%5B{contact_filter}',
+            json={'data': test_contacts}
+        )
+
+        tc_administratie = self.teamleader_fixture(
+            'test_contact_administratie.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=93a20358-4b37-071f-8975-bde813530b50',
+            json={'data': tc_administratie}
+        )
+
+        tc_directie = self.teamleader_fixture('test_contact_directie.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=03d32499-4a3d-0be9-bd79-424bf3530b4e',
+            json={'data': tc_directie}
+        )
+
+        tc_extra1 = self.teamleader_fixture('test_contact_extra1.json')
+        requests_mock.get(
+            f'{API_URL}/contacts.info?id=bf924044-c14e-053e-8077-df6f83530b51',
+            json={'data': tc_extra1}
+        )
+
+        requests_mock.post(
+            f'{API_URL}/contacts.update',
+            json={'data': {'id': 'bf924044-c14e-053e-8077-df6f83530b51'}},
+            status_code=200
+        )
+
+        requests_mock.post(
+            f'{API_URL}/contacts.add',
+            json={'data': {'id': 'bf924044-c14e-053e-8077-df6f83530b51'}},
+            status_code=200
+        )
+
+        # ok to add
+        requests_mock.post(
+            f'{API_URL}/contacts.linkToCompany',
+            json={'data': 'company link error'},
+            status_code=200
+        )
+
+        # all ok when updating link
+        requests_mock.post(
+            f'{API_URL}/contacts.updateCompanyLink',
+            json={'data': 'all ok'},
+            status_code=200
+        )
+
+        # make second update request with vat number fail
+        requests_mock.post(
+            f'{API_URL}/companies.update',
+            [
+                {'json': {'data': 'success'}, 'status_code': 200},
+                {'json': {'data': 'vat failed'}, 'status_code': 400}
+            ]
         )
 
         opstart = open("tests/fixtures/milestone/milestone_opstart.json", "r")
@@ -534,6 +743,27 @@ class TestMilestoneService():
         test_milestone.dossier.dossierDefinition = uuid.UUID(
             'ffb5c880-8301-4d15-bbe9-edaa6d59c4f6'
         )
+        ms.close()
+        res = await ws.execute_webhook('milestone_event', test_milestone)
+        assert res == 'milestone event is handled'
+
+    @pytest.mark.asyncio
+    async def test_milestone_with_unknown_org(self, mock_clients):
+        ws = WebhookScheduler()
+        ws.start(mock_clients)
+
+        # send a document event, so mocked redis stores it for
+        # actual milestone call
+        doc = open("tests/fixtures/document/updated_example.json", "r")
+        test_doc = DocumentBody.parse_raw(doc.read())
+        test_doc.dossier.externalId = UNKNOWN_OR_ID
+        doc.close()
+        res = await ws.execute_webhook('document_event', test_doc)
+        assert res == 'document event is handled'
+
+        ms = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(ms.read())
+        test_milestone.dossier.externalId = UNKNOWN_OR_ID
         ms.close()
         res = await ws.execute_webhook('milestone_event', test_milestone)
         assert res == 'milestone event is handled'

@@ -12,6 +12,7 @@ from unittest.mock import patch, MagicMock
 
 from app.clients.ldap_client import LdapClient
 from testing_config import tst_app_config
+from ldap3.core.exceptions import LDAPSocketOpenError
 
 
 class MockLdap():
@@ -65,4 +66,9 @@ class TestLdapClient:
     def test_find_company_unknown(self, ldap):
         with patch.object(ldap, 'connection', MagicMock(side_effect=fake_ldap_connect)) as mocked_connect:
             c = ldap.find_company('unknown_uuid')
+            assert c is None
+
+    def test_connection_raises_on_test_adress(self, ldap):
+        with pytest.raises(LDAPSocketOpenError):
+            c = ldap.find_company('test_connection')
             assert c is None
