@@ -279,7 +279,7 @@ class MilestoneService(SkryvBase):
             })
 
         return company
- 
+
     def algemeen_update(self, document_body, company):
         # update email, telefoon, website, btwnummer
         dvals = document_body.document.document.value
@@ -561,7 +561,7 @@ class MilestoneService(SkryvBase):
         company = self.algemeen_update(document_body, company)
 
         # contacts update also sets invoice adress adressee
-        company = self.contacts_update(document_body, company) 
+        company = self.contacts_update(document_body, company)
 
         return company
 
@@ -570,7 +570,7 @@ class MilestoneService(SkryvBase):
         dvals = document_body.document.document.value
         if 'adres_en_contactgegevens' not in dvals:
             return
-        
+
         ac = dvals['adres_en_contactgegevens']
         if 'btwnummer' in ac:
             vat_number = ac['btwnummer'].upper()
@@ -649,7 +649,6 @@ class MilestoneService(SkryvBase):
                     f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}"
                 )
 
-            
     def handle_event(self, milestone_body: MilestoneBody):
         self.body = milestone_body
         self.action = self.body.action
