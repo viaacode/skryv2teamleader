@@ -57,13 +57,22 @@ class SkryvBase:
         }
 
     def custom_field_mapping(self, field_ids):
-        self.custom_fields = {}
-        for f in self.tlc.list_custom_fields():
-            for f_label, f_id in field_ids.items():
-                if f['id'] == f_id:
-                    self.custom_fields[f_label] = f
+        try:
+            self.custom_fields = {}
+            for f in self.tlc.list_custom_fields():
+                for f_label, f_id in field_ids.items():
+                    if f['id'] == f_id:
+                        self.custom_fields[f_label] = f
 
-        return self.custom_fields
+            return self.custom_fields
+        except ValueError as e:
+            logger.info(
+                f"Authorization error while fetching teamleader custom fields: {e}")
+            # TODO: re-raise an error here and catch + slack message in other services
+            # self.slack.custom_fields_unauthorized(
+            #     company['id'],
+            #     e
+            # )
 
     def get_custom_field(self, resource, field_name):
         for f in resource['custom_fields']:

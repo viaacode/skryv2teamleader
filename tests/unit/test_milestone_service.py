@@ -9,6 +9,7 @@
 import uuid
 import requests_mock
 import json
+import pytest
 
 from app.comm.webhook_scheduler import WebhookScheduler
 from app.clients.slack_client import SlackClient
@@ -27,8 +28,6 @@ from mock_redis_cache import MockRedisCache
 
 from testing_config import tst_app_config
 
-import asyncio
-import pytest
 
 API_URL = 'https://api.teamleader.eu'
 
