@@ -245,10 +245,11 @@ class MilestoneService(SkryvBase):
         return company
 
     def update_company_email(self, company, mail_type, mail_value):
-        cp_mails = company['emails']
-        typeFound = False
         if 'emails' not in company:
             company['emails'] = []
+
+        typeFound = False
+        cp_mails = company['emails']
 
         for m in cp_mails:
             if m['type'] == mail_type:
@@ -264,14 +265,15 @@ class MilestoneService(SkryvBase):
         return company
 
     def update_company_phone(self, company, phone_number):
+        if 'telephones' not in company:
+            company['telephones'] = []
+
         cp_phones = company['telephones']
         phoneNumberFound = False
 
         # remove / and spaces in skryv phone number
         phone_number = phone_number.replace("/", "")
         phone_number = phone_number.replace(" ", "")
-        if 'telephones' not in company:
-            company['telephones'] = []
 
         for p in cp_phones:
             if p['type'] == 'phone':
@@ -430,6 +432,9 @@ class MilestoneService(SkryvBase):
             self.update_company_contact(company, contact, position)
 
     def get_relaties(self, contactgegevens, relaties, relatie_key, instroom_key, digitalisering_key):
+        if 'contactpersoon_dienstverlening' not in contactgegevens:
+            return relaties
+
         cdienst = contactgegevens['contactpersoon_dienstverlening']
         relatie_flags = cdienst[relatie_key]['selectedOptions']
         if relatie_flags[instroom_key]:
