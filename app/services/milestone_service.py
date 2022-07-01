@@ -235,6 +235,8 @@ class MilestoneService(SkryvBase):
                 logger.warning(
                     f"DEBUG: bedrijfsvorm {bedrijfsvorm} not found in mapping"
                 )
+        else:
+            logger.info("bedrijfsvorm niet gevonden in document.")
 
         return company
 
