@@ -10,6 +10,8 @@ import pytest
 import uuid
 import json
 import requests_mock
+from datetime import datetime
+
 from app.clients.teamleader_client import TeamleaderClient
 from testing_config import tst_app_config
 from tests.unit.mock_redis_cache import MockRedisCache
@@ -29,6 +31,42 @@ class TestTeamleaderClient:
         tlc_fast.RATE_LIMIT = 0.0
 
         return tlc_fast
+
+    def test_authcode_callback_bad_state(self, tlc, requests_mock):
+        test_code = 'code1234'
+        test_state = 'bad_state'
+        res = tlc.authcode_callback(test_code, test_state)
+        assert res['status'] == 'code rejected'
+        assert tlc.code != 'code1234'
+
+    def test_authcode_callback_invalid_response(self, tlc, requests_mock):
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            text='wrong code used',
+            status_code=400
+        )
+
+        test_code = 'code1234'
+        test_state = 'test_secret_code_state'
+        res = tlc.authcode_callback(test_code, test_state)
+        assert res['error'] == 'code rejected: wrong code used'
+
+    def test_authcode_callback(self, tlc, requests_mock):
+        test_code = 'code1234'
+        test_state = 'test_secret_code_state'
+
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            json={
+                'access_token': 'new_test_access_token',
+                'refresh_token': 'new_test_refresh_token'
+            }
+        )
+        res = tlc.authcode_callback(test_code, test_state)
+        assert res['status'] == 'code accepted'
+        assert tlc.code == 'code1234'
+        assert tlc.token == 'new_test_access_token'
+        assert tlc.refresh_token == 'new_test_refresh_token'
 
     def test_oauth_check(self, tlc, requests_mock):
         requests_mock.get(
@@ -82,6 +120,39 @@ class TestTeamleaderClient:
             result = tlc.get_company('company_uuid')
             assert result == {}
 
+    def test_get_company_refresh_token_needed(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/companies.info?id=company_uuid',
+            [
+                {'json': {'data': {}}, 'status_code': 401},
+                {'json': {'data': {}}, 'status_code': 200}
+            ]
+        )
+
+        requests_mock.post(
+            f'{self.AUTH_URL}/oauth2/access_token',
+            json={
+                'access_token': 'test_access',
+                'refresh_token': 'test_refresh',
+            },
+            status_code=200
+        )
+
+        result = tlc.get_company('company_uuid')
+        assert result == {}
+
+    def test_get_company_error_response_raises(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/companies.info?id=company_uuid',
+            [
+                {'json': {'data': {}}, 'status_code': 400},
+            ]
+        )
+
+        with pytest.raises(ValueError):
+            result = tlc.get_company('company_uuid')
+            assert result == {}
+
     def test_update_company(self, tlc, requests_mock):
         with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
             mock_company = json.loads(f.read())
@@ -98,6 +169,43 @@ class TestTeamleaderClient:
         assert result['emails'][0]['type'] == 'primary'
         assert result['emails'][0]['email'] == 'info@smak.be'
 
+    def test_update_company_with_empty_response(self, tlc, requests_mock):
+        with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
+            mock_company = json.loads(f.read())
+
+        requests_mock.post(
+            f'{self.API_URL}/companies.update',
+            json={'data': mock_company},
+            status_code=204
+        )
+
+        result = tlc.update_company(mock_company)
+        assert result is None
+
+    def test_update_company_when_refresh_token_needed(self, tlc, requests_mock):
+        with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
+            mock_company = json.loads(f.read())
+
+        requests_mock.post(
+            f'{self.API_URL}/companies.update',
+            [
+                {'json': {'data': 'some error'}, 'status_code': 401},
+                {'json': {'data': mock_company}, 'status_code': 200}
+            ]
+        )
+
+        requests_mock.post(
+            f'{self.AUTH_URL}/oauth2/access_token',
+            json={
+                'access_token': 'test_access',
+                'refresh_token': 'test_refresh',
+            },
+            status_code=200
+        )
+
+        result = tlc.update_company(mock_company)
+        assert result['name'] == 'S.M.A.K.'
+
     def test_list_companies(self, tlc, requests_mock):
         requests_mock.get(
             f'{self.API_URL}/companies.list',
@@ -105,6 +213,15 @@ class TestTeamleaderClient:
         )
 
         result = tlc.list_companies()
+        assert result == []
+
+    def test_list_companies_with_since(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/companies.list',
+            json={'data': []}
+        )
+
+        result = tlc.list_companies(1, 20, datetime.now())
         assert result == []
 
     def test_get_contact(self, tlc, requests_mock):
@@ -295,39 +412,7 @@ class TestTeamleaderClient:
         result = tlc.list_business_types()
         assert len(result) > 10
 
-    def test_authcode_callback_bad_state(self, tlc, requests_mock):
-        test_code = 'code1234'
-        test_state = 'bad_state'
-        res = tlc.authcode_callback(test_code, test_state)
-        assert res['status'] == 'code rejected'
-        assert tlc.code != 'code1234'
-
-    # def test_authcode_callback_wrong_code(self, tlc, requests_mock):
-    #     test_code = 'code1234'
-    #     test_state = 'test_secret_code_state'
-
-    #     requests_mock.post(
-    #         'https://app.teamleader.eu/oauth2/access_token',
-    #         json={},
-    #         status_code=400
-    #     )
-    #     res = tlc.authcode_callback(test_code, test_state)
-    #     assert res['status'] == 'code rejected'
-    #     assert tlc.code != 'code1234'
-
-    def test_authcode_callback(self, tlc, requests_mock):
-        test_code = 'code1234'
-        test_state = 'test_secret_code_state'
-
-        requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
-            json={
-                'access_token': 'new_test_access_token',
-                'refresh_token': 'new_test_refresh_token'
-            }
-        )
-        res = tlc.authcode_callback(test_code, test_state)
-        assert res['status'] == 'code accepted'
-        assert tlc.code == 'code1234'
-        assert tlc.token == 'new_test_access_token'
-        assert tlc.refresh_token == 'new_test_refresh_token'
+    def test_secure_route_without_jwt(self, tlc, requests_mock):
+        tlc.webhook_jwt = None
+        res = tlc.secure_route('some url')
+        assert res == 'some url'

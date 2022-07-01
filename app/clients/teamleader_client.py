@@ -89,6 +89,29 @@ class TeamleaderClient:
 
         return link
 
+    def auth_token_request(self):
+        """ use when auth_token_refresh fails """
+        req_uri = self.auth_uri + '/oauth2/access_token'
+        req_params = {
+            'client_id': self.client_id,
+            'client_secret': self.client_secret,
+            'code': self.code,
+            'redirect_uri': self.redirect_uri,
+            'grant_type': 'authorization_code'
+        }
+        r = requests.post(req_uri, data=req_params)
+        time.sleep(self.RATE_LIMIT)
+        self.handle_token_response(r)
+
+    def handle_token_response(self, token_response):
+        if token_response.status_code == 200:
+            response = token_response.json()
+            self.token = response['access_token']  # expires in 1 hour
+            self.refresh_token = response['refresh_token']
+            self.token_store.save(self.code, self.token, self.refresh_token)
+        else:
+            raise ValueError(token_response.text)
+
     def authcode_callback(self, code, state):
         """
         After user follows the authcode_request_link from above. we handle
@@ -108,34 +131,6 @@ class TeamleaderClient:
 
         except ValueError as e:
             return {'error': f'code rejected: {str(e)}'}
-
-    def handle_token_response(self, token_response):
-        if token_response.status_code == 200:
-            response = token_response.json()
-            self.token = response['access_token']  # expires in 1 hour
-            self.refresh_token = response['refresh_token']
-            self.token_store.save(self.code, self.token, self.refresh_token)
-        else:
-            logger.error(
-                f"Error {token_response.status_code}: {token_response.text} in handle_token_response"
-            )
-            logger.info(
-                f"Login into teamleader and paste code callback link:\n {self.authcode_request_link()}\n\n"
-            )
-
-    def auth_token_request(self):
-        """ use when auth_token_refresh fails """
-        req_uri = self.auth_uri + '/oauth2/access_token'
-        req_params = {
-            'client_id': self.client_id,
-            'client_secret': self.client_secret,
-            'code': self.code,
-            'redirect_uri': self.redirect_uri,
-            'grant_type': 'authorization_code'
-        }
-        r = requests.post(req_uri, data=req_params)
-        time.sleep(self.RATE_LIMIT)
-        self.handle_token_response(r)
 
     def auth_token_refresh(self):
         """ to be called whenever we get 401 from expiry on api calls """

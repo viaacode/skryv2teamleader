@@ -30,6 +30,8 @@ from testing_config import tst_app_config
 import asyncio
 import pytest
 
+API_URL = 'https://api.teamleader.eu'
+
 
 class TestMilestoneService():
     @pytest.fixture
@@ -468,8 +470,6 @@ class TestMilestoneService():
         assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
 
     def test_milestone_company_not_found(self, mock_client_requests, requests_mock):
-        API_URL = 'https://api.teamleader.eu'
-
         # send a document event, so mocked redis stores it for
         # actual milestone call
         requests_mock.get(
@@ -623,6 +623,19 @@ class TestMilestoneService():
         assert '"bcf9ceba-a988-0fc6-805f-9e087ea23dac", "value": "ingevuld"' in company_updated
         assert '"05cf38ba-2d6f-01fe-a85f-dd84aad23dae", "value": true' in company_updated
         assert '"1d0cc259-4b07-01b8-aa5b-100344423db0", "value": true' in company_updated
+
+    def test_facturatienaam_without_adresses(self, mock_client_requests, requests_mock):
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        ms = MilestoneService(mock_client_requests)
+        empty_company = {}
+        updated_company = ms.set_facturatienaam(empty_company, "some name")
+
+        assert updated_company['addresses'][0]['type'] == 'invoicing'
+        assert updated_company['addresses'][0]['address']['addressee'] == 'some name'
 
     @pytest.mark.asyncio
     async def test_milestone_geen_opstart(self, mock_clients):

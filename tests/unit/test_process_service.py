@@ -218,15 +218,6 @@ class TestProcessService:
             status_code=404
         )
 
-        # make first update fail, but have vat still saved
-        # requests_mock.post(
-        #     f'{API_URL}/companies.update',
-        #     [
-        #         {'json':{'data': 'some failure in saving'}, 'status_code': 400},
-        #         {'json':{'data': 'vat saved ok'}, 'status_code': 200}
-        #     ]
-        # )
-
         proc = open("tests/fixtures/process/process_ended.json", "r")
         test_process = ProcessBody.parse_raw(proc.read())
         proc.close()

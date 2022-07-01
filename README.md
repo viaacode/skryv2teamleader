@@ -39,24 +39,28 @@ INFO:     Started server process [51091]
 
 ```
 $ make test
+
 ============================= test session starts =============================
 platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, requests-mock-1.9.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 54 items                                                            
+collected 96 items                                                            
 
-tests/test_app.py .......                                               [ 12%]
-tests/test_app_startup.py .                                             [ 14%]
-tests/unit/test_auth_tokens.py .                                        [ 16%]
-tests/unit/test_document_service.py .....                               [ 25%]
-tests/unit/test_milestone_service.py ............                       [ 48%]
-tests/unit/test_process_service.py .....                                [ 57%]
-tests/unit/test_scheduler.py ..                                         [ 61%]
-tests/unit/test_slack_messages.py .....                                 [ 70%]
-tests/unit/test_teamleader_client.py ................                   [100%]
+tests/test_app.py ........                                              [  8%]
+tests/test_app_startup.py .                                             [  9%]
+tests/unit/test_auth_tokens.py ..                                       [ 11%]
+tests/unit/test_document_service.py .....                               [ 16%]
+tests/unit/test_ldap_client.py .......                                  [ 23%]
+tests/unit/test_milestone_service.py ..................                 [ 42%]
+tests/unit/test_process_service.py ..........                           [ 53%]
+tests/unit/test_redis_cache.py .....                                    [ 58%]
+tests/unit/test_scheduler.py ..                                         [ 60%]
+tests/unit/test_skryv_base_service.py ......                            [ 66%]
+tests/unit/test_slack_messages.py .....                                 [ 71%]
+tests/unit/test_teamleader_client.py ...........................        [100%]
 
-============================= 54 passed in 1.98s ==============================
+============================= 96 passed in 2.66s ==============================
 ```
 
 Run tests and get code coverage:
@@ -68,20 +72,20 @@ platform darwin -- Python 3.9.11, pytest-7.1.2, pluggy-1.0.0
 rootdir: /Users/wschrep/FreelanceWork/Meemoo/skryv2teamleader, configfile: pytest.ini
 plugins: asyncio-0.18.3, requests-mock-1.9.3, cov-2.8.1, mock-3.5.1
 asyncio: mode=auto
-collected 88 items                                                            
+collected 96 items                                                            
 
-tests/test_app.py ........                                              [  9%]
-tests/test_app_startup.py .                                             [ 10%]
-tests/unit/test_auth_tokens.py ..                                       [ 12%]
-tests/unit/test_document_service.py .....                               [ 18%]
-tests/unit/test_ldap_client.py .......                                  [ 26%]
-tests/unit/test_milestone_service.py .................                  [ 45%]
-tests/unit/test_process_service.py ..........                           [ 56%]
-tests/unit/test_redis_cache.py .....                                    [ 62%]
-tests/unit/test_scheduler.py ..                                         [ 64%]
-tests/unit/test_skryv_base_service.py ......                            [ 71%]
-tests/unit/test_slack_messages.py .....                                 [ 77%]
-tests/unit/test_teamleader_client.py ....................               [100%]
+tests/test_app.py ........                                              [  8%]
+tests/test_app_startup.py .                                             [  9%]
+tests/unit/test_auth_tokens.py ..                                       [ 11%]
+tests/unit/test_document_service.py .....                               [ 16%]
+tests/unit/test_ldap_client.py .......                                  [ 23%]
+tests/unit/test_milestone_service.py ..................                 [ 42%]
+tests/unit/test_process_service.py ..........                           [ 53%]
+tests/unit/test_redis_cache.py .....                                    [ 58%]
+tests/unit/test_scheduler.py ..                                         [ 60%]
+tests/unit/test_skryv_base_service.py ......                            [ 66%]
+tests/unit/test_slack_messages.py .....                                 [ 71%]
+tests/unit/test_teamleader_client.py ...........................        [100%]
 
 ---------- coverage: platform darwin, python 3.9.11-final-0 ----------
 Name                                Stmts   Miss  Cover
@@ -101,7 +105,7 @@ app/clients/redis_cache.py             32      0   100%
 app/clients/skryv_client.py             6      0   100%
 app/clients/slack_client.py            56      0   100%
 app/clients/teamleader_auth.py         26      0   100%
-app/clients/teamleader_client.py      188      8    96%
+app/clients/teamleader_client.py      187      0   100%
 app/comm/__init__.py                    0      0   100%
 app/comm/webhook_scheduler.py          45      0   100%
 app/models/__init__.py                  0      0   100%
@@ -116,15 +120,15 @@ app/models/process_body.py              9      0   100%
 app/server.py                          24      0   100%
 app/services/__init__.py                0      0   100%
 app/services/document_service.py       31      0   100%
-app/services/milestone_service.py     336      1    99%
+app/services/milestone_service.py     336      0   100%
 app/services/process_service.py        98      0   100%
 app/services/skryv_base.py             77      0   100%
 app/services/webhook_service.py         6      0   100%
 -------------------------------------------------------
-TOTAL                                1139      9    99%
+TOTAL                                1138      0   100%
 Coverage HTML written to dir htmlcov
 
-============================= 88 passed in 3.70s ==============================
+============================= 96 passed in 3.86s ==============================
 ```
 
 ## Environment and configmap
