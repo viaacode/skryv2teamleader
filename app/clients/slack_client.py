@@ -124,9 +124,9 @@ class SlackClient:
         self.create_message(msg)
 
     def teamleader_auth_error(self, service_name, error):
-        msg = "Teamleader API authentication error in {} : {}. {}".format(
+        msg = "Teamleader API authentication error in {} : {}. {}.".format(
             service_name,
             error,
-            'Use the /health/oauth route to update tokens with a renewal link'
+            'Use the /health/oauth route to update tokens with a authorization_refresh_link'
         )
         self.create_message(msg)
