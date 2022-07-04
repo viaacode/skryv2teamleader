@@ -37,6 +37,11 @@ class SlackWrapper:
                 )
                 return
 
+            if self.env == 'DEV':
+                print(f"\nSLACK CHANNEL: {self.channel} \nSLACK MSG: {slack_text}\n")
+                self.previous_message = slack_text
+                return
+
             self.client.chat_postMessage(
                 channel=self.channel,
                 text=slack_text

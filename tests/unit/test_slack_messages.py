@@ -59,6 +59,11 @@ class TestSlackMessages:
         slack.company_not_found('company_id', 'or_id')
         assert len(slack.slack_wrapper.client.all_method_calls()) == 1
 
+    def test_dev_only_prints_debug_message(self, slack):
+        slack.slack_wrapper.env = 'DEV'
+        slack.teamleader_auth_error('SomeService', 'some_error')
+        assert not slack.slack_wrapper.client.method_called('chat_postMessage')
+
     # these are already covered with other tests
     # def test_empty_last_name()
     # def test_external_id_empty()
