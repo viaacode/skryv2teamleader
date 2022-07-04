@@ -11,6 +11,7 @@
 from app.models.milestone_body import MilestoneBody
 from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
+from app.clients.teamleader_client import TeamleaderAuthError
 from pydantic import ValidationError
 
 from viaa.configuration import ConfigParser
@@ -26,7 +27,15 @@ class MilestoneService(SkryvBase):
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
         self.redis = common_clients.redis
-        self.read_configuration()
+
+        try:
+            self.read_configuration()
+        except TeamleaderAuthError as e:
+            self.slack.teamleader_auth_error(
+                'MilestoneService',
+                '401 error while reading custom fields'
+            )
+
         self.business_types = []
 
         self.category_map = {
@@ -662,13 +671,16 @@ class MilestoneService(SkryvBase):
                 )
 
     def handle_event(self, milestone_body: MilestoneBody):
-        self.body = milestone_body
-        self.action = self.body.action
-        self.dossier = self.body.dossier
-        self.milestone = self.body.milestone
-        self.or_id = self.dossier.externalId
+        try:
+            self.body = milestone_body
+            self.action = self.body.action
+            self.dossier = self.body.dossier
+            self.milestone = self.body.milestone
+            self.or_id = self.dossier.externalId
 
-        if(self.or_id):
-            self.update_company_and_contacts()
-        else:
-            self.slack.external_id_empty(self.dossier)
+            if(self.or_id):
+                self.update_company_and_contacts()
+            else:
+                self.slack.external_id_empty(self.dossier)
+        except TeamleaderAuthError as e:
+            self.slack.teamleader_auth_error('MilestoneService', e)

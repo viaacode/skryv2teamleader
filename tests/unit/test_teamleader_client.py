@@ -12,7 +12,7 @@ import json
 import requests_mock
 from datetime import datetime
 
-from app.clients.teamleader_client import TeamleaderClient
+from app.clients.teamleader_client import TeamleaderClient, TeamleaderAuthError
 from testing_config import tst_app_config
 from tests.unit.mock_redis_cache import MockRedisCache
 
@@ -48,8 +48,9 @@ class TestTeamleaderClient:
 
         test_code = 'code1234'
         test_state = 'test_secret_code_state'
-        res = tlc.authcode_callback(test_code, test_state)
-        assert res['error'] == 'code rejected: wrong code used'
+        with pytest.raises(TeamleaderAuthError):
+            res = tlc.authcode_callback(test_code, test_state)
+            assert res['error'] == 'code rejected: wrong code used'
 
     def test_authcode_callback(self, tlc, requests_mock):
         test_code = 'code1234'
@@ -116,7 +117,7 @@ class TestTeamleaderClient:
             status_code=401
         )
 
-        with pytest.raises(ValueError):
+        with pytest.raises(TeamleaderAuthError):
             result = tlc.get_company('company_uuid')
             assert result == {}
 
@@ -259,7 +260,7 @@ class TestTeamleaderClient:
             json=access_token_response
         )
 
-        with pytest.raises(ValueError, match='401'):
+        with pytest.raises(TeamleaderAuthError):
             result = tlc.list_contacts()
             assert result is None
 

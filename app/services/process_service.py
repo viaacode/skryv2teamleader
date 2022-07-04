@@ -17,6 +17,7 @@
 
 from app.models.process_body import ProcessBody
 from app.models.document_body import DocumentBody
+from app.clients.teamleader_client import TeamleaderAuthError
 from app.services.skryv_base import SkryvBase
 from pydantic import ValidationError
 
@@ -33,7 +34,13 @@ class ProcessService(SkryvBase):
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
         self.redis = common_clients.redis
-        self.read_configuration()
+        try:
+            self.read_configuration()
+        except TeamleaderAuthError as e:
+            self.slack.teamleader_auth_error(
+                'ProcessService',
+                '401 error while reading custom fields'
+            )
 
     def get_addendums(self, document_body):
         dvals = document_body.document.document.value
@@ -162,20 +169,24 @@ class ProcessService(SkryvBase):
             f"Process: skipping action={self.action} and process definition={process_definition}")
 
     def handle_event(self, process_body: ProcessBody):
-        self.body = process_body
-        self.dossier = self.body.dossier
-        self.process = self.body.process
-        self.action = self.body.action
-        self.or_id = self.dossier.externalId
+        try:
+            self.body = process_body
+            self.dossier = self.body.dossier
+            self.process = self.body.process
+            self.action = self.body.action
+            self.or_id = self.dossier.externalId
 
-        # enkel behandeling type dossier 'contentpartner'
-        if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
-            logger.info(
-                f"Skipping {self.dossier.dossierDefinition}, it's not a CP process"
-            )
-            return
+            # enkel behandeling type dossier 'contentpartner'
+            if self.dossier.dossierDefinition != self.SKRYV_DOSSIER_CP_ID:
+                logger.info(
+                    f"Skipping {self.dossier.dossierDefinition}, it's not a CP process"
+                )
+                return
 
-        if(self.or_id):
-            self.teamleader_update()
-        else:
-            self.slack.external_id_empty(self.dossier)
+            if(self.or_id):
+                self.teamleader_update()
+            else:
+                self.slack.external_id_empty(self.dossier)
+        except TeamleaderAuthError as e:
+            self.slack.teamleader_auth_error('ProcessService', e)
+

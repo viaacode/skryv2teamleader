@@ -13,7 +13,7 @@
 
 from app.models.document_body import DocumentBody
 from app.services.skryv_base import SkryvBase
-
+from app.clients.teamleader_client import TeamleaderAuthError
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
 
@@ -27,8 +27,14 @@ class DocumentService(SkryvBase):
         self.ldap = common_clients.ldap
         self.slack = common_clients.slack
         self.redis = common_clients.redis
-        self.read_configuration()
-
+        try:
+            self.read_configuration()
+        except TeamleaderAuthError as e:
+            self.slack.teamleader_auth_error(
+                'DocumentService',
+                '401 error while reading custom fields'
+            )
+        
     def save_cp_updated_document(self, document_body):
         if self.action != 'updated':
             logger.info(

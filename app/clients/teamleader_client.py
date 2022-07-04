@@ -30,6 +30,10 @@ from viaa.observability import logging
 config = ConfigParser()
 logger = logging.get_logger(__name__, config=config)
 
+class TeamleaderAuthError(Exception):
+    """Raised when authentication fails"""
+    pass
+
 
 class TeamleaderClient:
     """Acts as a client to query relevant information from Teamleader API"""
@@ -64,7 +68,7 @@ class TeamleaderClient:
             result = self.list_custom_fields(page=1, page_size=1)
             logger.info("Teamleader authorization status = OK")
             return {'status': 'ok'}
-        except ValueError:
+        except TeamleaderAuthError:
             link = self.authcode_request_link()
             logger.warning(
                 "Teamleader authorization expired. Use refresh link to renew tokens")
@@ -110,7 +114,7 @@ class TeamleaderClient:
             self.refresh_token = response['refresh_token']
             self.token_store.save(self.code, self.token, self.refresh_token)
         else:
-            raise ValueError(token_response.text)
+            raise TeamleaderAuthError(token_response.text)
 
     def authcode_callback(self, code, state):
         """
@@ -168,7 +172,10 @@ class TeamleaderClient:
                 res.text,
                 params
             )
-            raise ValueError(error_msg)
+            if res.status_code == 401:
+                raise TeamleaderAuthError(error_msg)
+            else:
+                raise ValueError(error_msg)
 
     def request_page(self, resource_path, page=None, page_size=None, updated_since: datetime = None):
         params = {}
@@ -211,7 +218,10 @@ class TeamleaderClient:
                 res.text,
                 params
             )
-            raise ValueError(error_msg)
+            if res.status_code==401:
+                raise TeamleaderAuthError(error_msg)
+            else:
+                raise ValueError(error_msg)
 
     def post_item(self, resource_path, payload):
         path = self.api_uri + resource_path
@@ -243,7 +253,10 @@ class TeamleaderClient:
                 res.text,
                 payload
             )
-            raise ValueError(error_msg)
+            if res.status_code==401:
+                raise TeamleaderAuthError(error_msg)
+            else:
+                raise ValueError(error_msg)
 
     def prepare_custom_fields(self, resource):
         custom_fields = resource['custom_fields']

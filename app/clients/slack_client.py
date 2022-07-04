@@ -122,3 +122,11 @@ class SlackClient:
             error
         )
         self.create_message(msg)
+
+    def teamleader_auth_error(self, service_name, error):
+        msg = "Teamleader authentication error 401 in {} : {}".format(
+            service_name,
+            error
+        )
+        self.create_message(msg)
+
