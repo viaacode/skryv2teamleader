@@ -189,4 +189,3 @@ class ProcessService(SkryvBase):
                 self.slack.external_id_empty(self.dossier)
         except TeamleaderAuthError as e:
             self.slack.teamleader_auth_error('ProcessService', e)
-

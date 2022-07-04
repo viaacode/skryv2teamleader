@@ -48,9 +48,8 @@ class TestTeamleaderClient:
 
         test_code = 'code1234'
         test_state = 'test_secret_code_state'
-        with pytest.raises(TeamleaderAuthError):
-            res = tlc.authcode_callback(test_code, test_state)
-            assert res['error'] == 'code rejected: wrong code used'
+        res = tlc.authcode_callback(test_code, test_state)
+        assert res['error'] == 'code rejected: wrong code used'
 
     def test_authcode_callback(self, tlc, requests_mock):
         test_code = 'code1234'
@@ -207,6 +206,45 @@ class TestTeamleaderClient:
         result = tlc.update_company(mock_company)
         assert result['name'] == 'S.M.A.K.'
 
+    def test_update_company_validation_error(self, tlc, requests_mock):
+        with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
+            mock_company = json.loads(f.read())
+
+        requests_mock.post(
+            f'{self.API_URL}/companies.update',
+            json={'data': mock_company},
+            status_code=400
+        )
+
+        with pytest.raises(ValueError):
+            result = tlc.update_company(mock_company)
+            assert result is None
+
+    def test_update_company_unauthorized_raised(self, tlc, requests_mock):
+        with open("tests/fixtures/teamleader/company_updated_addendums.json") as f:
+            mock_company = json.loads(f.read())
+
+        requests_mock.post(
+            f'{self.API_URL}/companies.update',
+            [
+                {'json': {'data': 'some error'}, 'status_code': 401},
+                {'json': {'data': mock_company}, 'status_code': 401}
+            ]
+        )
+
+        requests_mock.post(
+            f'{self.AUTH_URL}/oauth2/access_token',
+            json={
+                'access_token': 'test_access',
+                'refresh_token': 'test_refresh',
+            },
+            status_code=401
+        )
+
+        with pytest.raises(TeamleaderAuthError):
+            result = tlc.update_company(mock_company)
+            assert result == ''
+
     def test_list_companies(self, tlc, requests_mock):
         requests_mock.get(
             f'{self.API_URL}/companies.list',
@@ -261,6 +299,17 @@ class TestTeamleaderClient:
         )
 
         with pytest.raises(TeamleaderAuthError):
+            result = tlc.list_contacts()
+            assert result is None
+
+    def test_list_contacts_other_error(self, tlc, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/contacts.list',
+            json={'data': []},
+            status_code=400
+        )
+
+        with pytest.raises(ValueError):
             result = tlc.list_contacts()
             assert result is None
 

@@ -64,7 +64,7 @@ class SkryvBase:
                     self.custom_fields[f_label] = f
 
         return self.custom_fields
-        
+
     def get_custom_field(self, resource, field_name):
         for f in resource['custom_fields']:
             if f['definition']['id'] == self.custom_fields[field_name]['id']:

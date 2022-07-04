@@ -849,3 +849,33 @@ class TestMilestoneService():
 
         assert 'BE' in updated_company['vat_number']
         assert '0644.450.38' in updated_company['vat_number']
+
+    def test_milestone_service_with_unauthorized_teamleader_api(self, mock_client_requests, requests_mock):
+        API_URL = 'https://api.teamleader.eu'
+
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': []},
+            status_code=401
+        )
+
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            json={},
+            status_code=401
+        )
+
+        requests_mock.get(
+            'https://api.teamleader.eu/companies.info?id=1b2ab41a-7f59-103b-8cd4-1fcdd5140767',
+            json={},
+            status_code=401
+        )
+
+        mf = open("tests/fixtures/milestone/milestone_opstart.json", "r")
+        test_milestone = MilestoneBody.parse_raw(mf.read())
+        mf.close()
+
+        ms = MilestoneService(mock_client_requests)
+        ms.handle_event(test_milestone)
+
+        assert '/oauth2/access_token' in requests_mock.last_request.url

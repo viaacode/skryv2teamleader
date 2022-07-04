@@ -34,7 +34,7 @@ class DocumentService(SkryvBase):
                 'DocumentService',
                 '401 error while reading custom fields'
             )
-        
+
     def save_cp_updated_document(self, document_body):
         if self.action != 'updated':
             logger.info(

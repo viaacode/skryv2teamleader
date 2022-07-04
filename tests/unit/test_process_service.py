@@ -275,3 +275,33 @@ class TestProcessService:
         ps.handle_event(test_process)
 
         assert 'companies.update' in requests_mock.last_request.url
+
+    def test_process_service_with_unauthorized_teamleader_api(self, mock_client_requests, requests_mock):
+        API_URL = 'https://api.teamleader.eu'
+
+        requests_mock.get(
+            f'{API_URL}/customFieldDefinitions.list',
+            json={'data': []},
+            status_code=401
+        )
+
+        requests_mock.post(
+            'https://app.teamleader.eu/oauth2/access_token',
+            json={},
+            status_code=401
+        )
+
+        requests_mock.get(
+            'https://api.teamleader.eu/companies.info?id=1b2ab41a-7f59-103b-8cd4-1fcdd5140767',
+            json={},
+            status_code=401
+        )
+
+        proc = open("tests/fixtures/process/process_ended.json", "r")
+        test_process = ProcessBody.parse_raw(proc.read())
+        proc.close()
+
+        ps = ProcessService(mock_client_requests)
+        ps.handle_event(test_process)
+
+        assert '/oauth2/access_token' in requests_mock.last_request.url

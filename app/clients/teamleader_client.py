@@ -30,6 +30,7 @@ from viaa.observability import logging
 config = ConfigParser()
 logger = logging.get_logger(__name__, config=config)
 
+
 class TeamleaderAuthError(Exception):
     """Raised when authentication fails"""
     pass
@@ -133,7 +134,7 @@ class TeamleaderClient:
             self.auth_token_request()
             return {'status': 'code accepted'}
 
-        except ValueError as e:
+        except TeamleaderAuthError as e:
             return {'error': f'code rejected: {str(e)}'}
 
     def auth_token_refresh(self):
@@ -218,10 +219,7 @@ class TeamleaderClient:
                 res.text,
                 params
             )
-            if res.status_code==401:
-                raise TeamleaderAuthError(error_msg)
-            else:
-                raise ValueError(error_msg)
+            raise ValueError(error_msg)
 
     def post_item(self, resource_path, payload):
         path = self.api_uri + resource_path
@@ -253,10 +251,7 @@ class TeamleaderClient:
                 res.text,
                 payload
             )
-            if res.status_code==401:
-                raise TeamleaderAuthError(error_msg)
-            else:
-                raise ValueError(error_msg)
+            raise ValueError(error_msg)
 
     def prepare_custom_fields(self, resource):
         custom_fields = resource['custom_fields']
