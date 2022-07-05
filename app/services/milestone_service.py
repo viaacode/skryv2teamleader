@@ -5,7 +5,13 @@
 #
 #   app/services/milestone_service.py
 #
-#   MilestoneService, handle milestone webhook events
+#   MilestoneService, handle milestone webhook events for content partners
+#   This updates teamleader company status (custom fields section 2)
+#   This also adds and updates linked company contacts in teamleader from the document
+#   received in a previous document_service webhook call.
+#   The VAT number is updated in a seperate teamleader update call so that if it fails
+#   the previous changes are not lost.
+#   In case of validation errors or other connection errors slack messages are generated
 #
 
 from app.models.milestone_body import MilestoneBody

@@ -6,13 +6,14 @@
 #   app/services/process_service.py
 #
 #   ProcessService, handle process webhook events, we check for a secific
-#   ended process. And if found. We fetch the last updated document associated
-#   with this process and then set
-#   cp_status = ja,
-#   toestemming_start=True
-#   swo = True
+#   ended process (content partners only).
+#   And if found. We fetch the last updated document associated
+#   with this process and then set status and addendums depending on if
+#   it was an created Intentieverklaring_v2 or an ended ondertekenproces
 #   swo_addenda = mapped list from addenda inside the document into specific
-#   array value. We use base class helper methods for this
+#   array value. We use SkryvBase class helper methods for this.
+#   We also merge the addenda with already existing addenda in teamleader
+#   that might have been saved by a previous process or milestone.
 #
 
 from app.models.process_body import ProcessBody
