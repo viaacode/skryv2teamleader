@@ -41,7 +41,7 @@ class TestTeamleaderClient:
 
     def test_authcode_callback_invalid_response(self, tlc, requests_mock):
         requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
+            f'{self.AUTH_URL}/oauth2/access_token',
             text='wrong code used',
             status_code=400
         )
@@ -56,7 +56,7 @@ class TestTeamleaderClient:
         test_state = 'test_secret_code_state'
 
         requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
+            f'{self.AUTH_URL}/oauth2/access_token',
             json={
                 'access_token': 'new_test_access_token',
                 'refresh_token': 'new_test_refresh_token'
@@ -83,7 +83,7 @@ class TestTeamleaderClient:
             status_code=401
         )
         requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
+            f'{self.AUTH_URL}/oauth2/access_token',
             json={},
             status_code=400
         )
@@ -294,7 +294,7 @@ class TestTeamleaderClient:
             'refresh_token': 'teamleader_test_refresh_token'
         }
         requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
+            f'{self.AUTH_URL}/oauth2/access_token',
             json=access_token_response
         )
 

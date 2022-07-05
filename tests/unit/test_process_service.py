@@ -30,6 +30,9 @@ from testing_config import tst_app_config
 
 
 class TestProcessService:
+    API_URL = 'https://api.teamleader.eu'
+    AUTH_URL = 'https://app.teamleader.eu'
+
     @pytest.fixture
     def mock_clients(self):
         slack_client = SlackClient(tst_app_config())
@@ -184,12 +187,9 @@ class TestProcessService:
         assert res == 'process event is handled'
 
     def test_process_call_company_not_found(self, mock_client_requests, requests_mock):
-        API_URL = 'https://api.teamleader.eu'
-
-        # send a document event, so mocked redis stores it for
-        # actual milestone call
+        # send a document event, so mocked redis stores it for process ended event
         requests_mock.get(
-            f'{API_URL}/customFieldDefinitions.list',
+            f'{self.API_URL}/customFieldDefinitions.list',
             json={'data': self.teamleader_fixture('custom_fields.json')}
         )
 
@@ -213,7 +213,7 @@ class TestProcessService:
 
         # simulate company not found in teamleader
         requests_mock.get(
-            f'{API_URL}/companies.info?id={company_id}',
+            f'{self.API_URL}/companies.info?id={company_id}',
             json={'data': None},
             status_code=404
         )
@@ -228,12 +228,8 @@ class TestProcessService:
         assert 'companies.update' not in requests_mock.last_request.url
 
     def test_process_call_update_failed(self, mock_client_requests, requests_mock):
-        API_URL = 'https://api.teamleader.eu'
-
-        # send a document event, so mocked redis stores it for
-        # actual milestone call
         requests_mock.get(
-            f'{API_URL}/customFieldDefinitions.list',
+            f'{self.API_URL}/customFieldDefinitions.list',
             json={'data': self.teamleader_fixture('custom_fields.json')}
         )
 
@@ -255,13 +251,13 @@ class TestProcessService:
         test_company.pop('emails')
         test_company.pop('telephones')
         requests_mock.get(
-            f'{API_URL}/companies.info?id={company_id}',
+            f'{self.API_URL}/companies.info?id={company_id}',
             json={'data': test_company}
         )
 
         # make update fail with errorcode 400
         requests_mock.post(
-            f'{API_URL}/companies.update',
+            f'{self.API_URL}/companies.update',
             [
                 {'json': {'data': 'some failure in saving'}, 'status_code': 400},
             ]
@@ -277,22 +273,20 @@ class TestProcessService:
         assert 'companies.update' in requests_mock.last_request.url
 
     def test_process_service_with_unauthorized_teamleader_api(self, mock_client_requests, requests_mock):
-        API_URL = 'https://api.teamleader.eu'
-
         requests_mock.get(
-            f'{API_URL}/customFieldDefinitions.list',
+            f'{self.API_URL}/customFieldDefinitions.list',
             json={'data': []},
             status_code=401
         )
 
         requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
+            f'{self.AUTH_URL}/oauth2/access_token',
             json={},
             status_code=401
         )
 
         requests_mock.get(
-            'https://api.teamleader.eu/companies.info?id=1b2ab41a-7f59-103b-8cd4-1fcdd5140767',
+            f'{self.API_URL}/companies.info?id=1b2ab41a-7f59-103b-8cd4-1fcdd5140767',
             json={},
             status_code=401
         )

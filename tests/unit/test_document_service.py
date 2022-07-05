@@ -28,6 +28,9 @@ from testing_config import tst_app_config
 
 
 class TestDocumentService:
+    API_URL = 'https://api.teamleader.eu'
+    AUTH_URL = 'https://app.teamleader.eu'
+
     @pytest.fixture
     def mock_clients(self):
         slack_client = SlackClient(tst_app_config())
@@ -122,16 +125,14 @@ class TestDocumentService:
         assert res == 'document event is handled'
 
     def test_document_service_with_unauthorized_teamleader_api(self, mock_client_requests, requests_mock):
-        API_URL = 'https://api.teamleader.eu'
-
         requests_mock.get(
-            f'{API_URL}/customFieldDefinitions.list',
+            f'{self.API_URL}/customFieldDefinitions.list',
             json={'data': []},
             status_code=401
         )
 
         requests_mock.post(
-            'https://app.teamleader.eu/oauth2/access_token',
+            f'{self.AUTH_URL}/oauth2/access_token',
             json={},
             status_code=401
         )
