@@ -466,3 +466,75 @@ class TestTeamleaderClient:
         tlc.webhook_jwt = None
         res = tlc.secure_route('some url')
         assert res == 'some url'
+
+    def test_migrate_uuid(self, tlc, requests_mock):
+        old_id = '56061444'
+        resource_type = 'contact'
+        mapped_uuid = '6f9a8f80-5779-08fd-b57b-91a6d3576e04'
+        requests_mock.get(
+            f'{self.API_URL}/migrate.id?id={old_id}&type={resource_type}',
+            json={'data': {'id': mapped_uuid}}
+        )
+        contact_uuid = tlc.get_migrate_uuid(resource_type, old_id)
+        assert contact_uuid == mapped_uuid
+
+    def test_migrate_uuid_needs_auth_refresh(self, tlc, requests_mock):
+        old_id = '56061444'
+        resource_type = 'contact'
+        mapped_uuid = '6f9a8f80-5779-08fd-b57b-91a6d3576e04'
+        requests_mock.get(
+            f'{self.API_URL}/migrate.id?id={old_id}&type={resource_type}',
+            [
+                {'json': {'data': {'id': mapped_uuid}}, 'status_code': 401},
+                {'json': {'data': {'id': mapped_uuid}}, 'status_code': 200}
+            ]
+        )
+
+        requests_mock.post(
+            f'{self.AUTH_URL}/oauth2/access_token',
+            json={
+                'access_token': 'test_access',
+                'refresh_token': 'test_refresh',
+            },
+            status_code=200
+        )
+
+        contact_uuid = tlc.get_migrate_uuid(resource_type, old_id)
+        assert contact_uuid == mapped_uuid
+
+    def test_migrate_uuid_failed_auth_refresh(self, tlc, requests_mock):
+        old_id = '56061444'
+        resource_type = 'contact'
+        mapped_uuid = '6f9a8f80-5779-08fd-b57b-91a6d3576e04'
+        requests_mock.get(
+            f'{self.API_URL}/migrate.id?id={old_id}&type={resource_type}',
+            [
+                {'json': {'data': {'id': mapped_uuid}}, 'status_code': 401},
+                {'json': {'data': {'id': mapped_uuid}}, 'status_code': 401}
+            ]
+        )
+
+        requests_mock.post(
+            f'{self.AUTH_URL}/oauth2/access_token',
+            json={
+                'access_token': 'test_access',
+                'refresh_token': 'test_refresh',
+            },
+            status_code=400
+        )
+
+        with pytest.raises(TeamleaderAuthError):
+            contact_uuid = tlc.get_migrate_uuid(resource_type, old_id)
+            assert contact_uuid is None
+
+    def test_migrate_uuid_not_found(self, tlc, requests_mock):
+        old_id = '56061444'
+        resource_type = 'contact'
+        mapped_uuid = '6f9a8f80-5779-08fd-b57b-91a6d3576e04'
+        requests_mock.get(
+            f'{self.API_URL}/migrate.id?id={old_id}&type={resource_type}',
+            json={},
+            status_code=404
+        )
+        contact_uuid = tlc.get_migrate_uuid(resource_type, old_id)
+        assert contact_uuid is None

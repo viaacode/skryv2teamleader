@@ -357,3 +357,30 @@ class TeamleaderClient:
             return f"{url}?jwtauth={self.webhook_jwt}"
         else:
             return url
+
+    def get_migrate_uuid(self, resource_type, old_external_id):
+        """resource_type == 'company', 'contact', ..."""
+        path = self.api_uri + '/migrate.id'
+        headers = {'Authorization': "Bearer {}".format(self.token)}
+        params = {}
+        params['id'] = old_external_id
+        params['type'] = resource_type  # 'contact', 'company'
+
+        res = requests.get(path, params=params, headers=headers)
+        if res.status_code == 401:
+            self.auth_token_refresh()
+            headers = {'Authorization': "Bearer {}".format(self.token)}
+            res = requests.get(path, params=params, headers=headers)
+
+        time.sleep(self.RATE_LIMIT)
+
+        if res.status_code == 200:
+            return res.json()['data']['id']
+        else:
+            logger.error('call to {} failed\n error code={}\n error response {}\n used params {}\n'.format(
+                path,
+                res.status_code,
+                res.text,
+                params
+            ))
+            return None

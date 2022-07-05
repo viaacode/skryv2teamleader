@@ -38,7 +38,9 @@ class SlackWrapper:
                 return
 
             if self.env == 'DEV':
-                print(f"\nSLACK CHANNEL: {self.channel} \nSLACK MSG: {slack_text}\n")
+                print(
+                    f"\nSLACK CHANNEL: {self.channel} \nSLACK MSG: {slack_text}\n"
+                )
                 self.previous_message = slack_text
                 return
 
