@@ -10,6 +10,7 @@
 
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
+from urllib.error import URLError
 from app.models.dossier import Dossier
 from viaa.configuration import ConfigParser
 from viaa.observability import logging
@@ -37,7 +38,7 @@ class SlackWrapper:
                 )
                 return
 
-            if self.env == 'DEV':
+            if self.env == 'DEV' or self.env == 'TST':
                 print(
                     f"\nSLACK CHANNEL: {self.channel} \nSLACK MSG: {slack_text}\n"
                 )
@@ -51,9 +52,9 @@ class SlackWrapper:
 
             self.previous_message = slack_text
 
-        except SlackApiError as e:
+        except (SlackApiError, URLError) as e:
             logger.error(
-                f"SLACK ERROR: {e.response['error']} => Please check config.yml and .env"
+                f"SLACK ERROR: {e} => Please check config.yml and .env"
             )
 
 

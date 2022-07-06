@@ -32,7 +32,11 @@ class DossierMock:
 class TestSlackMessages:
     @pytest.fixture
     def slack(self):
-        slack_client = SlackClient(tst_app_config())
+        # we set env to QAS so we call real chat_postMessage
+        # but then mock this method to get full coverage without making real requests
+        app_config = tst_app_config()
+        app_config['environment'] = 'QAS'
+        slack_client = SlackClient(app_config)
         slack_client.slack_wrapper.client = MockSlackWrapper()
         return slack_client
 
@@ -63,6 +67,13 @@ class TestSlackMessages:
         slack.slack_wrapper.env = 'DEV'
         slack.teamleader_auth_error('SomeService', 'some_error')
         assert not slack.slack_wrapper.client.method_called('chat_postMessage')
+
+    def test_connection_error(self):
+        app_config = tst_app_config()
+        app_config['environment'] = 'QAS'
+        slack_client = SlackClient(app_config)
+        # trigger api error
+        slack_client.server_started_message()
 
     # these are already covered with other tests
     # def test_empty_last_name()

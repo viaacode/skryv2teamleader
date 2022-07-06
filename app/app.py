@@ -33,7 +33,7 @@ class App:
         self.redis_cache = redis_cache
 
     def start_clients(self, start_scheduler=True):
-        logger.info("Starting teamleader, zendesk, slack clients...")
+        logger.info("Starting teamleader, ldap, slack clients...")
         self.clients = construct_clients(config.app_cfg, self.redis_cache)
 
         if start_scheduler:
