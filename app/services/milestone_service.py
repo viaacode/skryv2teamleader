@@ -615,7 +615,8 @@ class MilestoneService(SkryvBase):
                 f"Error while updating VAT {company['id']}")
             self.slack.update_company_failed(
                 company['id'],
-                e
+                e,
+                self.dossier
             )
 
     def save_company(self, company):
@@ -626,7 +627,8 @@ class MilestoneService(SkryvBase):
             logger.info(f"Errors when updating company {company['id']}")
             self.slack.update_company_failed(
                 company['id'],
-                e
+                e,
+                self.dossier
             )
 
     def update_company_and_contacts(self):
@@ -675,6 +677,7 @@ class MilestoneService(SkryvBase):
                 logger.warning(
                     f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}"
                 )
+                self.slack.invalid_milestone_dossier(self.dossier, e)
 
     def handle_event(self, milestone_body: MilestoneBody):
         try:

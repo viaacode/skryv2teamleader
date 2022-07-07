@@ -106,6 +106,7 @@ class ProcessService(SkryvBase):
             logger.warning(
                 f"Missing or malformed dossier for ondertekenproces: {self.dossier.id} error: {e}"
             )
+            self.slack.invalid_ondertekenproces(self.dossier, e)
 
         return company
 
@@ -153,7 +154,8 @@ class ProcessService(SkryvBase):
                 f"Errors during update of company {company['id']}, sending slack message")
             self.slack.update_company_failed(
                 company['id'],
-                e
+                e,
+                self.dossier
             )
 
     def teamleader_update(self):

@@ -213,11 +213,10 @@ class TeamleaderClient:
             logger.warning(f"Warning: {path} responded with {res.text}")
             return []
         else:
-            error_msg = 'GET {} failed:\n status={}\n response={}\n params={}\n'.format(
+            error_msg = 'GET {} failed:\n status={}\n response={}\n'.format(
                 path,
                 res.status_code,
-                res.text,
-                params
+                res.text
             )
             raise ValueError(error_msg)
 
@@ -245,11 +244,10 @@ class TeamleaderClient:
         elif res.status_code == 204:
             return None
         else:
-            error_msg = 'POST {} failed:\n status={}\n response={}\n payload={}\n'.format(
+            error_msg = 'POST {} failed:\n status={}\n response={}\n'.format(
                 path,
                 res.status_code,
-                res.text,
-                payload
+                res.text
             )
             raise ValueError(error_msg)
 
