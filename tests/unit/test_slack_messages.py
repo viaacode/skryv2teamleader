@@ -52,11 +52,6 @@ class TestSlackMessages:
         slack.company_not_found(uuid.uuid4(), 'OR-testid')
         assert slack.slack_wrapper.client.method_called('chat_postMessage')
 
-    def test_teamleader_updated_failed(self, slack):
-        slack.update_company_failed(
-            uuid.uuid4(), 'company update failure: invalid vat number')
-        assert slack.slack_wrapper.client.method_called('chat_postMessage')
-
     def test_duplicate_message_filter(self, slack):
         slack.company_not_found('company_id', 'or_id')
         slack.company_not_found('company_id', 'or_id')
@@ -75,6 +70,8 @@ class TestSlackMessages:
         # trigger api error
         slack_client.server_started_message()
 
-    # these are already covered with other tests
-    # def test_empty_last_name()
-    # def test_external_id_empty()
+    # these are already covered with other tests:
+    # slack.test_empty_last_name()
+    # slack.test_external_id_empty()
+    # slack.update_company_failed(company_id, error, dossier)
+    # slack.invalid_ondertekenprocess(dossier_id, error)

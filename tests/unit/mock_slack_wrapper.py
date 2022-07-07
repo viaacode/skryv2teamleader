@@ -17,11 +17,13 @@ class MockSlackWrapper(MockClient):
         super().__init__()
 
     def create_message(self, message):
+        print(f"SLACK MESSAGE {message}")
         super().method_call(
             f"create_message: message={message}"
         )
 
     def chat_postMessage(self, channel, text):
+        print(f"SLACK MSG {channel}: {text}")
         super().method_call(
             f"chat_postMessage: {channel} {text}"
         )

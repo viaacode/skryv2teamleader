@@ -77,7 +77,11 @@ class SlackClient:
         )
 
     def external_id_empty(self, dossier: Dossier):
-        self.create_message(f"ExternalId is empty in document: {dossier}")
+        msg = "ExternalId is empty in skryv dossier_id: {} contentpartner: {}".format(
+            dossier.id,
+            dossier.label
+        )
+        self.create_message(msg)
 
     def no_ldap_entry_found(self, dossier: Dossier):
         msg = 'No LDAP entry found with Attribute'
@@ -102,33 +106,52 @@ class SlackClient:
             company['id']
         )
 
-        msg_part1 = f"Contact found with empty last_name, setting last_name = {contact['last_name']}"
-        msg_part2 = f'and linking to company in teamleader: {company_url}'
-        last_name_warning = f'{msg_part1} {msg_part2}'
+        msg_part1 = f"Contact found with empty last_name {contact.get('id')}.\n"
+        msg_part2 = f"Setting last_name to {contact.get('last_name')} \n"
+        msg_part3 = f"and linking to company in teamleader: {company_url}"
+        last_name_warning = f'{msg_part1} {msg_part2} {msg_part3}'
 
         self.create_message(last_name_warning)
 
     def update_contact_failed(self, contact, company_id, error):
-        msg = "Teamleader error when updating contact {} on company {} : {}".format(
-            contact,
-            company_id,
-            error
+        company_link = 'https://focus.teamleader.eu/company_detail.php?id={}'.format(
+            company_id
+        )
+
+        contact_link = 'https://focus.teamleader.eu/contact_detail.php?id={}'.format(
+            contact.get('id')
+        )
+
+        msg = "Teamleader error: {} when updating contact {}\n on company {}".format(
+            error,
+            contact_link,
+            company_link
         )
         self.create_message(msg)
 
     def add_contact_failed(self, contact, company_id, error):
-        msg = "Teamleader error when adding new contact {} on company {} : {}".format(
-            contact,
-            company_id,
-            error
+        company_link = 'https://focus.teamleader.eu/company_detail.php?id={}'.format(
+            company_id
+        )
+
+        msg = "Teamleader error: {} when adding new contact {}\n on company {}".format(
+            error,
+            f"{contact.get('first_name')} {contact.get('last_name')}",
+            company_link
         )
         self.create_message(msg)
 
-    def update_company_failed(self, company_id, error):
-        msg = "Teamleader error when updating company {} : {}".format(
-            company_id,
-            error
+    def update_company_failed(self, company_id, error, dossier):
+        company_link = 'https://focus.teamleader.eu/company_detail.php?id={}'.format(
+            company_id
         )
+        msg = "Teamleader error {} when updating company {}".format(
+            error,
+            company_link
+        )
+
+        msg = f"{msg}\n contentpartner: {dossier.label}\n skryv_id: {dossier.id}"
+
         self.create_message(msg)
 
     def teamleader_auth_error(self, service_name, error):
@@ -136,5 +159,13 @@ class SlackClient:
             service_name,
             error,
             'Use the /health/oauth route to update tokens with a authorization_refresh_link'
+        )
+        self.create_message(msg)
+
+    def invalid_ondertekenproces(self, dossier, error):
+        msg = 'Error in ondertekenproces voor Skryv {} {} parsing error: {}'.format(
+            f'contentpartner={dossier.label}',
+            f'dossier_id={dossier.id}',
+            error
         )
         self.create_message(msg)

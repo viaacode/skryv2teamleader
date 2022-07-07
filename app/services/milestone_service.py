@@ -615,7 +615,8 @@ class MilestoneService(SkryvBase):
                 f"Error while updating VAT {company['id']}")
             self.slack.update_company_failed(
                 company['id'],
-                e
+                e,
+                self.dossier
             )
 
     def save_company(self, company):
@@ -626,7 +627,8 @@ class MilestoneService(SkryvBase):
             logger.info(f"Errors when updating company {company['id']}")
             self.slack.update_company_failed(
                 company['id'],
-                e
+                e,
+                self.dossier
             )
 
     def update_company_and_contacts(self):

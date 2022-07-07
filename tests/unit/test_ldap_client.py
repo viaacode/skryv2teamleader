@@ -28,7 +28,6 @@ class MockLdap():
 
 
 def fake_ldap_connect():
-    print("faking ldap connection")
     return MockLdap()
 
 
