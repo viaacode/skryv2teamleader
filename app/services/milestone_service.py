@@ -677,6 +677,7 @@ class MilestoneService(SkryvBase):
                 logger.warning(
                     f"Missing or malformed dossier for milestone company_update: {self.dossier.id} error: {e}"
                 )
+                self.slack.invalid_milestone_dossier(self.dossier, e)
 
     def handle_event(self, milestone_body: MilestoneBody):
         try:

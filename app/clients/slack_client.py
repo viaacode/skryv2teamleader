@@ -163,7 +163,15 @@ class SlackClient:
         self.create_message(msg)
 
     def invalid_ondertekenproces(self, dossier, error):
-        msg = 'Error in ondertekenproces voor Skryv {} {} parsing error: {}'.format(
+        msg = 'Errors in ondertekenproces for Skryv {} {} parsing error: {}'.format(
+            f'contentpartner={dossier.label}',
+            f'dossier_id={dossier.id}',
+            error
+        )
+        self.create_message(msg)
+
+    def invalid_milestone_dossier(self, dossier, error):
+        msg = 'Error in dossier during handling of milestone for Skryv {} {} parsing error: {}'.format(
             f'contentpartner={dossier.label}',
             f'dossier_id={dossier.id}',
             error
