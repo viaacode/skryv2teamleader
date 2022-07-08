@@ -21,6 +21,8 @@
 import requests
 import time
 import json
+import urllib.parse
+
 from datetime import datetime
 from app.clients.teamleader_auth import TeamleaderAuth
 from app.clients.redis_cache import RedisCache
@@ -53,6 +55,7 @@ class TeamleaderClient:
         self.webhook_url = app_config['skryv']['webhook_url']
         self.webhook_jwt = app_config['skryv']['webhook_jwt']
         self.redirect_uri = self.secure_route(params['redirect_uri'])
+        self.redirect_uri_base = params['redirect_uri']
 
         self.token_store = TeamleaderAuth(params, redis_cache)
 
@@ -68,11 +71,14 @@ class TeamleaderClient:
         try:
             result = self.list_custom_fields(page=1, page_size=1)
             logger.info("Teamleader authorization status = OK")
-            return {'status': 'ok'}
+            return {
+                'status': 'ok'
+            }
         except TeamleaderAuthError:
             link = self.authcode_request_link()
             logger.warning(
-                "Teamleader authorization expired. Use refresh link to renew tokens")
+                f"Teamleader authorization expired. Use refresh link: {link} to renew tokens"
+            )
             return {
                 'status': 'authorization expired',
                 'authorization_refresh_link': link
@@ -84,13 +90,21 @@ class TeamleaderClient:
         is logged into teamleader. The user then needs to click 'Geef toegang' and this triggers
         a request to the 'redirect_uri' that is handled by our authcode_callback method.
         """
-        auth_uri = self.auth_uri + '/oauth2/authorize'
-        link = "{}?client_id={}&response_type=code&redirect_uri={}&state={}".format(
-            auth_uri,
-            self.client_id,
-            self.redirect_uri,
-            self.secret_code_state
-        )
+        jwt_params = {
+            'jwtauth': self.webhook_jwt,
+        }
+        encoded_params = urllib.parse.urlencode(jwt_params)
+        redirect_uri = f"{self.redirect_uri_base}?{encoded_params}"
+
+        params = {
+            'client_id': self.client_id,
+            'response_type': 'code',
+            'redirect_uri': self.redirect_uri,
+            'state': self.secret_code_state
+        }
+
+        encoded_params = urllib.parse.urlencode(params)
+        link = f'{self.auth_uri}/oauth2/authorize?{encoded_params}'
 
         return link
 
