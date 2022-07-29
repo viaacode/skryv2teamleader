@@ -187,4 +187,4 @@ class SkryvBase:
             logger.warning(warning_msg)
             return contact
 
-        return self.set_custom_field(contact, 'functie_category', value)
+        return self.set_custom_field(contact, 'functie_category', [value])

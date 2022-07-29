@@ -883,4 +883,4 @@ class TestMilestoneService():
         result = ms.set_functie_category(mock_contact, 'marcom')
 
         assert result['id'] == 'some_test_id'
-        assert result['custom_fields'][0]['value'] == 'marcom'
+        assert result['custom_fields'][0]['value'] == ['marcom']
