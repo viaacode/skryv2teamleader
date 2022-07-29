@@ -171,40 +171,23 @@ class SkryvBase:
     def set_functie_category(self, contact, value):
         if not value:
             return contact
+        
+        # skryv key is archief_of_collectiebeheer but there is a bug in skryv
+        # and in practice this key is returned 'archief ofcollectiebeheer'
+        # probably this also happens on other keys like it__techniek
+        # however during meeting 29/7/2022 we decided to just omit the category if this happens.
+        skryv_to_tl_mapping = {
+            'archief ofcollectiebeheer': "archief en collectiebeheer", 
+            'it__techniek': 'IT en techniek',
+            'marketing__communicatie': 'marcom',
+            'onderzoek': 'kennis en onderzoek',
+            'publiekswerking_of_educatie': 'publiekswerking en educatie'
+        }
 
-        # key is normaal archief_of_collectiebeheer maar er is een bug in skryv.
-        # archief ofcollectiebeheer komt hier als value en moet mappen naar 'archief en collectiebeheer'
-        # skryv_mapping = {
-        #     'archief ofcollectiebeheer': "archief en collectiebeheer",
-        #     'administratie': 'administratie',
-        # }
-        #
-        # dit zijn overige toegelaten teamleader waardes.
-        # en in principe moeten we dus alles testen om de juiste key van skryv te mappen hier:
-        #
-        # "beleid",
-        # "bestuur",
-        # "consultancy",
-        # "directie",
-        # "effectief lid",
-        # "IT en techniek",
-        # "kennis en onderzoek",
-        # "legal",
-        # "management",
-        # "marcom",
-        # "mediaproductie",
-        # "onderwijzend personeel",
-        # "pedagogische begeleider",
-        # "pers (geschreven)",
-        # "pers (tv)",
-        # "plaatsvervangend lid",
-        # "publiekswerking en educatie",
-        # "sales",
-        # "uitgever/auteur"
-        #
-        # maar voorlopig als waarde niet juist is, loggen we een warning maar voor rest
-        # stroomt contact wel door dan (meeting 29/7/2022)
-
+        # map key, or take original if its already the same as teamleader
+        value = skryv_to_tl_mapping.get(value, value)
+         
+        # if this fails, we just log a warning and return contact without category set
         allowed_categories = self.custom_fields['functie_category']['configuration']['options']
         if value not in allowed_categories:
             contact_info = 'id={} name={}{} emails={}'.format(

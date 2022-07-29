@@ -884,3 +884,30 @@ class TestMilestoneService():
 
         assert result['id'] == 'some_test_id'
         assert result['custom_fields'][0]['value'] == ['marcom']
+
+    def test_valid_functie_category_mapping(self, mock_client_requests, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        ms = MilestoneService(mock_client_requests)
+        mock_contact = {'id': 'some_test_id', 'custom_fields': []}
+        result = ms.set_functie_category(mock_contact, 'archief ofcollectiebeheer')
+
+        assert result['id'] == 'some_test_id'
+        assert result['custom_fields'][0]['value'] == ['archief en collectiebeheer']
+
+    def test_valid_functie_category_mapping2(self, mock_client_requests, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        ms = MilestoneService(mock_client_requests)
+        mock_contact = {'id': 'some_test_id', 'custom_fields': []}
+        result = ms.set_functie_category(mock_contact, 'it__techniek')
+
+        assert result['id'] == 'some_test_id'
+        assert result['custom_fields'][0]['value'] == ['IT en techniek']
+
