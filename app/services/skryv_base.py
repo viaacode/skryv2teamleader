@@ -172,6 +172,39 @@ class SkryvBase:
         if not value:
             return contact
 
+        # key is normaal archief_of_collectiebeheer maar er is een bug in skryv.
+        # archief ofcollectiebeheer komt hier als value en moet mappen naar 'archief en collectiebeheer'
+        # skryv_mapping = {
+        #     'archief ofcollectiebeheer': "archief en collectiebeheer",
+        #     'administratie': 'administratie',
+        # }
+        #
+        # dit zijn overige toegelaten teamleader waardes.
+        # en in principe moeten we dus alles testen om de juiste key van skryv te mappen hier:
+        #
+        # "beleid",
+        # "bestuur",
+        # "consultancy",
+        # "directie",
+        # "effectief lid",
+        # "IT en techniek",
+        # "kennis en onderzoek",
+        # "legal",
+        # "management",
+        # "marcom",
+        # "mediaproductie",
+        # "onderwijzend personeel",
+        # "pedagogische begeleider",
+        # "pers (geschreven)",
+        # "pers (tv)",
+        # "plaatsvervangend lid",
+        # "publiekswerking en educatie",
+        # "sales",
+        # "uitgever/auteur"
+        #
+        # maar voorlopig als waarde niet juist is, loggen we een warning maar voor rest
+        # stroomt contact wel door dan (meeting 29/7/2022)
+
         allowed_categories = self.custom_fields['functie_category']['configuration']['options']
         if value not in allowed_categories:
             contact_info = 'id={} name={}{} emails={}'.format(
