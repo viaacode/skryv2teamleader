@@ -171,13 +171,13 @@ class SkryvBase:
     def set_functie_category(self, contact, value):
         if not value:
             return contact
-        
+
         # skryv key is archief_of_collectiebeheer but there is a bug in skryv
         # and in practice this key is returned 'archief ofcollectiebeheer'
         # probably this also happens on other keys like it__techniek
         # however during meeting 29/7/2022 we decided to just omit the category if this happens.
         skryv_to_tl_mapping = {
-            'archief ofcollectiebeheer': "archief en collectiebeheer", 
+            'archief ofcollectiebeheer': "archief en collectiebeheer",
             'it__techniek': 'IT en techniek',
             'marketing__communicatie': 'marcom',
             'onderzoek': 'kennis en onderzoek',
@@ -186,7 +186,7 @@ class SkryvBase:
 
         # map key, or take original if its already the same as teamleader
         value = skryv_to_tl_mapping.get(value, value)
-         
+
         # if this fails, we just log a warning and return contact without category set
         allowed_categories = self.custom_fields['functie_category']['configuration']['options']
         if value not in allowed_categories:

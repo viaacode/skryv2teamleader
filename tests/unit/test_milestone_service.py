@@ -893,10 +893,12 @@ class TestMilestoneService():
 
         ms = MilestoneService(mock_client_requests)
         mock_contact = {'id': 'some_test_id', 'custom_fields': []}
-        result = ms.set_functie_category(mock_contact, 'archief ofcollectiebeheer')
+        result = ms.set_functie_category(
+            mock_contact, 'archief ofcollectiebeheer')
 
         assert result['id'] == 'some_test_id'
-        assert result['custom_fields'][0]['value'] == ['archief en collectiebeheer']
+        assert result['custom_fields'][0]['value'] == [
+            'archief en collectiebeheer']
 
     def test_valid_functie_category_mapping2(self, mock_client_requests, requests_mock):
         requests_mock.get(
@@ -910,4 +912,3 @@ class TestMilestoneService():
 
         assert result['id'] == 'some_test_id'
         assert result['custom_fields'][0]['value'] == ['IT en techniek']
-
