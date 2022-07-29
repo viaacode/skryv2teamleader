@@ -169,4 +169,22 @@ class SkryvBase:
         return self.set_custom_field(contact, 'relatie_meemoo', array_values)
 
     def set_functie_category(self, contact, value):
+        if not value:
+            return contact
+
+        allowed_categories = self.custom_fields['functie_category']['configuration']['options']
+        if value not in allowed_categories:
+            contact_info = 'id={} name={}{} emails={}'.format(
+                contact.get('id'),
+                contact.get('first_name'),
+                contact.get('last_name'),
+                contact.get('emails'),
+            )
+            warning_msg = "skipping invalid function_category value = {} for contact = {}".format(
+                value,
+                contact_info
+            )
+            logger.warning(warning_msg)
+            return contact
+
         return self.set_custom_field(contact, 'functie_category', value)

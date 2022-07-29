@@ -332,6 +332,7 @@ class TestMilestoneService():
 
         tc_administratie = self.teamleader_fixture(
             'test_contact_administratie.json')
+
         requests_mock.get(
             f'{self.API_URL}/contacts.info?id=93a20358-4b37-071f-8975-bde813530b50',
             json={'data': tc_administratie}
@@ -856,3 +857,30 @@ class TestMilestoneService():
         ms.handle_event(test_milestone)
 
         assert '/oauth2/access_token' in requests_mock.last_request.url
+
+    def test_invalid_functie_category(self, mock_client_requests, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        ms = MilestoneService(mock_client_requests)
+        mock_contact = {'id': 'some_test_id', 'custom_fields': []}
+        result = ms.set_functie_category(
+            mock_contact, 'some bad functie category')
+
+        assert result['id'] == 'some_test_id'
+        assert result['custom_fields'] == []
+
+    def test_valid_functie_category(self, mock_client_requests, requests_mock):
+        requests_mock.get(
+            f'{self.API_URL}/customFieldDefinitions.list',
+            json={'data': self.teamleader_fixture('custom_fields.json')}
+        )
+
+        ms = MilestoneService(mock_client_requests)
+        mock_contact = {'id': 'some_test_id', 'custom_fields': []}
+        result = ms.set_functie_category(mock_contact, 'marcom')
+
+        assert result['id'] == 'some_test_id'
+        assert result['custom_fields'][0]['value'] == 'marcom'
