@@ -293,9 +293,11 @@ class TeamleaderClient:
         return self.request_item('/companies.info', uid)
 
     def update_company(self, company):
+        if 'payment_term' in company and company['payment_term'] is None:
+            del company['payment_term']
+
         company = self.prepare_custom_fields(company)
-        result = self.post_item('/companies.update', company)
-        return result
+        return self.post_item('/companies.update', company)
 
     def list_contacts(self, page=1, page_size=20, updated_since: datetime = None):
         return self.request_page(
