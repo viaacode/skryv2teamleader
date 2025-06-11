@@ -22,7 +22,7 @@ from app.app import main_app
 app = FastAPI(
     title="Skryv2Teamleader",
     description="Receive skryv webhooks and make updates in teamleader.",
-    version="1.0.0",
+    version="1.2.2",
 )
 
 app.include_router(api_router)
