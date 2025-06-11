@@ -12,7 +12,6 @@ import requests_mock
 import json
 
 from app.comm.webhook_scheduler import WebhookScheduler
-from app.clients.slack_client import SlackClient
 from app.clients.skryv_client import SkryvClient
 from app.clients.common_clients import CommonClients
 from app.clients.teamleader_client import TeamleaderClient
@@ -23,7 +22,6 @@ from app.services.process_service import ProcessService
 
 from mock_teamleader_client import MockTlClient
 from mock_ldap_client import MockLdapClient, UNKNOWN_OR_ID, UNMAPPED_OR_ID
-from mock_slack_wrapper import MockSlackWrapper
 from mock_redis_cache import MockRedisCache
 
 from testing_config import tst_app_config
@@ -34,23 +32,7 @@ class TestProcessService:
     AUTH_URL = 'https://app.teamleader.eu'
 
     @pytest.fixture
-    def mock_clients(self):
-        slack_client = SlackClient(tst_app_config())
-        slack_client.slack_wrapper = MockSlackWrapper()
-
-        return CommonClients(
-            MockTlClient(),
-            MockLdapClient(),
-            slack_client,
-            SkryvClient(tst_app_config()),
-            MockRedisCache()
-        )
-
-    @pytest.fixture
-    def mock_client_requests(self):
-        slack_client = SlackClient(tst_app_config())
-        slack_client.slack_wrapper = MockSlackWrapper()
-
+    def mock_client_requests(self, slack):
         tlc = TeamleaderClient(
             tst_app_config(),
             MockRedisCache()
@@ -61,7 +43,7 @@ class TestProcessService:
         return CommonClients(
             tlc,
             MockLdapClient(),
-            slack_client,
+            slack,
             SkryvClient(tst_app_config()),
             MockRedisCache()
         )

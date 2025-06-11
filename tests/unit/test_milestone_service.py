@@ -12,7 +12,6 @@ import json
 import pytest
 
 from app.comm.webhook_scheduler import WebhookScheduler
-from app.clients.slack_client import SlackClient
 from app.clients.skryv_client import SkryvClient
 from app.clients.teamleader_client import TeamleaderClient
 from app.clients.common_clients import CommonClients
@@ -23,7 +22,6 @@ from app.services.document_service import DocumentService
 
 from mock_teamleader_client import MockTlClient
 from mock_ldap_client import MockLdapClient, UNKNOWN_OR_ID
-from mock_slack_wrapper import MockSlackWrapper
 from mock_redis_cache import MockRedisCache
 
 from testing_config import tst_app_config
@@ -32,39 +30,6 @@ from testing_config import tst_app_config
 class TestMilestoneService():
     API_URL = 'https://api.teamleader.eu'
     AUTH_URL = 'https://app.teamleader.eu'
-
-    @pytest.fixture
-    def mock_clients(self):
-        slack_client = SlackClient(tst_app_config())
-        slack_client.slack_wrapper = MockSlackWrapper()
-
-        return CommonClients(
-            MockTlClient(),
-            MockLdapClient(),
-            slack_client,
-            SkryvClient(tst_app_config()),
-            MockRedisCache()
-        )
-
-    @pytest.fixture
-    def mock_client_requests(self):
-        slack_client = SlackClient(tst_app_config())
-        slack_client.slack_wrapper = MockSlackWrapper()
-
-        tlc = TeamleaderClient(
-            tst_app_config(),
-            MockRedisCache()
-        )
-        # switch off rate limiting for fast tests
-        tlc.RATE_LIMIT = 0.0
-
-        return CommonClients(
-            tlc,
-            MockLdapClient(),
-            slack_client,
-            SkryvClient(tst_app_config()),
-            MockRedisCache()
-        )
 
     def teamleader_fixture(self, json_file):
         f = open(f"tests/fixtures/teamleader/{json_file}")

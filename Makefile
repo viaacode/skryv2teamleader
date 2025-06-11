@@ -3,6 +3,9 @@ FOLDERS := ./app ./tests
 
 .DEFAULT_GOAL := help
 
+VENV := python_env
+python := python3
+
 
 .PHONY: help
 help:
@@ -24,12 +27,12 @@ help:
 
 .PHONY: install
 install:
-	mkdir -p python_env; \
-	python3 -m venv python_env; \
-	. python_env/bin/activate; \
-	python3 -m pip install --upgrade pip; \
-	python3 -m pip install -r requirements.txt; \
-	python3 -m pip install -r requirements-test.txt
+	mkdir -p $(VENV); \
+	$(python) -m venv $(VENV); \
+	. $(VENV)/bin/activate; \
+	$(python) -m pip install --upgrade pip; \
+	$(python) -m pip install -r requirements.txt; \
+	$(python) -m pip install -r requirements-test.txt
 
 
 .PHONY: clean
@@ -40,21 +43,21 @@ clean:
 
 .PHONY: lint
 lint:
-	@. python_env/bin/activate; \
-	pycodestyle --max-line-length=120 --exclude=.git,python_env,__pycache__  . && echo "pycodestyle OK."
+	@. $(VENV)/bin/activate; \
+	pycodestyle --max-line-length=120 --exclude=.git,$(VENV),__pycache__  . && echo "pycodestyle OK."
 
 
 .PHONY: format
 format:
-	@. python_env/bin/activate; \
+	@. $(VENV)/bin/activate; \
 	autopep8 --in-place -r $(FOLDERS); 
 	@echo "autopep8 formatting in place for folders: $(FOLDERS)..."
 
 .PHONY: test
 test:
-	@. python_env/bin/activate; \
+	@. $(VENV)/bin/activate; \
 	export `grep -v '^#' .env.example | xargs` && \
-	python -m pytest
+	$(python) -m pytest
 
 
 .PHONY: dockertest
@@ -70,9 +73,9 @@ dockerrun:
 
 .PHONY: coverage
 coverage:
-	@. python_env/bin/activate; \
+	@. $(VENV)/bin/activate; \
 	export `grep -v '^#' .env.example | xargs` && \
-	python -m pytest --cov-config=.coveragerc --cov . .  --cov-report html --cov-report term
+	$(python) -m pytest --cov-config=.coveragerc --cov . .  --cov-report html --cov-report term
 
 
 .PHONY: code_callback_example
@@ -82,20 +85,20 @@ code_callback_example:
 
 .PHONY: console
 console:
-	@. python_env/bin/activate; \
+	@. $(VENV)/bin/activate; \
 	export `grep -v '^#' .env | xargs` && \
-	python
+	$(python)
 
 
 .PHONY: server
 server:
-	@. python_env/bin/activate; \
+	@. $(VENV)/bin/activate; \
 	export `grep -v '^#' .env | xargs` && \
 	uvicorn app.server:app --reload --port 8080 --no-access-log --reload-dir app
 
 .PHONY: benchmark
 benchmark:
-	@. python_env/bin/activate; \
+	@. $(VENV)/bin/activate; \
 	export `grep -v '^#' .env | xargs` && \
-	python main.py
+	$(python) main.py
 

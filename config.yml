@@ -19,8 +19,7 @@ app:
     URI: !ENV ${LDAP_URI}
     password: !ENV ${LDAP_PASSWORD}
   slack:
-    channel: !ENV ${SLACK_CHANNEL}
-    token: !ENV ${SLACK_TOKEN}
+    webhook: !ENV ${SLACK_WEBHOOK}
   skryv:
     webhook_url: !ENV ${WEBHOOK_URL}
     webhook_jwt: !ENV ${WEBHOOK_JWT} 
